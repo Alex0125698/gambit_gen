@@ -1,10 +1,81 @@
+# ----------- instructions -------------
+
+# 1. compile gambit as normal
+
+# 2. copy the gambit executable into files/
+
+# 3. setup the options below to you liking
+
+# 4. set any other options in the yaml files
+#    found in files/yaml_files/ but don't touch
+#    any line containing '~'
+
+# 5. setup your desired plots in files/plots.pip
+#    but don't touch any line containing '~'
+
+# 6. modify files/job.sh so that it works on
+#    your HPC but don't touch any line containing '~'
+
+# 7. run this python script
+
+# 8. run the file: 'gens/runScans.sh'
+
+# 9. run the file: 'gens/runPippi.sh'
+
+
+# ----------- options -------------
+
+# a GAMBIT is generated for all possible combinations below
+# and a script is generated for running all simultaneously
+# WARNING: be careful not to generate too many, otherwise you will run out of memory
+
+conv_threshold = 1e-6
+required_printed_points = 3500000
+required_points = -1
+required_scan_duration = 90*60
+
+NODE_COUNT = 1  # set to desired number of nodes per gambit
+CORE_COUNT = 16 # set to number of cores per node
+
+# allowed options: "THDM", "THDMI", "THDMII", "THDMLS", or "THDMflipped"
+models = ["THDMI"]
+
+# allowed options: "tree" or "loop"
+runnings = ["tree"]
+
+# allowed options: "generic", "hybrid_lambda_1", "hybrid_lambda_2", "hybrid_Higgs", "higgs", or "physical"
+
+# instead of setting the basis, we set the file. This will allow us to run targetted scans in the same basis.
+# not that we cant simply change the basis as the params will be wrong
+bases = [#("hybrid_Higgs", "THDMI_hybrid_Higgs"),
+         ("hybrid_Higgs", "THDMI_high_cosba"), 
+         ("hybrid_Higgs", "THDMI_low_cosba")]
+
+# allowed options: "flat", or "log"
+tanb_types = ["flat"]
+
+# allowed options: all, theory, collider, electroweak, flavour
+#                 (the name of any individual constraint)
+#                 (in the case of perturbativity, or unitarity just name the function)
+constraints = [["theory"], 
+               ["theory", "collider"], 
+               ["theory", "electroweak"], 
+               ["theory", "flavour"],
+               ["all"]]
+
+# note that all data for [bases,tanb_types] is combined for plotting
+# whereas each [models,runnings,constraints] generate different sets of plots
+
+
+# ----------- main script -------------
+
 import re
 import os
 import shutil
 from distutils.dir_util import copy_tree
 from sys import platform
+from pathlib import Path
 
-CORE_COUNT = 16
 
 def generate_gambit_name():
     generate_gambit_name.counter += 1
@@ -17,78 +88,92 @@ gambit_dirs = []
 
 class Options:
 
+    # the names of all constraints
+    constraints_theory = ["NLO_unitarity_LogLikelihood_THDM", "LO_unitarity_LogLikelihood_THDM", "stability_LogLikelihood_THDM", "light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "scalar_mass_range_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM", "perturbativity_lambdas_LogLikelihood_THDM", "perturbativity_yukawas_LogLikelihood_THDM"]
+    constraints_collider = ["LEP_Higgs_LogLike", "LHC_Higgs_LogLike"]
+    constraints_electroweak =  ["oblique_parameters_LogLikelihood_THDM", "lnL_gm2"]
+    constraints_flavour =  ["BDstartaunu_LogLikelihood", "BDtaunu_LogLikelihood", "gmu_ge_LogLikelihood", "FLDstar_LogLikelihood", "Bc_lifetime_LogLikelihood", "Bs2llp_LogLikelihood", "B2Kllp_LogLikelihood", "RK_RKstarnunu_LogLikelihood", "h2taumu_LogLikelihood", "t2ch_LogLikelihood", "deltaMB_LogLikelihood", "deltaMBd_LogLikelihood", "SL_LogLikelihood", "l2lgamma_LogLikelihood", "l2lll_LogLikelihood", "RDRDstar_LogLikelihood", "b2sgamma_LogLikelihood", "B2Kstargamma_LogLikelihood", "B2mumu_LogLikelihood_LHCb", "B2mumu_LogLikelihood_CMS", "B2mumu_LogLikelihood_Atlas", "B2KstarmumuAng_LogLikelihood_Atlas", "B2KstarmumuAng_LogLikelihood_CMS", "B2KstarmumuAng_LogLikelihood_LHCb_2020", "B2KstarmumuAng_LogLikelihood_Belle", "B2KstarmumuAng_LogLikelihood_LHCb", "B2KstarellellAng_LogLikelihood_Belle", "Bu2KstarmumuAng_LogLikelihood_LHCb_2020", "B2KstarmumuAng_CPAssym_LogLikelihood_LHCb", "B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020", "B2KstarmumuBr_LogLikelihood_LHCb", "B2KmumuBr_LogLikelihood_LHCb", "Bs2phimumuBr_LogLikelihood"]
+    constraints_all = constraints_theory + constraints_collider + constraints_electroweak + constraints_flavour
+
     def __init__(self):
 
+        # default scan options
+        self.tanb_type = None
+        self.full_model_name = None
+        self.model = None
+        self.running = None
+        self.basis = None
+
+        # default convergence criteria
+        self.conv_threshold = 1e-5
+        self.required_printed_points = -1
         self.required_points = -1
-        self.required_valid_points = -1
-        self.required_scan_duration = -1
+        self.required_scan_duration = 7*24*60*60
 
-        # name of the hdf5 file
-        self.outputName = "scan"
+        # set default constraints
+        for c in self.constraints_all:
+            setattr(self, c, False)
 
-        # --- basis ---
+        # default paths
+        self.results_folder = "../runs"
+        self.plots_folder = "../plots"
+        self.scan_name = "scan"
 
-        # either: "coupling", "physical", "physical-zoom"
-        self.basis = "physical-zoom" 
-        self.tanb_type = "flat"
+    def setModel(self, model, basis, running):
 
-        # --- models ---
+        self.model = model
+        self.running = running
+        self.basis = basis
 
-        # either: "THDMI", "THDMIatQ", "THDMI_physical", "THDMI_physicalatQ"
-        self.model = "THDMI_physical"
+        if basis == "coupling":
+            basis = ""
+        if running == "loop":
+            running = "atQ"
+        else:
+            running = ""
 
-        # --- constraints ---
+        self.full_model_name = model + "_" + basis + running
 
-        # theory
-        self.negativeMass = True # TODO
-        self.stability = False
-        self.metaStability = False
-        self.unitarity = False
-        self.perturbativity_couplings = False
-        self.perturbativity_h0_mass = False
-        self.perturbativity_scalar_mass = False
-        # Collider
-        self.higgsBounds = False
-        self.higgsSignals = False
-        # (todo) XX -> h
-        # (todo) h -> YY
-        # Precision
-        self.obliqueParameters = False
-        # Flavor
-        self.b2sgamma = False
-        self.deltaMB = False
-        self.deltaMBd = False
-        self.b2ll = False
-        self.SL = False
-        self.LUV = False
+    def setConstraint(self, name):
 
-    def allTheory(self):
-        self.negativeMass = True
-        self.stability = True
-        self.metaStability = True
-        self.unitarity = True
-        self.perturbativity_couplings = True
-        if self.isLoopLevel():
-            self.perturbativity_h0_mass = True
-            self.perturbativity_scalar_mass = True
+        setit = []
 
-    def allCollider(self):
-        self.higgsBounds = True
-        self.higgsSignals = True
+        if name == "all":
+            setit = self.constraints_all
+        elif name == "theory":
+            setit = self.constraints_theory
+        elif name == "collider":
+            setit = self.constraints_collider
+        elif name == "electroweak":
+            setit = self.constraints_electroweak
+        elif name == "flavour":
+            setit = self.constraints_flavour
+        else:
+            setit = [name]
+            if not hasattr(self, name):
+                raise Exception("Error: no constraint called: " + name)
 
-    def allPrecision(self):
-        self.obliqueParameters = True
+        for c in setit:
+            setattr(self, c, True)
 
-    def allFlavour(self):
-        self.b2sgamma = True
-        self.deltaMB = True
-        self.deltaMBd = True
-        self.b2ll = True
-        self.SL = True
-        self.LUV = True
+    def validate(self):
 
-    def isLoopLevel(self):
-        return self.model == "THDMIatQ" or self.model == "THDMI_physicalatQ"
+        # unitarity 
+        if self.running == "tree" and self.NLO_unitarity_LogLikelihood_THDM:
+            self.NLO_unitarity_LogLikelihood_THDM = False
+            self.LO_unitarity_LogLikelihood_THDM = True
+
+        if self.running == "loop" and self.LO_unitarity_LogLikelihood_THDM:
+            self.LO_unitarity_LogLikelihood_THDM = False
+            self.NLO_unitarity_LogLikelihood_THDM = True
+
+        # correction checks
+        if self.running == "tree":
+            self.light_scalar_mass_corrections_LogLikelihood_THDM = False
+            self.heavy_scalar_mass_corrections_LogLikelihood_THDM = False
+
+        if  self.perturbativity_LogLikelihood_THDM:
+            self.perturbativity_lambdas_LogLikelihood_THDM = False
 
 def makeGambit(options, dir):
 
@@ -104,18 +189,16 @@ def makeGambit(options, dir):
     # os.rename("gens/files", dir2)
 
     # figure out the yaml file name
-    if options.basis == "coupling":
-        yaml_name = "THDM_coupling.yaml"
-    if options.basis == "physical":
-        yaml_name = "THDM_physical.yaml"
-    if options.basis == "physical-zoom":
-        yaml_name = "THDM_physical_zoom.yaml"
+    yaml_name = options.file + ".yaml"
 
     # patch the yaml file
     patchYaml(options, dir, yaml_name)
 
     # patch the run script
     patchRunScript(options, dir, yaml_name)
+
+    # create the output folders
+    # Path(dir2 + '/../runs/samples/' + options.results_folder).mkdir(parents=True, exist_ok=True)
 
     print("done")
    
@@ -130,56 +213,40 @@ def patchYaml(options, dir, yaml_name):
     s = s.replace("prior_type: tanb", "prior_type: " + options.tanb_type)
 
     # set the model name
-    s = s.replace("TheModelName", options.model)
+    s = s.replace("TheModelName", options.full_model_name)
 
     # set the scan duration and point limit
-    s = s.replace("12121212", str(int(options.required_points / CORE_COUNT)))
-    s = s.replace("23232323", str(int(options.required_valid_points / CORE_COUNT)))
+    s = s.replace("12121212", str(int(options.required_points)))
+    s = s.replace("23232323", str(int(options.required_printed_points)))
     s = s.replace("34343434", str(int(options.required_scan_duration)))
+    s = s.replace("convthresh:", "convthresh: " + str(options.conv_threshold) + " #")
 
     # set the output hdf5 name
-    s = s.replace("scan.hdf5", options.outputName + ".hdf5")
+    s = s.replace("scan.hdf5", options.scan_name + ".hdf5")
+
+    # set the output folder
+    s = s.replace("the_output_folder", options.results_folder)
 
     # add parameters for loop-level models
-    if options.isLoopLevel():
-        s = s.replace("#~0","")
+    if options.running == "loop":
+        s = s.replace("#~~Qin:","Qin:")
 
-    # set the constraints
-    if options.negativeMass:
-        pass
-    if options.stability:
-        s = s.replace("#~1","")
-    if options.metaStability:
-        pass
-    if options.unitarity:
-        if options.isLoopLevel():
-            s = s.replace("#~2","")
-        else:
-            s = s.replace("#~F", "")
-    if options.perturbativity_couplings:
-        s = s.replace("#~3","")
-    if options.perturbativity_h0_mass:
-        s = s.replace("#~4","")
-    if options.perturbativity_scalar_mass:
-        s = s.replace("#~5","")
-    if options.higgsBounds:
-        s = s.replace("#~6","")
-    if options.higgsSignals:
-        s = s.replace("#~7","")
-    if options.obliqueParameters:
-        s = s.replace("#~8","")
-    if options.b2sgamma:
-        s = s.replace("#~9","")
-    if options.deltaMB:
-        s = s.replace("#~A","")
-    if options.deltaMBd:
-        s = s.replace("#~B","")
-    if options.b2ll:
-        s = s.replace("#~C","")
-    if options.SL:
-        s = s.replace("#~D","")
-    if options.LUV:
-        s = s.replace("#~E","")
+    # comment other scale for tree level
+    if options.running == "tree":
+        s = s.replace("check_other_scale:", "check_other_scale: -1 # ")
+    
+    # uncomment required constraints
+    for c in  options.constraints_all:
+        if getattr(options,c):
+            # get the marker
+            i = s.find("capability: " + c)
+            if i == -1:
+                i = s.find("function: " + c)
+            if i != -1:
+                marker = s[i-1]
+                t = s[i-2]
+                if t == "~":
+                    s = s.replace("#~"+marker, "")
 
     # write patched file to disk
     file = open("gens/" + dir + "/yaml_files/" + yaml_name, 'w')
@@ -239,97 +306,49 @@ def patchRunScriptJC(options, dir, yaml_name):
 
 def main():
 
-    runnings = ["tree", "loop"]
-    bases = ["coupling", "physical", "physical-zoom"]
-    tanb_types = ["log", "flat"]
+    counter = 0
 
-    # loop over all bases + runnings
-    for running in runnings:
-        for basis in bases:
-            for tanb_type in tanb_types:
+    # --- loop over all options ---
 
-                # figure out the model name
-                if running == "loop":
-                    if basis == "coupling":
-                        model = "THDMIatQ"
-                    else:
-                        model = "THDMI_physicalatQ"
-                else:
-                    if basis == "coupling":
-                        model = "THDMI"
-                    else:
-                        model = "THDMI_physical"
+    for model in models:
+        for running in runnings:
+            for constraint in constraints:
 
-                # --- generate scans for each set of constraints
-                constraint_types = [Options.allTheory, Options.allPrecision, Options.allFlavour, Options.allCollider]
-                constraint_names = ["theory", "precision", "flavour", "collider"]
+                constraint_name = "_set" + str(counter) + "_" + constraint[0]
+                counter += 1
 
-                for i in range(0, len(constraint_types)):
+                for (basis,file) in bases:
+                    for tanb in tanb_types:
 
-                    fcn = constraint_types[i]
-                    fcn_name = constraint_names[i]
+                        options = Options()
 
-                    # setup the scan options
-                    options = Options()
+                        # setup the scan options
+                        options.setModel(model, basis, running)
+                        options.file = file
+                        options.tanb_type = tanb
+                        for c in constraint:
+                            options.setConstraint(c)
 
-                    options.required_points = 10000000
-                    options.required_valid_points = 200000
-                    options.required_scan_duration = 3*60*60
-                    if tanb_types == "log" and ( bases == "coupling" or bases == "physical-zoom" ):
-                        options.required_scan_duration = 6*60*60
+                        # setup convergence criteria
+                        options.conv_threshold = conv_threshold
+                        options.required_printed_points = required_printed_points
+                        options.required_points = required_points
+                        if required_printed_points is not -1:
+                            options.required_printed_points /= CORE_COUNT
+                        if required_points is not -1:
+                            options.required_points /= CORE_COUNT
+                        options.required_scan_duration = required_scan_duration
 
-                    # for our preliminary scan...
-                    options.required_scan_duration /= 3
+                        # setup paths
+                        options.results_folder = "../../runs/" + model + running + constraint_name + "/"
+                        options.plots_folder = "../plots/" + model + running + constraint_name + "/"
+                        options.scan_name = file + "_tb"  + tanb
 
-                    outputFolder = running + "_set_" + constraint_names[i] + "/"
-                    options.outputName = outputFolder + "scan_" + basis + "_" + tanb_type
-                    options.model = model
-                    options.basis = basis
-                    options.tanb_type = tanb_type
-                    fcn(options)
+                        # make sure everything is valid
+                        options.validate()
 
-                    # make a new gambit with the options specified above
-                    makeGambit(options, generate_gambit_name())
-
-
-                # --- generate scans for individual theory constraints
-
-                theory_names = ["negativeMass", "stability", "metaStability", "unitarity", "perturbativity_couplings", "perturbativity_h0_mass", "perturbativity_scalar_mass"]
-
-                for i in range(0, len(theory_names)):
-
-                    theory = theory_names[i]
-
-                    # setup the scan options
-                    options = Options()
-
-                    options.required_points = 10000000
-                    options.required_valid_points = 200000
-                    options.required_scan_duration = 3*60*60
-                    if tanb_types == "log" and ( bases == "coupling" or bases == "physical-zoom" ):
-                        options.required_scan_duration = 6*60*60
-
-                    # for our preliminary scan...
-                    options.required_scan_duration /= 3
-
-                    outputFolder = running + "_th_" + theory_names[i] + "/"
-                    options.outputName = outputFolder + "scan_" + basis + "_" + tanb_type
-                    options.model = model
-                    options.basis = basis
-                    options.tanb_type = tanb_type
-                    setattr(options,theory,True)
-
-                    # make a new gambit with the options specified above
-                    makeGambit(options, generate_gambit_name())
-
-
-                # generate scans for individual collider channels (XX -> h)
-
-                # generate scans for individual collider channels (h -> YY)
-
-                # generate scans for individual flavour constraints
-
-
+                        # make a new gambit with the options specified above
+                        makeGambit(options, generate_gambit_name())
 
     # --- create the runner script --- 
 
@@ -340,6 +359,7 @@ def main():
     for dir in gambit_dirs:
         file.write('cd "' + parent_abs + "/" + dir + '"\n')
         file.write("./job.sh\n")
+        file.write("echo \"------------------------------\"\n")
         # file.write('ccc_msub "' + parent_abs + "/" + dir + "/job.sh" + '"\n') # Jolit-Curie
     file.close()
     print("done")
