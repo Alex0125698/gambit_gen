@@ -18,38 +18,53 @@
 
 # 7. run this python script
 
-# 8. run the file: 'gens/runScans.sh'
+# 8. run the file: 'gen_path/runScans.sh'
 
-# 9. run the file: 'gens/runPippi.sh'
+# 9. run the file: 'gen_path/runPippi.sh'
 
 
 # ----------- options -------------
 
 # a GAMBIT is generated for all possible combinations below
 # and a script is generated for running all simultaneously
-# WARNING: be careful not to generate too many, otherwise you will run out of memory
+# WARNING: be careful not to generate too many, otherwise you will run out of storage
+
+postfix = '_8'
+
+gen_path = 'gens' + postfix
 
 conv_threshold = 1e-6
-required_printed_points = 3500000
+required_printed_points = -1
 required_points = -1
-required_scan_duration = 90*60
+required_scan_duration = 80*60 # in seconds
 
 NODE_COUNT = 1  # set to desired number of nodes per gambit
 CORE_COUNT = 16 # set to number of cores per node
+
+# either "DIRAC" or "BASH"
+MODE = "DIRAC"
 
 # allowed options: "THDM", "THDMI", "THDMII", "THDMLS", or "THDMflipped"
 models = ["THDMI"]
 
 # allowed options: "tree" or "loop"
-runnings = ["tree"]
+runnings = ["loop"]
 
 # allowed options: "generic", "hybrid_lambda_1", "hybrid_lambda_2", "hybrid_Higgs", "higgs", or "physical"
 
 # instead of setting the basis, we set the file. This will allow us to run targetted scans in the same basis.
 # not that we cant simply change the basis as the params will be wrong
-bases = [#("hybrid_Higgs", "THDMI_hybrid_Higgs"),
-         ("hybrid_Higgs", "THDMI_high_cosba"), 
-         ("hybrid_Higgs", "THDMI_low_cosba")]
+bases = [
+        ("hybrid_Higgs", "THDMI_hybrid_Higgs"),
+        #  ("hybrid_Higgs", "THDMI_hybrid_Higgs_logtb"),
+        #  ("hybrid_Higgs", "THDMI_high_cosba"), 
+        #  ("hybrid_Higgs", "THDMI_low_cosba"),
+        #  ("hybrid_Higgs", "THDMI_hhigh_cosba"), 
+        #  ("hybrid_Higgs", "THDMI_llow_cosba"),
+         ("hybrid_Higgs", "THDMI_high_mass"),
+         ("generic", "THDMI"),
+        #  ("physical", "THDMI_physical")
+         ]
 
 # allowed options: "flat", or "log"
 tanb_types = ["flat"]
@@ -57,11 +72,18 @@ tanb_types = ["flat"]
 # allowed options: all, theory, collider, electroweak, flavour
 #                 (the name of any individual constraint)
 #                 (in the case of perturbativity, or unitarity just name the function)
-constraints = [["theory"], 
-               ["theory", "collider"], 
-               ["theory", "electroweak"], 
-               ["theory", "flavour"],
-               ["all"]]
+constraints = [
+            #    (["theory"], "theory"),
+            #    (["all"], "all"),
+            #    (["theory", "electroweak"], "electroweak"),
+               (["NLO_unitarity_LogLikelihood_THDM"], "NLO"),
+            #    (["stability_LogLikelihood_THDM"], "stability"),
+            #    (["perturbativity_LogLikelihood_THDM"], "perturbativity"),
+            #    (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM"], "corrections"),
+            #    (["perturbativity_yukawas_LogLikelihood_THDM"], "pert_yukawas")
+            #    (["theory", "collider"], "HBHS"), 
+            #    (["theory", "flavour"], "flavour")
+               ]
 
 # note that all data for [bases,tanb_types] is combined for plotting
 # whereas each [models,runnings,constraints] generate different sets of plots
@@ -72,6 +94,7 @@ constraints = [["theory"],
 import re
 import os
 import shutil
+import math
 from distutils.dir_util import copy_tree
 from sys import platform
 from pathlib import Path
@@ -89,10 +112,18 @@ gambit_dirs = []
 class Options:
 
     # the names of all constraints
-    constraints_theory = ["NLO_unitarity_LogLikelihood_THDM", "LO_unitarity_LogLikelihood_THDM", "stability_LogLikelihood_THDM", "light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "scalar_mass_range_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM", "perturbativity_lambdas_LogLikelihood_THDM", "perturbativity_yukawas_LogLikelihood_THDM"]
+    constraints_theory = ["NLO_unitarity_LogLikelihood_THDM", "LO_unitarity_LogLikelihood_THDM", "stability_LogLikelihood_THDM", "light_scalar_mass_corrections_LogLikelihood_THDM", 
+                         "heavy_scalar_mass_corrections_LogLikelihood_THDM", "scalar_mass_range_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM", "perturbativity_lambdas_LogLikelihood_THDM", 
+                         "perturbativity_yukawas_LogLikelihood_THDM"]
     constraints_collider = ["LEP_Higgs_LogLike", "LHC_Higgs_LogLike"]
     constraints_electroweak =  ["oblique_parameters_LogLikelihood_THDM", "lnL_gm2"]
-    constraints_flavour =  ["BDstartaunu_LogLikelihood", "BDtaunu_LogLikelihood", "gmu_ge_LogLikelihood", "FLDstar_LogLikelihood", "Bc_lifetime_LogLikelihood", "Bs2llp_LogLikelihood", "B2Kllp_LogLikelihood", "RK_RKstarnunu_LogLikelihood", "h2taumu_LogLikelihood", "t2ch_LogLikelihood", "deltaMB_LogLikelihood", "deltaMBd_LogLikelihood", "SL_LogLikelihood", "l2lgamma_LogLikelihood", "l2lll_LogLikelihood", "RDRDstar_LogLikelihood", "b2sgamma_LogLikelihood", "B2Kstargamma_LogLikelihood", "B2mumu_LogLikelihood_LHCb", "B2mumu_LogLikelihood_CMS", "B2mumu_LogLikelihood_Atlas", "B2KstarmumuAng_LogLikelihood_Atlas", "B2KstarmumuAng_LogLikelihood_CMS", "B2KstarmumuAng_LogLikelihood_LHCb_2020", "B2KstarmumuAng_LogLikelihood_Belle", "B2KstarmumuAng_LogLikelihood_LHCb", "B2KstarellellAng_LogLikelihood_Belle", "Bu2KstarmumuAng_LogLikelihood_LHCb_2020", "B2KstarmumuAng_CPAssym_LogLikelihood_LHCb", "B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020", "B2KstarmumuBr_LogLikelihood_LHCb", "B2KmumuBr_LogLikelihood_LHCb", "Bs2phimumuBr_LogLikelihood"]
+    constraints_flavour =  ["BDstartaunu_LogLikelihood", "BDtaunu_LogLikelihood", "gmu_ge_LogLikelihood", "FLDstar_LogLikelihood", "Bc_lifetime_LogLikelihood", "Bs2llp_LogLikelihood", "B2Kllp_LogLikelihood",
+                            "RK_RKstarnunu_LogLikelihood", "h2taumu_LogLikelihood", "t2ch_LogLikelihood", "deltaMB_LogLikelihood", "deltaMBd_LogLikelihood", "SL_LogLikelihood", "l2lgamma_LogLikelihood", 
+                            "l2lll_LogLikelihood", "RDRDstar_LogLikelihood", "b2sgamma_LogLikelihood", "B2Kstargamma_LogLikelihood", "B2mumu_LogLikelihood_LHCb", "B2mumu_LogLikelihood_CMS", 
+                            "B2mumu_LogLikelihood_Atlas", "B2KstarmumuAng_LogLikelihood_Atlas", "B2KstarmumuAng_LogLikelihood_CMS", "B2KstarmumuAng_LogLikelihood_LHCb_2020", 
+                            "B2KstarmumuAng_LogLikelihood_Belle", "B2KstarmumuAng_LogLikelihood_LHCb", "B2KstarellellAng_LogLikelihood_Belle", "Bu2KstarmumuAng_LogLikelihood_LHCb_2020", 
+                            "B2KstarmumuAng_CPAssym_LogLikelihood_LHCb", "B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020", "B2KstarmumuBr_LogLikelihood_LHCb", "B2KmumuBr_LogLikelihood_LHCb", 
+                            "Bs2phimumuBr_LogLikelihood"]
     constraints_all = constraints_theory + constraints_collider + constraints_electroweak + constraints_flavour
 
     def __init__(self):
@@ -124,15 +155,16 @@ class Options:
         self.model = model
         self.running = running
         self.basis = basis
+        basis = "_" + basis
 
-        if basis == "coupling":
+        if self.basis == "coupling" or self.basis == "generic" or self.basis == "general":
             basis = ""
         if running == "loop":
             running = "atQ"
         else:
             running = ""
 
-        self.full_model_name = model + "_" + basis + running
+        self.full_model_name = model + basis + running
 
     def setConstraint(self, name):
 
@@ -177,8 +209,8 @@ class Options:
 
 def makeGambit(options, dir):
 
-    print('making: ' + os.path.abspath("gens") + "/" + dir + " ... ")
-    dir2 = "gens/" + dir
+    print('making: ' + os.path.abspath(gen_path) + "/" + dir + " ... ")
+    dir2 = gen_path+"/" + dir
 
     # delete contents if it already exists
     if os.path.exists(dir2):
@@ -186,7 +218,7 @@ def makeGambit(options, dir):
 
     # copy the files to a new gambit dir
     copy_tree("files/", dir2)
-    # os.rename("gens/files", dir2)
+    # os.rename(gen_path+"/files", dir2)
 
     # figure out the yaml file name
     yaml_name = options.file + ".yaml"
@@ -195,22 +227,29 @@ def makeGambit(options, dir):
     patchYaml(options, dir, yaml_name)
 
     # patch the run script
-    patchRunScript(options, dir, yaml_name)
+    if MODE == "BASH":
+        patchRunScript(options, dir, yaml_name)
+    elif MODE == "DIRAC":
+        patchRunScriptJC(options, dir, yaml_name)
+    else:
+        raise Exception("unknown mode")
 
-    # create the output folders
-    # Path(dir2 + '/../runs/samples/' + options.results_folder).mkdir(parents=True, exist_ok=True)
+    # create the output folders (otherwise hdf5_v1 will crash)
+    Path(dir2 + '/yaml_files/' + options.results_folder + '/samples').mkdir(parents=True, exist_ok=True)
 
     print("done")
    
 def patchYaml(options, dir, yaml_name):
 
     # read yaml file into string
-    file = open("gens/" + dir + "/yaml_files/" + yaml_name, 'r')
+    file = open(gen_path+"/" + dir + "/yaml_files/" + yaml_name, 'r')
     s = file.read()
     file.close()
 
+    print("DEBUG: patching " + gen_path+"/" + dir + "/yaml_files/" + yaml_name)
+
     # set basis
-    s = s.replace("prior_type: tanb", "prior_type: " + options.tanb_type)
+    s = s.replace("prior_Type: tanb", "prior_type: " + options.tanb_type)
 
     # set the model name
     s = s.replace("TheModelName", options.full_model_name)
@@ -249,14 +288,14 @@ def patchYaml(options, dir, yaml_name):
                     s = s.replace("#~"+marker, "")
 
     # write patched file to disk
-    file = open("gens/" + dir + "/yaml_files/" + yaml_name, 'w')
+    file = open(gen_path+"/" + dir + "/yaml_files/" + yaml_name, 'w')
     file.write(s)
     file.close()
 
 def patchRunScript(options, dir, yaml_name):
 
     # load run script into string
-    file = open("gens/" + dir + "/job.sh", 'r')
+    file = open(gen_path+"/" + dir + "/job.sh", 'r')
     s = file.read()
     file.close()
     
@@ -264,43 +303,53 @@ def patchRunScript(options, dir, yaml_name):
     s = s.replace("THDM_physical.yaml", yaml_name)
 
     # write patched file to disk
-    file = open("gens/" + dir + "/job.sh", 'w')
+    file = open(gen_path+"/" + dir + "/job.sh", 'w')
     file.write(s)
     file.close()
 
 def patchRunScriptJC(options, dir, yaml_name):
 
     # load run script into string
-    file = open("gens/" + dir + "/job.sh", 'r')
+    file = open(gen_path+"/" + dir + "/job_dirac.sh", 'r')
     s = file.read()
     file.close()
 
     # set the job name
-    s = s.replace("#MSUB -r gambit_thdm", "#MSUB -r thdm_" + options.outputName)
+    s = s.replace("SBATCH -J gambit_thdm", "SBATCH -J thdm_" + options.scan_name)
 
-    # set the stdout and stderr paths
-    dir_abs = os.path.abspath("gens/" + dir)
+    # set the stdout and stderr paths (todo)
+    dir_abs = os.path.abspath(gen_path+"/" + dir)
     # s = s.replace("stdo_", dir + "/work/stdo_")
     # s = s.replace("stde_", dir + "/work/stde_")
 
     # set gambit dir
-    s = s.replace("${CCCSCRATCHDIR}/gambit", dir_abs)
+    s = s.replace("GAMBIT_BASE_DIR", dir_abs)
 
     # set yaml name
     s = s.replace("THDM_physical.yaml", yaml_name)
 
     # set scan name
-    s = s.replace("scan.tar.gz", options.outputName + ".tar.gz")
-    s = s.replace("scan.hdf5", options.outputName + ".hdf5")
+    # s = s.replace("scan.tar.gz", options.outputName + ".tar.gz")
+    # s = s.replace("scan.hdf5", options.outputName + ".hdf5")
 
     # set scan duration
-    dur = 0.8 # hours
-    scan_percent = 0.93 # use 94% of time for scan
-    s = s.replace("9999", str(int(60*60*dur)))
-    s = s.replace("8888", str(int(60*60*dur*scan_percent-120)))
+
+    secs = 60 + 1.03*options.required_scan_duration
+    mins = secs / 60.
+    hours = mins / 60.
+    secs = math.floor(secs) % 60
+    mins = math.floor(mins) % 60
+    hours = math.floor(hours)
+    
+    print("HH:MM:SS " + str(hours) + ":" + str(mins) + ":" + str(secs))
+
+    s = s.replace("878787", str(math.floor(options.required_scan_duration + 40)))
+    s = s.replace("MMMMM", str(mins))
+    s = s.replace("SSSSS", str(secs))
+    s = s.replace("HHHHH", str(hours))
 
     # write patched file to disk
-    file = open("gens/" + dir + "/job.sh", 'w')
+    file = open(gen_path+"/" + dir + "/job.sh", 'w')
     file.write(s)
     file.close()
 
@@ -312,9 +361,9 @@ def main():
 
     for model in models:
         for running in runnings:
-            for constraint in constraints:
+            for (constraint, constraint_name) in constraints:
 
-                constraint_name = "_set" + str(counter) + "_" + constraint[0]
+                
                 counter += 1
 
                 for (basis,file) in bases:
@@ -339,13 +388,15 @@ def main():
                             options.required_points /= CORE_COUNT
                         options.required_scan_duration = required_scan_duration
 
-                        # setup paths
-                        options.results_folder = "../../runs/" + model + running + constraint_name + "/"
-                        options.plots_folder = "../plots/" + model + running + constraint_name + "/"
-                        options.scan_name = file + "_tb"  + tanb
-
                         # make sure everything is valid
                         options.validate()
+
+                        # setup paths
+                        constraint_name_full = "_" + constraint_name
+                        options.results_folder = "../../../runs/" + model + running + constraint_name_full + "/"
+                        options.plots_folder = "../plots/" + model + running + constraint_name_full + "/"
+                        options.scan_name = file + "_tb"  + tanb + postfix
+
 
                         # make a new gambit with the options specified above
                         makeGambit(options, generate_gambit_name())
@@ -354,11 +405,14 @@ def main():
 
     # write it
     print("generating runner script...")
-    parent_abs = os.path.abspath("gens")
+    parent_abs = os.path.abspath(gen_path)
     file = open(parent_abs + "/runScans.sh", "w")
     for dir in gambit_dirs:
         file.write('cd "' + parent_abs + "/" + dir + '"\n')
-        file.write("./job.sh\n")
+        if MODE == "BASH":
+            file.write("./job.sh\n")
+        else:
+            file.write("sbatch job.sh\n")
         file.write("echo \"------------------------------\"\n")
         # file.write('ccc_msub "' + parent_abs + "/" + dir + "/job.sh" + '"\n') # Jolit-Curie
     file.close()

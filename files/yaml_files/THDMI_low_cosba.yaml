@@ -47,28 +47,36 @@ Parameters:
       #      but m12_2 too low tends to cause negative masses
 
       mh:
-          range: [124.55, 125.75]
+          range: [124.4, 126.0]
           prior_Type: flat
       mH:
           range: [130, 2000]
           prior_Type: flat
       cba:
-          range: [-0.4, -0.02]
+          range: [-0.3, -0.06]
+          # range: [-0.4, -0.02]
           prior_Type: flat
       tanb:
-          range: [12, 50]
+          range: [5, 50]
+          # range: [12, 50]
           prior_Type: tanb
       Lambda4:
-          range: [-10, +10]
-          # range: [-4.5, +4.5]
+          # range: [-12.5, +12.5]
+          # range: [-10, +10]
+          # range: [-6, +6]
+          range: [-4, +4]
           prior_Type: flat
       Lambda5:
-          range: [-7, +7]
-          # range: [-3.5, +2.5]
+          # range: [-12.5, +12.5]
+          # range: [-7, +7]
+          # range: [-3.5, +6]
+          range: [-3.0, +3.0]
           prior_Type: flat
       Lambda7:
-          range: [-5, +5]
-          # range: [-2.5, +2.5]
+          # range: [-12.5, +12.5]
+          # range: [-5, +5]
+          # range: [-3.5, +3.5]
+          range: [-2, +2]
           prior_Type: flat
       lambda6:
           fixed_value: 0.0
@@ -91,12 +99,18 @@ Printer:
   #   buffer_length: 100
   #   output_file: "scan.txt"
 
-  printer: hdf5
+  # printer: hdf5
+  # options:
+  #   output_file: "scan.hdf5"
+  #   group: "/data"
+  #   delete_file_on_restart: true
+
+  printer: hdf5_v1
   options:
     output_file: "scan.hdf5"
     group: "/data"
     delete_file_on_restart: true
-
+    disable_combine_routines: true
 
 #################################
 ##     SCANNER SELECTION       ##
@@ -135,7 +149,7 @@ Scanner:
       jDE: true
 
       # population size (increase this to get more robust scan, or decrease to make it run faster)
-      NP: 30000
+      NP: 20000
 
       # when the average generation improvement falls below this, we stop the scan
       convthresh: 1e-6
@@ -252,7 +266,7 @@ ObsLikes:
     #~Ccapability: oblique_parameters_LogLikelihood_THDM
 
 #   # muon anomalous magnetic moment likelihood (for GTHDM)
-#   #~D- purpose: Observable
+#   #~D- purpose: LogLike
 #     #~Dcapability: lnL_gm2
 #     #~Dfunction: lnL_gm2
 
@@ -588,6 +602,10 @@ Rules:
   - capability: muon_gm2_Exp
     function: gm2_Exp_BNL
 
+  - capability: LHC_Higgs_LogLike
+    options:
+      # -1:all, 0:RUN1_SS, 1:LATEST_SS, 2:LATEST_STXS
+      HS_analysis: -1
 
 #########################
 # Logging setup
