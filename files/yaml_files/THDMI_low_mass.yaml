@@ -51,14 +51,14 @@ Parameters:
           range: [115,135]
           prior_Type: flat
       mH:
-          range: [130, 2000]
+          range: [130, 650]
           prior_Type: flat
       cba:
           range: [-0.4, +0.4]
           prior_Type: flat
       tanb:
           range: [0.001, 50]
-          prior_Type: log
+          prior_Type: tanb
       Lambda4:
           # range: [-12.5, +12.5]
           # range: [-10, +10]
