@@ -29,7 +29,7 @@
 # and a script is generated for running all simultaneously
 # WARNING: be careful not to generate too many, otherwise you will run out of storage
 
-postfix = '_14'
+postfix = '_15'
 
 gen_path = 'gens' + postfix
 
