@@ -132,9 +132,6 @@ Scanner:
     differentialEvolution:
       plugin: diver
       like: LogLike
-      aux_printer_txt_options:
-      aux_printer_stats_options:
-      aux_printer_live_options:
       verbosity: 0
 
       # turning this off will use the less aggressive jDE self-adaptive optimization
@@ -150,7 +147,7 @@ Scanner:
       jDE: true
 
       # population size (increase this to get more robust scan, or decrease to make it run faster)
-      NP: 20000
+      NP: 40000
 
       # when the average generation improvement falls below this, we stop the scan
       convthresh: 1e-6

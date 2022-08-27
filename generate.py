@@ -29,26 +29,26 @@
 # and a script is generated for running all simultaneously
 # WARNING: be careful not to generate too many, otherwise you will run out of storage
 
-postfix = '_15'
+postfix = '_17'
 
 gen_path = 'gens' + postfix
 
 conv_threshold = 1e-6
-required_printed_points = 50000
-required_points = 600000*16
-required_scan_duration = 30*60 # in seconds
+required_printed_points = 200000
+required_points = -1
+required_scan_duration = 40*60 # in seconds
 
 NODE_COUNT = 1  # set to desired number of nodes per gambit
-CORE_COUNT = 16 # set to number of cores per node
+CORE_COUNT = 72 # set to number of cores per node
 
 # either "DIRAC" or "BASH"
-MODE = "BASH"
+MODE = "DIRAC"
 
 # allowed options: "THDM", "THDMI", "THDMII", "THDMLS", or "THDMflipped"
-models = ["THDMI", "THDMII"]
+models = ["THDMII"]
 
 # allowed options: "tree" or "loop"
-runnings = ["loop"]
+runnings = ["tree"]
 
 # allowed options: "generic", "hybrid_lambda_1", "hybrid_lambda_2", "hybrid_Higgs", "higgs", or "physical"
 
@@ -59,14 +59,16 @@ runnings = ["loop"]
 bases = [
 
     # ("hybrid_Higgs", "THDMI_hybrid_Higgs"),
-    ("hybrid_Higgs", "THDMI_hybrid_Higgs_logtb"),
+    # ("hybrid_Higgs", "THDMI_hybrid_Higgs_logtb"),
+    ("hybrid_Higgs", "THDMI_hybrid_Higgs_lowtanb"),
     # ("hybrid_Higgs", "THDMI_high_cosba"), 
     # ("hybrid_Higgs", "THDMI_low_cosba"),
     # ("hybrid_Higgs", "THDMI_hhigh_cosba"), 
     # ("hybrid_Higgs", "THDMI_llow_cosba"),
     # ("hybrid_Higgs", "THDMI_high_mass"),
     # ("hybrid_Higgs", "THDMI_high_mass_log"),
-    # ("hybrid_Higgs", "THDMI_low_mass"),
+    ("hybrid_Higgs", "THDMI_low_mass"),
+    ("hybrid_Higgs", "THDMI_vlow_mass"),
     # ("generic", "THDMI"),
     #  ("physical", "THDMI_physical")
 
@@ -95,7 +97,7 @@ tanb_types = ["flat"]
 # collider scans
 constraints = [
 
-    (["theory", "b2sgamma_LogLikelihood"], "b2sgamma_2"),
+    # (["theory", "b2sgamma_LogLikelihood"], "b2sgamma_2"),
 
     # (["theory"], "theory"),
     # (["theory", "LEP_Higgs_LogLike", "LHC_Higgs_LogLike"], "collider"),
@@ -108,35 +110,35 @@ constraints = [
 ]
 
 # # flavour scans
-# constraints = [
+constraints = [
 
-#     (["theory"], "theory"),
-#     (["theory", "Bs2llp_LogLikelihood"], "Bs2llp"),
-#     (["theory", "B2Kllp_LogLikelihood"], "B2Kllp"),
-#     (["theory", "B2mumu_LogLikelihood_Atlas"], "B2mumu_Atlas"),
-#     (["theory", "B2mumu_LogLikelihood_LHCb"], "B2mumu_LHCb"),
-#     (["theory", "B2mumu_LogLikelihood_CMS"], "B2mumu_CMS"),
-#     (["theory", "Bc_lifetime_LogLikelihood"], "Bc_lifetime"),
-#     (["theory", "RK_RKstarnunu_LogLikelihood"], "RK_RKstarnunu"),
-#     (["theory", "deltaMB_LogLikelihood"], "deltaMB"),
-#     (["theory", "deltaMBd_LogLikelihood"], "deltaMBd"),
-#     (["theory", "SL_LogLikelihood"], "SL"),
-#     (["theory", "b2sgamma_LogLikelihood"], "b2sgamma"),
-#     (["theory", "B2Kstargamma_LogLikelihood"], "B2Kstargamma"),
-#     # (["theory", "RK_LogLikelihood_LHCb"], "RK"),
-#     # (["theory", "RKstar_LogLikelihood_LHCb"], "RKstar"),
-#     (["theory", "B2KstarmumuAng_LogLikelihood_Atlas"], "B2KstarmumuAng_Atlas"),
-#     (["theory", "B2KstarmumuAng_LogLikelihood_CMS"], "B2KstarmumuAng_CMS"),
-#     (["theory", "B2KstarmumuAng_LogLikelihood_LHCb_2020"], "B2KstarmumuAng_LHCb_2020"),
-#     (["theory", "B2KstarmumuAng_LogLikelihood_Belle"], "B2KstarmumuAng_Belle"),
-#     (["theory", "B2KstarellellAng_LogLikelihood_Belle"], "B2KstarellellAng"),
-#     (["theory", "Bu2KstarmumuAng_LogLikelihood_LHCb_2020"], "Bu2KstarmumuAng"),
-#     (["theory", "B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020"], "B2KstareeAng_Lowq2"),
-#     (["theory", "B2KstarmumuBr_LogLikelihood_LHCb"], "B2KstarmumuBr"),
-#     (["theory", "B2KmumuBr_LogLikelihood_LHCb"], "B2KmumuBr"),
-#     (["theory", "Bs2phimumuBr_LogLikelihood"], "Bs2phimumuBr"),
+    (["theory"], "theory"),
+    (["theory", "Bs2llp_LogLikelihood"], "Bs2llp"),
+    # (["theory", "B2Kllp_LogLikelihood"], "B2Kllp"),
+    (["theory", "B2mumu_LogLikelihood_Atlas"], "B2mumu_Atlas"),
+    (["theory", "B2mumu_LogLikelihood_LHCb"], "B2mumu_LHCb"),
+    # (["theory", "B2mumu_LogLikelihood_CMS"], "B2mumu_CMS"),
+    # (["theory", "Bc_lifetime_LogLikelihood"], "Bc_lifetime"),
+    # (["theory", "RK_RKstarnunu_LogLikelihood"], "RK_RKstarnunu"),
+    (["theory", "deltaMB_LogLikelihood"], "deltaMB"),
+    # (["theory", "deltaMBd_LogLikelihood"], "deltaMBd"),
+    # (["theory", "SL_LogLikelihood"], "SL"),
+    (["theory", "b2sgamma_LogLikelihood"], "b2sgamma"),
+    # (["theory", "B2Kstargamma_LogLikelihood"], "B2Kstargamma"),
+    # (["theory", "RK_LogLikelihood_LHCb"], "RK"),
+    # (["theory", "RKstar_LogLikelihood_LHCb"], "RKstar"),
+    # (["theory", "B2KstarmumuAng_LogLikelihood_Atlas"], "B2KstarmumuAng_Atlas"),
+    # (["theory", "B2KstarmumuAng_LogLikelihood_CMS"], "B2KstarmumuAng_CMS"),
+    # (["theory", "B2KstarmumuAng_LogLikelihood_LHCb_2020"], "B2KstarmumuAng_LHCb_2020"),
+    # (["theory", "B2KstarmumuAng_LogLikelihood_Belle"], "B2KstarmumuAng_Belle"),
+    # (["theory", "B2KstarellellAng_LogLikelihood_Belle"], "B2KstarellellAng"),
+    # (["theory", "Bu2KstarmumuAng_LogLikelihood_LHCb_2020"], "Bu2KstarmumuAng"),
+    # (["theory", "B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020"], "B2KstareeAng_Lowq2"),
+    # (["theory", "B2KstarmumuBr_LogLikelihood_LHCb"], "B2KstarmumuBr"),
+    # (["theory", "B2KmumuBr_LogLikelihood_LHCb"], "B2KmumuBr"),
+    # (["theory", "Bs2phimumuBr_LogLikelihood"], "Bs2phimumuBr"),
 
-# ]
+]
 
 # note that all data for [bases,tanb_types] is combined for plotting
 # whereas each [models,runnings,constraints] generate different sets of plots
