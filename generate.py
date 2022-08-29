@@ -29,26 +29,26 @@
 # and a script is generated for running all simultaneously
 # WARNING: be careful not to generate too many, otherwise you will run out of storage
 
-postfix = '_17'
+postfix = '_22'
 
 gen_path = 'gens' + postfix
 
 conv_threshold = 1e-6
-required_printed_points = 200000
+required_printed_points = 100000
 required_points = -1
-required_scan_duration = 40*60 # in seconds
+required_scan_duration = 30*60 # in seconds
 
 NODE_COUNT = 1  # set to desired number of nodes per gambit
-CORE_COUNT = 72 # set to number of cores per node
+CORE_COUNT = 16 # set to number of cores per node
 
 # either "DIRAC" or "BASH"
-MODE = "DIRAC"
+MODE = "BASH"
 
 # allowed options: "THDM", "THDMI", "THDMII", "THDMLS", or "THDMflipped"
-models = ["THDMII"]
+models = ["THDMI", "THDMII"]
 
 # allowed options: "tree" or "loop"
-runnings = ["tree"]
+runnings = ["loop"]
 
 # allowed options: "generic", "hybrid_lambda_1", "hybrid_lambda_2", "hybrid_Higgs", "higgs", or "physical"
 
@@ -60,16 +60,16 @@ bases = [
 
     # ("hybrid_Higgs", "THDMI_hybrid_Higgs"),
     # ("hybrid_Higgs", "THDMI_hybrid_Higgs_logtb"),
-    ("hybrid_Higgs", "THDMI_hybrid_Higgs_lowtanb"),
+    # ("hybrid_Higgs", "THDMI_hybrid_Higgs_lowtanb"),
     # ("hybrid_Higgs", "THDMI_high_cosba"), 
     # ("hybrid_Higgs", "THDMI_low_cosba"),
     # ("hybrid_Higgs", "THDMI_hhigh_cosba"), 
     # ("hybrid_Higgs", "THDMI_llow_cosba"),
     # ("hybrid_Higgs", "THDMI_high_mass"),
     # ("hybrid_Higgs", "THDMI_high_mass_log"),
-    ("hybrid_Higgs", "THDMI_low_mass"),
-    ("hybrid_Higgs", "THDMI_vlow_mass"),
-    # ("generic", "THDMI"),
+    # ("hybrid_Higgs", "THDMI_low_mass"),
+    # ("hybrid_Higgs", "THDMI_vlow_mass"),
+    ("generic", "THDMI"),
     #  ("physical", "THDMI_physical")
 
 ]
@@ -112,18 +112,18 @@ constraints = [
 # # flavour scans
 constraints = [
 
-    (["theory"], "theory"),
-    (["theory", "Bs2llp_LogLikelihood"], "Bs2llp"),
+    (["higgs_mass_LogLikelihood", "LO_unitarity_LogLikelihood_THDM", "stability_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM"], "generic_theory"),
+    # (["theory", "Bs2llp_LogLikelihood"], "Bs2llp"),
     # (["theory", "B2Kllp_LogLikelihood"], "B2Kllp"),
-    (["theory", "B2mumu_LogLikelihood_Atlas"], "B2mumu_Atlas"),
-    (["theory", "B2mumu_LogLikelihood_LHCb"], "B2mumu_LHCb"),
+    # (["theory", "B2mumu_LogLikelihood_Atlas"], "B2mumu_Atlas"),
+    # (["theory", "B2mumu_LogLikelihood_LHCb"], "B2mumu_LHCb"),
     # (["theory", "B2mumu_LogLikelihood_CMS"], "B2mumu_CMS"),
     # (["theory", "Bc_lifetime_LogLikelihood"], "Bc_lifetime"),
     # (["theory", "RK_RKstarnunu_LogLikelihood"], "RK_RKstarnunu"),
-    (["theory", "deltaMB_LogLikelihood"], "deltaMB"),
+    # (["theory", "deltaMB_LogLikelihood"], "deltaMB"),
     # (["theory", "deltaMBd_LogLikelihood"], "deltaMBd"),
     # (["theory", "SL_LogLikelihood"], "SL"),
-    (["theory", "b2sgamma_LogLikelihood"], "b2sgamma"),
+    (["higgs_mass_LogLikelihood", "LO_unitarity_LogLikelihood_THDM", "stability_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM", "b2sgamma_LogLikelihood"], "generic_b2sgamma"),
     # (["theory", "B2Kstargamma_LogLikelihood"], "B2Kstargamma"),
     # (["theory", "RK_LogLikelihood_LHCb"], "RK"),
     # (["theory", "RKstar_LogLikelihood_LHCb"], "RKstar"),
