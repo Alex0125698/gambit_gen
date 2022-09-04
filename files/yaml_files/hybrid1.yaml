@@ -59,19 +59,19 @@ Parameters:
           range: [0.001, 70]
           prior_Type: tanb
       Lambda4:
-          range: [-13, +13]
-          # range: [-6, +6]
-          # range: [-4, +4]
+          # range: [-13, +13]
+          # range: [-13, +13]
+          range: [-4,5]
           prior_Type: flat
       Lambda5:
-          range: [-13, +13]
-          # range: [-3.5, +6]
-          # range: [-3.0, +3.0]
+          # range: [-13, +13]
+          # range: [-9, +9]
+          range: [-3,4]
           prior_Type: flat
       Lambda7:
-          range: [-13, +13]
-          # range: [-3.5, +3.5]
-          # range: [-2, +2]
+          # range: [-13, +13]
+          # range: [-5, +5]
+          range: [-2,2.5]
           prior_Type: flat
       lambda6:
           fixed_value: 0.0
@@ -155,6 +155,8 @@ Scanner:
 
       # set the acceptable value to coincide with our invalidation threshold
       max_acceptable_value: 9e5 # (invalid for < -1e6)
+
+      outputSamples: false
 
 
 #################################
@@ -734,7 +736,7 @@ Rules:
 Logger:
 
   redirection:
-    [Debug] :  "debug.log"
+    # [Debug] :  "debug.log"w
     [Default] :  "default.log"
     [DecayBit] :  "DecayBit.log"
     [PrecisionBit] :  "PrecisionBit.log"

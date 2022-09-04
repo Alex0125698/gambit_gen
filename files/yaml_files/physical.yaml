@@ -50,26 +50,26 @@ Parameters:
         prior_Type: flat
       mH:
         range: [140, 2500]
-        prior_type: flat
+        prior_Type: flat
       mA:
         range: [140, 2500]
-        prior_type: flat
+        prior_Type: flat
       mHp:
         range: [140, 2500]
-        prior_type: flat
-      lambda_6:
+        prior_Type: flat
+      lambda6:
         fixed_value: 0.0
-      lambda_7:
+      lambda7:
         fixed_value: 0.0
       m12_2:
         range: [0, 6.4e5]
       tanb:
         range: [0.001, 70]
-        prior_type: tanb
+        prior_Type: tanb
       sba:
         range: [0.90, 1.0]
-        prior_type: flat
-        #~~Qin: 91.1876 # = mZ
+        prior_Type: flat
+      #~~Qin: 91.1876 # = mZ
 
 
 #################################
@@ -147,6 +147,8 @@ Scanner:
 
       # set the acceptable value to coincide with our invalidation threshold
       max_acceptable_value: 9e5 # (invalid for < -1e6)
+
+      outputSamples: false
 
 
 #################################
@@ -726,7 +728,7 @@ Rules:
 Logger:
 
   redirection:
-    [Debug] :  "debug.log"
+    # [Debug] :  "debug.log"
     [Default] :  "default.log"
     [DecayBit] :  "DecayBit.log"
     [PrecisionBit] :  "PrecisionBit.log"

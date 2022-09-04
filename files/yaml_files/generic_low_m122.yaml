@@ -46,19 +46,29 @@ Parameters:
       # range of m12_2 hard to justify so we use a logarithmic prior over a large region
       #      but m12_2 too low tends to cause negative masses
       lambda1:
-          range: [0, 13]
+          # range: [0, 13]
+          # range: [0, 9]
+          range: [0, 5]
           prior_type: flat
       lambda2:
-          range: [0, 13]
+          # range: [0, 13]
+          # range: [0, 9]
+          range: [0, 6]
           prior_type: flat
       lambda3:
-          range: [-13, 13]
+          # range: [-13, 13]
+          # range: [-8, 13]
+          range: [-4, 5]
           prior_type: flat
       lambda4:
-          range: [-13, 13]
+          # range: [-13, 13]
+          # range: [-13, 13]
+          range: [-5, 5]
           prior_type: flat
       lambda5:
-          range: [-13, 13]
+          # range: [-13, 13]
+          # range: [-10, 9]
+          range: [-4, 4]
           prior_type: flat
       lambda6:
           fixed_value: 0.0
@@ -148,6 +158,8 @@ Scanner:
 
       # set the acceptable value to coincide with our invalidation threshold
       max_acceptable_value: 9e5 # (invalid for < -1e6)
+
+      outputSamples: false
 
 
 #################################
@@ -727,7 +739,7 @@ Rules:
 Logger:
 
   redirection:
-    [Debug] :  "debug.log"
+    # [Debug] :  "debug.log"
     [Default] :  "default.log"
     [DecayBit] :  "DecayBit.log"
     [PrecisionBit] :  "PrecisionBit.log"

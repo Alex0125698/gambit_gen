@@ -3,6 +3,7 @@
 # 1. compile gambit as normal
 
 # 2. copy the gambit executable into files/
+#    (overwrite the existing one)
 
 # 3. setup the options below to you liking
 
@@ -29,15 +30,15 @@
 # and a script is generated for running all simultaneously
 # WARNING: be careful not to generate too many, otherwise you will run out of storage
 
-use_speed_hacks = false
-postfix = '_22'
+use_speed_hacks = True
+postfix = '_49'
 
 gen_path = 'gens' + postfix
 
 conv_threshold = 1e-6
-required_printed_points = 250000
+required_printed_points = 600000
 required_points = -1
-required_scan_duration = 20*60 # in seconds
+required_scan_duration = 19*60 # in seconds
 
 NODE_COUNT = 1  # set to desired number of nodes per gambit
 CORE_COUNT = 72 # set to number of cores per node
@@ -46,36 +47,40 @@ CORE_COUNT = 72 # set to number of cores per node
 MODE = "DIRAC"
 
 # allowed options: "THDM", "THDMI", "THDMII", "THDMLS", or "THDMflipped"
-models = ["THDMI", "THDMII"]
+models = ["THDMI","THDMII"]
 
 # allowed options: "tree" or "loop"
-runnings = ["loop"]
+runnings = ["tree","loop"]
 
 # allowed options: "generic", "hybrid_lambda_1", "hybrid_lambda_2", "hybrid_Higgs", "higgs", or "physical"
 
 # instead of setting the basis, we set the file. This will allow us to run targetted scans in the same basis.
 # not that we cant simply change the basis as the params will be wrong
 
-# 17
+# 19
 bases = [
 
+    # ("generic", "generic_test"),
     ("generic", "generic"),
-    ("generic", "generic_low_m122"),
-    ("hybrid_Higgs", "hybrid1_high_cosba"),
-    ("hybrid_Higgs", "hybrid1_high_mass_log"),
-    ("hybrid_Higgs", "hybrid1_high_mass"),
+    # ("generic", "generic_low_m122"),
+    # ("hybrid_Higgs", "hybrid1_high_cosba"),
+    # ("hybrid_Higgs", "hybrid1_high_mass_log"),
+    # ("hybrid_Higgs", "hybrid1_high_mass"),
     ("hybrid_Higgs", "hybrid1_log"),
-    ("hybrid_Higgs", "hybrid1_low_cosba"),
-    ("hybrid_Higgs", "hybrid1_low_mass400"),
-    ("hybrid_Higgs", "hybrid1_low_mass650"),
-    ("hybrid_Higgs", "hybrid1_low_tanb"),
-    ("hybrid_Higgs", "hybrid1_tanb25"),
-    ("hybrid_Higgs", "hybrid1_tanb36"),
-    ("hybrid_Higgs", "hybrid1_tanb45"),
+    # ("hybrid_Higgs", "hybrid1_low_cosba"),
+    # ("hybrid_Higgs", "hybrid1_low_mass400"),
+    # ("hybrid_Higgs", "hybrid1_low_mass650"),
+    # ("hybrid_Higgs", "hybrid1_low_tanb"),
+    # ("hybrid_Higgs", "hybrid1_tanb1p5"),
+    # ("hybrid_Higgs", "hybrid1_tanb12"),
+    # ("hybrid_Higgs", "hybrid1_tanb25"),
+    # ("hybrid_Higgs", "hybrid1_tanb36"),
+    # ("hybrid_Higgs", "hybrid1_tanb45"),
     ("hybrid_Higgs", "hybrid1"),
-    ("hybrid_Higgs2", "hybrid2_low_mass200"),
+    # ("hybrid_Higgs2", "hybrid2_low_mass200"),
     ("hybrid_Higgs2", "hybrid2_low_mass350"),
-    ("physical", "physical"),
+    # ("physical", "physical"),
+
 ]
 
 
@@ -87,81 +92,88 @@ tanb_types = ["flat"]
 #                 (in the case of perturbativity, or unitarity just name the function)
 
 
+# 39-2
+
 # ---- COMBINED SCANS ----
 
 # 1
-constraints = [
+# constraints = [
 
-    (["all"], "all"),
+#     (["all"], "all"),
 
-]
+# ]
 
 # ---- THEORY SCANS ----
 
 # 5
-constraints = [
+# constraints = [
 
-    (["theory"], "theory"),
-    (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "LO_unitarity_LogLikelihood_THDM"], "LO"),
-    # (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "NLO_unitarity_LogLikelihood_THDM"], "NLO"),
-    (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "stability_LogLikelihood_THDM"], "stability"),
-    (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM"], "perturbativity"),
-    # (["perturbativity_yukawas_LogLikelihood_THDM"], "pert_yukawas")
+#     (["theory"], "theory"),
+#     (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "LO_unitarity_LogLikelihood_THDM"], "LO"),
+#     # (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "NLO_unitarity_LogLikelihood_THDM"], "NLO"),
+#     (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "stability_LogLikelihood_THDM"], "stability"),
+#     (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM"], "perturbativity"),
+#     # (["perturbativity_yukawas_LogLikelihood_THDM"], "pert_yukawas")
 
-]
+# ]
 
 # ---- ELECTROWEAK SCANS ----
 
 # 1
-constraints = [
+# constraints = [
 
-(["theory", "electroweak"], "electroweak"),
+#     (["theory", "electroweak"], "electroweak"),
 
-]
+# ]
 
 # ---- COLLIDER SCANS ----
 
-constraints = [
+# 6
+# constraints = [
 
-    (["theory", "collider"], "collider"),
-    (["theory", "LEP_Higgs_LogLike"], "HB"),
-    (["theory", "LHC_Higgs_LogLike", "HS_ALL"], "HS"),
-    (["theory", "LHC_Higgs_LogLike", "HS_RUN1_SS"], "HS_RUN1_SS"),
-    (["theory", "LHC_Higgs_LogLike", "HS_LATEST_SS"], "HS_LATEST_SS"),
-    (["theory", "LHC_Higgs_LogLike", "HS_LATEST_STXS"], "HS_LATEST_STXS"),
+#     # (["theory", "collider"], "collider"),
+#     # (["theory", "LEP_Higgs_LogLike"], "HB"),
+#     # (["theory", "LHC_Higgs_LogLike", "HS_ALL"], "HS"),
+#     # (["theory", "LHC_Higgs_LogLike", "HS_RUN1_SS"], "HSRUN1SS"),
+#     (["theory", "LHC_Higgs_LogLike", "HS_LATEST_SS"], "HSLATESTSS"),
+#     # (["theory", "LHC_Higgs_LogLike", "HS_LATEST_STXS"], "HSLATESTSTXS"),
 
-]
+# ]
 
 # ---- FLAVOR SCANS ----
 
-# constraints = [
+# 26-2
+constraints = [
 
-#     (["theory", "Bs2llp_LogLikelihood"], "test2_Bs2llp"),
-#     (["theory", "B2Kllp_LogLikelihood"], "B2Kllp"),
-#     (["theory", "B2mumu_LogLikelihood_Atlas"], "test2_B2mumu_Atlas"),
-#     (["theory", "B2mumu_LogLikelihood_LHCb"], "B2mumu_LHCb"),
-#     (["theory", "B2mumu_LogLikelihood_CMS"], "B2mumu_CMS"),
-#     (["theory", "Bc_lifetime_LogLikelihood"], "Bc_lifetime"),
-#     (["theory", "RK_RKstarnunu_LogLikelihood"], "RK_RKstarnunu"),
-#     (["theory", "deltaMB_LogLikelihood"], "test2_deltaMB"),
-#     (["theory", "deltaMBd_LogLikelihood"], "deltaMBd"),
-#     (["theory", "SL_LogLikelihood"], "SL"),
-#     (["theory", "b2sgamma_LogLikelihood"], "test2_b2sgamma"),
-#     (["theory", "B2Kstargamma_LogLikelihood"], "B2Kstargamma"),
-#     (["theory", "RK_LogLikelihood_LHCb"], "RK"),
-#     (["theory", "RKstar_LogLikelihood_LHCb"], "RKstar"),
-#     (["theory", "B2KstarmumuAng_LogLikelihood_Atlas"], "B2KstarmumuAng_Atlas"),
-#     (["theory", "B2KstarmumuAng_LogLikelihood_CMS"], "B2KstarmumuAng_CMS"),
-#     (["theory", "B2KstarmumuAng_LogLikelihood_LHCb_2020"], "B2KstarmumuAng_LHCb_2020"),
-#     (["theory", "B2KstarmumuAng_LogLikelihood_Belle"], "B2KstarmumuAng_Belle"),
-#     (["theory", "B2KstarellellAng_LogLikelihood_Belle"], "B2KstarellellAng"),
-#     (["theory", "Bu2KstarmumuAng_LogLikelihood_LHCb_2020"], "Bu2KstarmumuAng"),
-#     (["theory", "B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020"], "B2KstareeAng_Lowq2"),
-#     (["theory", "B2KstarmumuBr_LogLikelihood_LHCb"], "B2KstarmumuBr"),
-#     (["theory", "B2KmumuBr_LogLikelihood_LHCb"], "B2KmumuBr"),
-#     (["theory", "Bs2phimumuBr_LogLikelihood"], "Bs2phimumuBr"),
+    # (["theory", "flavour"], "flavour"),
+    # (["theory", "Bs2llp_LogLikelihood"], "Bs2llp"),
+    # (["theory", "B2Kllp_LogLikelihood"], "B2Kllp"),
+    (["theory", "B2mumu_LogLikelihood_Atlas"], "native_B2mumuAtlas"),
+    # (["theory", "B2mumu_LogLikelihood_LHCb"], "B2mumuLHCb"),
+    (["theory", "B2mumu_LogLikelihood_CMS"], "native_B2mumuCMS"),
+    # (["theory", "Bc_lifetime_LogLikelihood"], "Bclifetime"),
+    # (["theory", "RK_RKstarnunu_LogLikelihood"], "RKRKstarnunu"),
+    # (["theory", "deltaMB_LogLikelihood"], "deltaMB"),
+    # (["theory", "deltaMBd_LogLikelihood"], "deltaMBd"),
+    # (["theory", "SL_LogLikelihood"], "SL"),
+    (["theory", "b2sgamma_LogLikelihood"], "native_b2sgamma"),
+    (["theory", "B2Kstargamma_LogLikelihood"], "native_B2Kstargamma"),
+    # (["theory", "RK_LogLikelihood_LHCb"], "RK"),
+    # (["theory", "RKstar_LogLikelihood_LHCb"], "RKstar"),
+    # (["theory", "B2KstarmumuAng_LogLikelihood_Atlas"], "B2KstarmumuAngAtlas"),
+    # (["theory", "B2KstarmumuAng_LogLikelihood_CMS"], "B2KstarmumuAngCMS"),
+    # (["theory", "B2KstarmumuAng_LogLikelihood_LHCb_2020"], "B2KstarmumuAngLHCb2020"),
+    # (["theory", "B2KstarmumuAng_LogLikelihood_Belle"], "B2KstarmumuAngBelle"),
+    # (["theory", "B2KstarellellAng_LogLikelihood_Belle"], "B2KstarellellAng"),
+    # (["theory", "Bu2KstarmumuAng_LogLikelihood_LHCb_2020"], "Bu2KstarmumuAng"),
+    # (["theory", "B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020"], "B2KstareeAngLowq2"),
+    # (["theory", "B2KstarmumuBr_LogLikelihood_LHCb"], "B2KstarmumuBr"),
+    # (["theory", "B2KmumuBr_LogLikelihood_LHCb"], "B2KmumuBr"),
+    # (["theory", "Bs2phimumuBr_LogLikelihood"], "test_Bs2phimumuBr"),
+    # (["theory", "B2mumu_LogLikelihood_Atlas", "B2mumu_LogLikelihood_LHCb", "B2mumu_LogLikelihood_CMS"], "B2mumu"),
+    # (["theory", "B2KstarmumuAng_LogLikelihood_Atlas", "B2KstarmumuAng_LogLikelihood_CMS", "B2KstarmumuAng_LogLikelihood_LHCb_2020", "B2KstarmumuAng_LogLikelihood_Belle"], "B2KstarmumuAng"),
 
-# ]
+]
 
 
 
@@ -196,7 +208,7 @@ class Options:
                          "heavy_scalar_mass_corrections_LogLikelihood_THDM", "scalar_mass_range_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM", "perturbativity_lambdas_LogLikelihood_THDM", 
                          "perturbativity_yukawas_LogLikelihood_THDM"]
     constraints_collider = ["LEP_Higgs_LogLike", "LHC_Higgs_LogLike","HS_ALL","HS_RUN1_SS","HS_LATEST_SS","HS_LATEST_STXS"] #higgs_mass_LogLikelihood
-    constraints_electroweak =  ["oblique_parameters_LogLikelihood_THDM", "lnL_gm2"]
+    constraints_electroweak =  ["oblique_parameters_LogLikelihood_THDM"] # lnL_gm2
     constraints_flavour =  ["Bs2llp_LogLikelihood","B2Kllp_LogLikelihood","B2mumu_LogLikelihood_Atlas","B2mumu_LogLikelihood_LHCb","B2mumu_LogLikelihood_CMS",
                             "dBRBDstartaunu_LogLikelihood","dBRBDtaunu_LogLikelihood","gmu_ge_LogLikelihood","FLDstar_LogLikelihood","Bc_lifetime_LogLikelihood",
                             "RK_RKstarnunu_LogLikelihood","h2taumu_LogLikelihood","t2ch_LogLikelihood","deltaMB_LogLikelihood","deltaMBd_LogLikelihood",
@@ -271,12 +283,17 @@ class Options:
 
     def validate(self):
 
+        # REMOVE ONCE SEGFAULT FIXED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        # !!! get rid of LLs that crash
+        self.RK_LogLikelihood_LHCb = False
+        self.RKstar_LogLikelihood_LHCb = False
+
         # unitarity 
         if self.running == "tree" and self.NLO_unitarity_LogLikelihood_THDM:
             self.NLO_unitarity_LogLikelihood_THDM = False
             self.LO_unitarity_LogLikelihood_THDM = True
 
-        if self.running == "loop" and self.LO_unitarity_LogLikelihood_THDM:
+        if self.running == "loop" and self.LO_unitarity_LogLikelihood_THDM and self.NLO_unitarity_LogLikelihood_THDM:
             self.LO_unitarity_LogLikelihood_THDM = False
             self.NLO_unitarity_LogLikelihood_THDM = True
 
@@ -374,9 +391,9 @@ def patchYaml(options, dir, yaml_name):
     
     # set the speed hacks
     if use_speed_hacks:
-        s = s.replace("#~o:","")
+        s = s.replace("#~o","")
     else:
-        s = s.replace("#~o:","use_speedhacks: false # ")
+        s = s.replace("#~o","use_speedhacks: false # ")
 
 
     # uncomment required constraints
@@ -475,18 +492,16 @@ def patchRunScriptJC(options, dir, yaml_name):
 
 def main():
 
-    counter = 0
+    folders_to_merge = {}
 
     # --- loop over all options ---
 
     for model in models:
         for running in runnings:
             for (constraint, constraint_name) in constraints:
-
-                
-                counter += 1
-
+                counter = 0
                 for (basis,file) in bases:
+                    counter += 1
                     for tanb in tanb_types:
 
                         options = Options()
@@ -511,21 +526,35 @@ def main():
                         # make sure everything is valid
                         options.validate()
 
+                        scanner_suffix = "_" + str(counter) if MODE != "BASH" else ""
+
                         # setup paths
                         constraint_name_full = "_" + constraint_name
-                        options.results_folder = "../../../runs/" + model + running + constraint_name_full + "/"
+                        options.results_folder = "../../../runs/" + model + running + constraint_name_full + scanner_suffix + "/"
                         options.plots_folder = "../plots/" + model + running + constraint_name_full + "/"
                         options.scan_name = file + "_tb"  + tanb + postfix
+
+                        folders_to_merge[options.results_folder] = "../../../runs/" + model + running + constraint_name_full + "/"
 
 
                         # make a new gambit with the options specified above
                         makeGambit(options, generate_gambit_name())
 
+    parent_abs = os.path.abspath(gen_path)
+    if MODE != "BASH":
+        with open(parent_abs + "/merge.sh", "w") as f:
+            f.write("cd gambit_1/yaml_files\n")
+            for k,v in folders_to_merge.items():
+                f.write("rsync -a \"{0}\" \"{1}\"\n".format(k,v))
+                f.write("rm -rf \"{0}\"\n".format(k))
+
+        if platform == "linux" or platform == "linux2":
+            os.system("chmod +x " + parent_abs + "/merge.sh")
+
     # --- create the runner script --- 
 
     # write it
     print("generating runner script...")
-    parent_abs = os.path.abspath(gen_path)
     file = open(parent_abs + "/runScans.sh", "w")
     for i,dir in enumerate(gambit_dirs):
         file.write("echo \"------------------------------\"\n")

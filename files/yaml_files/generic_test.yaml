@@ -45,38 +45,31 @@ Parameters:
       # lower limit of tanb due to perturbativity of top Yukawa coupling
       # range of m12_2 hard to justify so we use a logarithmic prior over a large region
       #      but m12_2 too low tends to cause negative masses
-
-      mh:
-          range: [115,135]
-          prior_Type: flat
-      mH:
-          range: [140, 400]
-          prior_Type: flat
-      cba:
-          range: [-0.55, +0.55]
-          prior_Type: flat
-      tanb:
-          range: [0.001, 50]
-          prior_Type: tanb
-      Lambda4:
-          # range: [-13, +13]
-          # range: [-13, +13]
-          range: [-4,5]
-          prior_Type: flat
-      Lambda5:
-          # range: [-13, +13]
-          # range: [-9, +9]
-          range: [-3,4]
-          prior_Type: flat
-      Lambda7:
-          # range: [-13, +13]
-          # range: [-5, +5]
-          range: [-2,2.5]
-          prior_Type: flat
+      lambda1:
+          range: [3, 12]
+          prior_type: flat
+      lambda2:
+          range: [1, 12]
+          prior_type: flat
+      lambda3:
+          range: [-12, 3]
+          prior_type: flat
+      lambda4:
+          range: [-12, 7]
+          prior_type: flat
+      lambda5:
+          range: [-8, 12]
+          prior_type: flat
       lambda6:
           fixed_value: 0.0
       lambda7:
           fixed_value: 0.0
+      m12_2:
+          range: [-1e3, 2.25e6]
+          prior_type: flat
+      tanb:
+          range: [0.001, 70]
+          prior_type: flat
       #~~Qin: 91.1876 # = mZ
 
 
@@ -170,6 +163,13 @@ ObsLikes:
   #      THEORETICAL LIKELIHOODS        #
   #-------------------------------------#
 
+  # prevents Higgs pole mass from going out of set range (soft-cutoff)
+  - purpose:    LogLike
+    capability: higgs_mass_LogLikelihood
+    options:
+      higgs_mass_uncertainty: 10
+      valid_range: 90
+
   # Checks that the LO or NLO scattering-matrix is unitary
   # Calculates and applies limit on eigenvalues of matrix
   # Likelihood type: Half-Gaussian
@@ -207,13 +207,6 @@ ObsLikes:
   #~5- purpose:    LogLike
     #~5capability: heavy_scalar_mass_corrections_LogLikelihood_THDM
 
-  # prevents Higgs pole mass from going out of set range (soft-cutoff)
-  - purpose:    LogLike
-    capability: higgs_mass_LogLikelihood
-    options:
-      higgs_mass_uncertainty: 10
-      valid_range: 40
-
   # enforces a mass range for all scalars from the yaml
   # these are specified by the run options (given below):
   # (*) maximum_scalar_mass
@@ -236,7 +229,7 @@ ObsLikes:
   # perturbativity constraint on yukawas
   #~9- purpose:    LogLike
     #~9capability: perturbativity_yukawas_LogLikelihood_THDM
-
+    
   #-------------------------------------#
   #      COLLIDER LIKELIHOODS           #
   #-------------------------------------#
@@ -636,7 +629,7 @@ Rules:
     options:
       dummy: true
       #~ouse_speedhacks: true
-
+      
   - capability: decay_rates
     function: all_decays
 
