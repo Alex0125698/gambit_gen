@@ -60,18 +60,18 @@ Parameters:
           prior_Type: flat
       Lambda4:
           # range: [-13, +13]
-          # range: [-13, +13]
-          range: [-4,5]
+          range: [-13, +13]
+          # range: [-4,5]
           prior_Type: flat
       Lambda5:
           # range: [-13, +13]
-          # range: [-9, +9]
-          range: [-3,4]
+          range: [-9, +9]
+          # range: [-3,4]
           prior_Type: flat
       Lambda7:
           # range: [-13, +13]
-          # range: [-5, +5]
-          range: [-2,2.5]
+          range: [-5, +5]
+          # range: [-2,2.5]
           prior_Type: flat
       lambda6:
           fixed_value: 0.0
@@ -696,22 +696,22 @@ Rules:
   - capability: B2KstarmumuAng_LogLikelihood_Atlas
     function: HEPLike_B2KstarmumuAng_LogLikelihood_Atlas
     options:
-      ignore_lowq2_bin: false
+      ignore_lowq2_bin: true
 
   - capability: B2KstarmumuAng_LogLikelihood_Belle
     function: HEPLike_B2KstarmumuAng_LogLikelihood_Belle
     options:
-      ignore_lowq2_bin: false
+      ignore_lowq2_bin: true
 
   - capability: B2KstarmumuAng_LogLikelihood_LHCb_2020
     function: HEPLike_B2KstarmumuAng_LogLikelihood_LHCb_2020
     options:
-      ignore_lowq2_bin: false
+      ignore_lowq2_bin: true
 
   - capability: B2KstarmumuBr_LogLikelihood_LHCb
     function: HEPLike_B2KstarmumuBr_LogLikelihood_LHCb
     options:
-      ignore_lowq2_bin: false
+      ignore_lowq2_bin: true
 
   - capability: muon_gm2
     # function: SuperIso_muon_gm2

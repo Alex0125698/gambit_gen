@@ -30,34 +30,34 @@
 # and a script is generated for running all simultaneously
 # WARNING: be careful not to generate too many, otherwise you will run out of storage
 
-use_speed_hacks = True
-postfix = '_49'
+use_speed_hacks = False
+postfix = '_63'
 
 gen_path = 'gens' + postfix
 
 conv_threshold = 1e-6
-required_printed_points = 600000
+required_printed_points = 250000
 required_points = -1
-required_scan_duration = 19*60 # in seconds
+required_scan_duration = 20*60 # in seconds
 
 NODE_COUNT = 1  # set to desired number of nodes per gambit
-CORE_COUNT = 72 # set to number of cores per node
+CORE_COUNT = 16 # set to number of cores per node
 
 # either "DIRAC" or "BASH"
-MODE = "DIRAC"
+MODE = "BASH"
 
 # allowed options: "THDM", "THDMI", "THDMII", "THDMLS", or "THDMflipped"
 models = ["THDMI","THDMII"]
 
 # allowed options: "tree" or "loop"
-runnings = ["tree","loop"]
+runnings = ["tree"]
 
 # allowed options: "generic", "hybrid_lambda_1", "hybrid_lambda_2", "hybrid_Higgs", "higgs", or "physical"
 
 # instead of setting the basis, we set the file. This will allow us to run targetted scans in the same basis.
 # not that we cant simply change the basis as the params will be wrong
 
-# 19
+# 20
 bases = [
 
     # ("generic", "generic_test"),
@@ -67,6 +67,7 @@ bases = [
     # ("hybrid_Higgs", "hybrid1_high_mass_log"),
     # ("hybrid_Higgs", "hybrid1_high_mass"),
     ("hybrid_Higgs", "hybrid1_log"),
+    ("hybrid_Higgs2", "hybrid2_alignment"),
     # ("hybrid_Higgs", "hybrid1_low_cosba"),
     # ("hybrid_Higgs", "hybrid1_low_mass400"),
     # ("hybrid_Higgs", "hybrid1_low_mass650"),
@@ -131,12 +132,12 @@ tanb_types = ["flat"]
 # 6
 # constraints = [
 
-#     # (["theory", "collider"], "collider"),
-#     # (["theory", "LEP_Higgs_LogLike"], "HB"),
-#     # (["theory", "LHC_Higgs_LogLike", "HS_ALL"], "HS"),
-#     # (["theory", "LHC_Higgs_LogLike", "HS_RUN1_SS"], "HSRUN1SS"),
+#     (["theory", "collider"], "collider"),
+#     (["theory", "LEP_Higgs_LogLike"], "HB"),
+#     (["theory", "LHC_Higgs_LogLike", "HS_ALL"], "HS"),
+#     (["theory", "LHC_Higgs_LogLike", "HS_RUN1_SS"], "HSRUN1SS"),
 #     (["theory", "LHC_Higgs_LogLike", "HS_LATEST_SS"], "HSLATESTSS"),
-#     # (["theory", "LHC_Higgs_LogLike", "HS_LATEST_STXS"], "HSLATESTSTXS"),
+#     (["theory", "LHC_Higgs_LogLike", "HS_LATEST_STXS"], "HSLATESTSTXS"),
 
 # ]
 
@@ -146,32 +147,32 @@ tanb_types = ["flat"]
 constraints = [
 
     # (["theory", "flavour"], "flavour"),
-    # (["theory", "Bs2llp_LogLikelihood"], "Bs2llp"),
-    # (["theory", "B2Kllp_LogLikelihood"], "B2Kllp"),
-    (["theory", "B2mumu_LogLikelihood_Atlas"], "native_B2mumuAtlas"),
-    # (["theory", "B2mumu_LogLikelihood_LHCb"], "B2mumuLHCb"),
-    (["theory", "B2mumu_LogLikelihood_CMS"], "native_B2mumuCMS"),
-    # (["theory", "Bc_lifetime_LogLikelihood"], "Bclifetime"),
-    # (["theory", "RK_RKstarnunu_LogLikelihood"], "RKRKstarnunu"),
-    # (["theory", "deltaMB_LogLikelihood"], "deltaMB"),
-    # (["theory", "deltaMBd_LogLikelihood"], "deltaMBd"),
-    # (["theory", "SL_LogLikelihood"], "SL"),
-    (["theory", "b2sgamma_LogLikelihood"], "native_b2sgamma"),
-    (["theory", "B2Kstargamma_LogLikelihood"], "native_B2Kstargamma"),
-    # (["theory", "RK_LogLikelihood_LHCb"], "RK"),
-    # (["theory", "RKstar_LogLikelihood_LHCb"], "RKstar"),
-    # (["theory", "B2KstarmumuAng_LogLikelihood_Atlas"], "B2KstarmumuAngAtlas"),
-    # (["theory", "B2KstarmumuAng_LogLikelihood_CMS"], "B2KstarmumuAngCMS"),
-    # (["theory", "B2KstarmumuAng_LogLikelihood_LHCb_2020"], "B2KstarmumuAngLHCb2020"),
-    # (["theory", "B2KstarmumuAng_LogLikelihood_Belle"], "B2KstarmumuAngBelle"),
-    # (["theory", "B2KstarellellAng_LogLikelihood_Belle"], "B2KstarellellAng"),
-    # (["theory", "Bu2KstarmumuAng_LogLikelihood_LHCb_2020"], "Bu2KstarmumuAng"),
-    # (["theory", "B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020"], "B2KstareeAngLowq2"),
-    # (["theory", "B2KstarmumuBr_LogLikelihood_LHCb"], "B2KstarmumuBr"),
-    # (["theory", "B2KmumuBr_LogLikelihood_LHCb"], "B2KmumuBr"),
-    # (["theory", "Bs2phimumuBr_LogLikelihood"], "test_Bs2phimumuBr"),
-    # (["theory", "B2mumu_LogLikelihood_Atlas", "B2mumu_LogLikelihood_LHCb", "B2mumu_LogLikelihood_CMS"], "B2mumu"),
-    # (["theory", "B2KstarmumuAng_LogLikelihood_Atlas", "B2KstarmumuAng_LogLikelihood_CMS", "B2KstarmumuAng_LogLikelihood_LHCb_2020", "B2KstarmumuAng_LogLikelihood_Belle"], "B2KstarmumuAng"),
+#     # (["theory", "Bs2llp_LogLikelihood"], "Bs2llp"),
+#     (["theory", "B2Kllp_LogLikelihood"], "B2Kllp"),
+#     (["theory", "B2mumu_LogLikelihood_Atlas"], "B2mumuAtlas"),
+#     (["theory", "B2mumu_LogLikelihood_LHCb"], "B2mumuLHCb"),
+    # (["theory", "B2mumu_LogLikelihood_CMS"], "B2mumuCMS"),
+#     (["theory", "Bc_lifetime_LogLikelihood"], "Bclifetime"),
+#     # (["theory", "RK_RKstarnunu_LogLikelihood"], "RKRKstarnunu"),
+#     # (["theory", "deltaMB_LogLikelihood"], "deltaMB"),
+#     # (["theory", "deltaMBd_LogLikelihood"], "deltaMBd"),
+#     (["theory", "SL_LogLikelihood"], "SL"),
+    # (["theory", "b2sgamma_LogLikelihood"], "test_b2sgamma"),
+    # (["theory", "B2Kstargamma_LogLikelihood"], "test_B2Kstargamma"),
+    (["theory", "RK_LogLikelihood_LHCb"], "RK"),
+    (["theory", "RKstar_LogLikelihood_LHCb"], "RKstar"),
+    # (["theory", "B2KstarmumuAng_LogLikelihood_Atlas"], "test_B2KstarmumuAngAtlas"),
+#     (["theory", "B2KstarmumuAng_LogLikelihood_CMS"], "B2KstarmumuAngCMS"),
+#     (["theory", "B2KstarmumuAng_LogLikelihood_LHCb_2020"], "B2KstarmumuAngLHCb2020"),
+#     (["theory", "B2KstarmumuAng_LogLikelihood_Belle"], "B2KstarmumuAngBelle"),
+#     # (["theory", "B2KstarellellAng_LogLikelihood_Belle"], "B2KstarellellAng"),
+#     (["theory", "Bu2KstarmumuAng_LogLikelihood_LHCb_2020"], "Bu2KstarmumuAng"),
+#     # (["theory", "B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020"], "B2KstareeAngLowq2"),
+#     (["theory", "B2KstarmumuBr_LogLikelihood_LHCb"], "B2KstarmumuBr"),
+#     (["theory", "B2KmumuBr_LogLikelihood_LHCb"], "B2KmumuBr"),
+#     (["theory", "Bs2phimumuBr_LogLikelihood"], "Bs2phimumuBr"),
+#     (["theory", "B2mumu_LogLikelihood_Atlas", "B2mumu_LogLikelihood_LHCb", "B2mumu_LogLikelihood_CMS"], "B2mumu"),
+#     (["theory", "B2KstarmumuAng_LogLikelihood_Atlas", "B2KstarmumuAng_LogLikelihood_CMS", "B2KstarmumuAng_LogLikelihood_LHCb_2020", "B2KstarmumuAng_LogLikelihood_Belle"], "B2KstarmumuAng"),
 
 ]
 
@@ -285,8 +286,14 @@ class Options:
 
         # REMOVE ONCE SEGFAULT FIXED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         # !!! get rid of LLs that crash
-        self.RK_LogLikelihood_LHCb = False
-        self.RKstar_LogLikelihood_LHCb = False
+        # self.RK_LogLikelihood_LHCb = False
+        # self.RKstar_LogLikelihood_LHCb = False
+        # self.B2KstarellellAng_LogLikelihood_Belle = False #!!!!!!!!!!!!!!!!!!!
+        # self.deltaMB_LogLikelihood = False #!!!!!!!!!!!!!!!!!!!
+        # self.deltaMBd_LogLikelihood = False #!!!!!!!!!!!!!!!!!!!
+        # self.RK_RKstarnunu_LogLikelihood = False #!!!!!!!!!!!!!!!!!!!
+        # self.B2KstareeAngLowq2 = False #!!!!!!!!!!!!!!!!!!!
+        # self.Bs2llp = False #!!!!!!!!!!!!!!!!!!!
 
         # unitarity 
         if self.running == "tree" and self.NLO_unitarity_LogLikelihood_THDM:
@@ -534,22 +541,49 @@ def main():
                         options.plots_folder = "../plots/" + model + running + constraint_name_full + "/"
                         options.scan_name = file + "_tb"  + tanb + postfix
 
-                        folders_to_merge[options.results_folder] = "../../../runs/" + model + running + constraint_name_full + "/"
+                        tmp = "../runs/" + model + running + constraint_name_full + scanner_suffix + "/"
+                        folders_to_merge[tmp] = "../runs/" + model + running + constraint_name_full + "/"
 
+                        # for i in range(0,CORE_COUNT):
+                        #     folders_to_merge[options.results_folder + 'samples/' + options.scan_name + ".hdf5_temp_" + str(i)] = "../../../runs/" + model + running + constraint_name_full + "/"
 
                         # make a new gambit with the options specified above
                         makeGambit(options, generate_gambit_name())
 
     parent_abs = os.path.abspath(gen_path)
     if MODE != "BASH":
-        with open(parent_abs + "/merge.sh", "w") as f:
-            f.write("cd gambit_1/yaml_files\n")
-            for k,v in folders_to_merge.items():
-                f.write("rsync -a \"{0}\" \"{1}\"\n".format(k,v))
-                f.write("rm -rf \"{0}\"\n".format(k))
+        with open(parent_abs + "/merge.py", "w") as f:
+            f.write("#!/bin/python3\n")
+            f.write("import os, shutil, pathlib, fnmatch\n")
+            f.write("def move_dir(src: str, dst: str, pattern: str = '*'):\n")
+            f.write("    if not os.path.isdir(src):\n")
+            f.write("        return\n")
+            f.write("    if not os.path.isdir(dst):\n")
+            f.write("        pathlib.Path(dst).mkdir(parents=True, exist_ok=True)\n")
+            f.write("    for f in fnmatch.filter(os.listdir(src), pattern):\n")
+            f.write("        shutil.move(os.path.join(src, f), os.path.join(dst, f))\n\n")
+            
+
+            # f.write("cd gambit_1/yaml_files\n")
+            # f.write( "import os\n")
+            # f.write( "import shutil\n")
+            # f.write( "from pathlib import Path\n")
+            for src,dst in folders_to_merge.items():
+                f.write('move_dir(\"{0}samples\",\"{1}samples\")\n'.format(src,dst))
+                f.write("if os.path.isdir(\"{0}\"):\n".format(src))
+                f.write("    os.system('rm -rf \"{0}\"')\n\n".format(src))
+                # f.write( 'Path("{0}samples").mkdir(parents=True, exist_ok=True)\n'.format(dst))
+                # f.write( 'if os.path.exists(\"{0}samples\"):\n'.format(src))
+                # f.write( '    files = os.listdir(\"{0}samples\")\n'.format(src))
+                # f.write( '    for f in files:\n')
+                # f.write( '        shutil.move(f.name,\"{0}samples\")\n'.format(dst))
+
+                # f.write("mv \"{0}\" \"{1}samples\"\n".format(k,v))
+                # f.write("rsync -a \"{0}\" \"{1}\"\n".format(k,v))
+                # f.write("rm -rf \"{0}\"\n".format(k))
 
         if platform == "linux" or platform == "linux2":
-            os.system("chmod +x " + parent_abs + "/merge.sh")
+            os.system("chmod +x " + parent_abs + "/merge.py")
 
     # --- create the runner script --- 
 
@@ -575,3 +609,5 @@ def main():
 
 # run the main function
 main()
+
+

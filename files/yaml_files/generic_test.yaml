@@ -689,22 +689,22 @@ Rules:
   - capability: B2KstarmumuAng_LogLikelihood_Atlas
     function: HEPLike_B2KstarmumuAng_LogLikelihood_Atlas
     options:
-      ignore_lowq2_bin: false
+      ignore_lowq2_bin: true
 
   - capability: B2KstarmumuAng_LogLikelihood_Belle
     function: HEPLike_B2KstarmumuAng_LogLikelihood_Belle
     options:
-      ignore_lowq2_bin: false
+      ignore_lowq2_bin: true
 
   - capability: B2KstarmumuAng_LogLikelihood_LHCb_2020
     function: HEPLike_B2KstarmumuAng_LogLikelihood_LHCb_2020
     options:
-      ignore_lowq2_bin: false
+      ignore_lowq2_bin: true
 
   - capability: B2KstarmumuBr_LogLikelihood_LHCb
     function: HEPLike_B2KstarmumuBr_LogLikelihood_LHCb
     options:
-      ignore_lowq2_bin: false
+      ignore_lowq2_bin: true
 
   - capability: muon_gm2
     # function: SuperIso_muon_gm2

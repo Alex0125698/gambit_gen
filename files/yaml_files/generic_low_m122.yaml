@@ -47,28 +47,28 @@ Parameters:
       #      but m12_2 too low tends to cause negative masses
       lambda1:
           # range: [0, 13]
-          # range: [0, 9]
-          range: [0, 5]
+          range: [0, 9]
+          # range: [0, 5]
           prior_type: flat
       lambda2:
           # range: [0, 13]
-          # range: [0, 9]
-          range: [0, 6]
+          range: [0, 9]
+          # range: [0, 6]
           prior_type: flat
       lambda3:
           # range: [-13, 13]
-          # range: [-8, 13]
-          range: [-4, 5]
+          range: [-8, 13]
+          # range: [-4, 5]
           prior_type: flat
       lambda4:
           # range: [-13, 13]
-          # range: [-13, 13]
-          range: [-5, 5]
+          range: [-13, 13]
+          # range: [-5, 5]
           prior_type: flat
       lambda5:
           # range: [-13, 13]
-          # range: [-10, 9]
-          range: [-4, 4]
+          range: [-10, 9]
+          # range: [-4, 4]
           prior_type: flat
       lambda6:
           fixed_value: 0.0
@@ -699,22 +699,22 @@ Rules:
   - capability: B2KstarmumuAng_LogLikelihood_Atlas
     function: HEPLike_B2KstarmumuAng_LogLikelihood_Atlas
     options:
-      ignore_lowq2_bin: false
+      ignore_lowq2_bin: true
 
   - capability: B2KstarmumuAng_LogLikelihood_Belle
     function: HEPLike_B2KstarmumuAng_LogLikelihood_Belle
     options:
-      ignore_lowq2_bin: false
+      ignore_lowq2_bin: true
 
   - capability: B2KstarmumuAng_LogLikelihood_LHCb_2020
     function: HEPLike_B2KstarmumuAng_LogLikelihood_LHCb_2020
     options:
-      ignore_lowq2_bin: false
+      ignore_lowq2_bin: true
 
   - capability: B2KstarmumuBr_LogLikelihood_LHCb
     function: HEPLike_B2KstarmumuBr_LogLikelihood_LHCb
     options:
-      ignore_lowq2_bin: false
+      ignore_lowq2_bin: true
 
   - capability: muon_gm2
     # function: SuperIso_muon_gm2

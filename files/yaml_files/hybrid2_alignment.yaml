@@ -50,10 +50,10 @@ Parameters:
           range: [115,135]
           prior_Type: flat
       mHp:
-          range: [0, 200]
+          range: [0, 2500]
           prior_Type: flat
       cba:
-          range: [-0.55, +0.55]
+          range: [-0.04, +0.04]
           prior_Type: flat
       tanb:
           range: [0.001, 70]
