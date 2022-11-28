@@ -1,3 +1,5 @@
+#!/bin/python3
+
 # ----------- instructions -------------
 
 # 1. compile gambit as normal
@@ -30,27 +32,27 @@
 # and a script is generated for running all simultaneously
 # WARNING: be careful not to generate too many, otherwise you will run out of storage
 
-use_speed_hacks = False
-postfix = '_63'
+use_speed_hacks = True
+postfix = '_68'
 
 gen_path = 'gens' + postfix
 
 conv_threshold = 1e-6
-required_printed_points = 250000
+required_printed_points = 400000
 required_points = -1
-required_scan_duration = 20*60 # in seconds
+required_scan_duration = 30*60 # in seconds
 
 NODE_COUNT = 1  # set to desired number of nodes per gambit
-CORE_COUNT = 16 # set to number of cores per node
+CORE_COUNT = 72 # set to number of cores per node
 
 # either "DIRAC" or "BASH"
-MODE = "BASH"
+MODE = "DIRAC"
 
 # allowed options: "THDM", "THDMI", "THDMII", "THDMLS", or "THDMflipped"
 models = ["THDMI","THDMII"]
 
 # allowed options: "tree" or "loop"
-runnings = ["tree"]
+runnings = ["loop"]
 
 # allowed options: "generic", "hybrid_lambda_1", "hybrid_lambda_2", "hybrid_Higgs", "higgs", or "physical"
 
@@ -62,10 +64,10 @@ bases = [
 
     # ("generic", "generic_test"),
     ("generic", "generic"),
-    # ("generic", "generic_low_m122"),
+    ("generic", "generic_low_m122"),
     # ("hybrid_Higgs", "hybrid1_high_cosba"),
-    # ("hybrid_Higgs", "hybrid1_high_mass_log"),
-    # ("hybrid_Higgs", "hybrid1_high_mass"),
+    ("hybrid_Higgs", "hybrid1_high_mass_log"),
+    ("hybrid_Higgs", "hybrid1_high_mass"),
     ("hybrid_Higgs", "hybrid1_log"),
     ("hybrid_Higgs2", "hybrid2_alignment"),
     # ("hybrid_Higgs", "hybrid1_low_cosba"),
@@ -146,33 +148,34 @@ tanb_types = ["flat"]
 # 26-2
 constraints = [
 
-    # (["theory", "flavour"], "flavour"),
-#     # (["theory", "Bs2llp_LogLikelihood"], "Bs2llp"),
-#     (["theory", "B2Kllp_LogLikelihood"], "B2Kllp"),
-#     (["theory", "B2mumu_LogLikelihood_Atlas"], "B2mumuAtlas"),
-#     (["theory", "B2mumu_LogLikelihood_LHCb"], "B2mumuLHCb"),
+    (["all"], "all"),
+    (["theory", "flavour"], "flavour"),
+    # # (["theory", "Bs2llp_LogLikelihood"], "Bs2llp"),
+    # (["theory", "B2Kllp_LogLikelihood"], "B2Kllp"),
+    # (["theory", "B2mumu_LogLikelihood_Atlas"], "B2mumuAtlas"),
+    # (["theory", "B2mumu_LogLikelihood_LHCb"], "B2mumuLHCb"),
     # (["theory", "B2mumu_LogLikelihood_CMS"], "B2mumuCMS"),
-#     (["theory", "Bc_lifetime_LogLikelihood"], "Bclifetime"),
-#     # (["theory", "RK_RKstarnunu_LogLikelihood"], "RKRKstarnunu"),
-#     # (["theory", "deltaMB_LogLikelihood"], "deltaMB"),
-#     # (["theory", "deltaMBd_LogLikelihood"], "deltaMBd"),
-#     (["theory", "SL_LogLikelihood"], "SL"),
-    # (["theory", "b2sgamma_LogLikelihood"], "test_b2sgamma"),
-    # (["theory", "B2Kstargamma_LogLikelihood"], "test_B2Kstargamma"),
-    (["theory", "RK_LogLikelihood_LHCb"], "RK"),
-    (["theory", "RKstar_LogLikelihood_LHCb"], "RKstar"),
-    # (["theory", "B2KstarmumuAng_LogLikelihood_Atlas"], "test_B2KstarmumuAngAtlas"),
-#     (["theory", "B2KstarmumuAng_LogLikelihood_CMS"], "B2KstarmumuAngCMS"),
-#     (["theory", "B2KstarmumuAng_LogLikelihood_LHCb_2020"], "B2KstarmumuAngLHCb2020"),
-#     (["theory", "B2KstarmumuAng_LogLikelihood_Belle"], "B2KstarmumuAngBelle"),
-#     # (["theory", "B2KstarellellAng_LogLikelihood_Belle"], "B2KstarellellAng"),
-#     (["theory", "Bu2KstarmumuAng_LogLikelihood_LHCb_2020"], "Bu2KstarmumuAng"),
-#     # (["theory", "B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020"], "B2KstareeAngLowq2"),
-#     (["theory", "B2KstarmumuBr_LogLikelihood_LHCb"], "B2KstarmumuBr"),
-#     (["theory", "B2KmumuBr_LogLikelihood_LHCb"], "B2KmumuBr"),
-#     (["theory", "Bs2phimumuBr_LogLikelihood"], "Bs2phimumuBr"),
-#     (["theory", "B2mumu_LogLikelihood_Atlas", "B2mumu_LogLikelihood_LHCb", "B2mumu_LogLikelihood_CMS"], "B2mumu"),
-#     (["theory", "B2KstarmumuAng_LogLikelihood_Atlas", "B2KstarmumuAng_LogLikelihood_CMS", "B2KstarmumuAng_LogLikelihood_LHCb_2020", "B2KstarmumuAng_LogLikelihood_Belle"], "B2KstarmumuAng"),
+    # (["theory", "Bc_lifetime_LogLikelihood"], "Bclifetime"),
+    # # (["theory", "RK_RKstarnunu_LogLikelihood"], "RKRKstarnunu"),
+    # # (["theory", "deltaMB_LogLikelihood"], "deltaMB"),
+    # # (["theory", "deltaMBd_LogLikelihood"], "deltaMBd"),
+    (["theory", "SL_LogLikelihood"], "SL"),
+    (["theory", "b2sgamma_LogLikelihood"], "b2sgamma"),
+    (["theory", "B2Kstargamma_LogLikelihood"], "B2Kstargamma"),
+    # (["theory", "RK_LogLikelihood_LHCb"], "RK"),
+    # (["theory", "RKstar_LogLikelihood_LHCb"], "RKstar"),
+    # (["theory", "B2KstarmumuAng_LogLikelihood_Atlas"], "B2KstarmumuAngAtlas"),
+    # (["theory", "B2KstarmumuAng_LogLikelihood_CMS"], "B2KstarmumuAngCMS"),
+    # (["theory", "B2KstarmumuAng_LogLikelihood_LHCb_2020"], "B2KstarmumuAngLHCb2020"),
+    # (["theory", "B2KstarmumuAng_LogLikelihood_Belle"], "B2KstarmumuAngBelle"),
+    # # (["theory", "B2KstarellellAng_LogLikelihood_Belle"], "B2KstarellellAng"),
+    (["theory", "Bu2KstarmumuAng_LogLikelihood_LHCb_2020"], "Bu2KstarmumuAng"),
+    # # (["theory", "B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020"], "B2KstareeAngLowq2"),
+    (["theory", "B2KstarmumuBr_LogLikelihood_LHCb"], "B2KstarmumuBr"),
+    (["theory", "B2KmumuBr_LogLikelihood_LHCb"], "B2KmumuBr"),
+    (["theory", "Bs2phimumuBr_LogLikelihood"], "Bs2phimumuBr"),
+    # (["theory", "B2mumu_LogLikelihood_Atlas", "B2mumu_LogLikelihood_LHCb", "B2mumu_LogLikelihood_CMS"], "B2mumu"),
+    # (["theory", "B2KstarmumuAng_LogLikelihood_Atlas", "B2KstarmumuAng_LogLikelihood_CMS", "B2KstarmumuAng_LogLikelihood_LHCb_2020", "B2KstarmumuAng_LogLikelihood_Belle"], "B2KstarmumuAng"),
 
 ]
 
@@ -286,11 +289,11 @@ class Options:
 
         # REMOVE ONCE SEGFAULT FIXED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         # !!! get rid of LLs that crash
-        # self.RK_LogLikelihood_LHCb = False
-        # self.RKstar_LogLikelihood_LHCb = False
+        self.RK_LogLikelihood_LHCb = False
+        self.RKstar_LogLikelihood_LHCb = False
         # self.B2KstarellellAng_LogLikelihood_Belle = False #!!!!!!!!!!!!!!!!!!!
-        # self.deltaMB_LogLikelihood = False #!!!!!!!!!!!!!!!!!!!
-        # self.deltaMBd_LogLikelihood = False #!!!!!!!!!!!!!!!!!!!
+        self.deltaMB_LogLikelihood = False #!!!!!!!!!!!!!!!!!!!
+        self.deltaMBd_LogLikelihood = False #!!!!!!!!!!!!!!!!!!!
         # self.RK_RKstarnunu_LogLikelihood = False #!!!!!!!!!!!!!!!!!!!
         # self.B2KstareeAngLowq2 = False #!!!!!!!!!!!!!!!!!!!
         # self.Bs2llp = False #!!!!!!!!!!!!!!!!!!!
