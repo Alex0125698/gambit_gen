@@ -32,6 +32,9 @@
 # and a script is generated for running all simultaneously
 # WARNING: be careful not to generate too many, otherwise you will run out of storage
 
+yaml_dir = 'yaml_files_full'
+# yaml_dir = 'yaml_files_med'
+# yaml_dir = 'yaml_files_small'
 use_speed_hacks = True
 postfix = '_71'
 
@@ -366,11 +369,17 @@ def makeGambit(options, dir):
 def patchYaml(options, dir, yaml_name):
 
     # read yaml file into string
-    file = open(gen_path+"/" + dir + "/yaml_files/" + yaml_name, 'r')
+    file = open(gen_path+"/" + dir + "/" + yaml_dir + "/" + yaml_name, 'r')
     s = file.read()
     file.close()
 
-    print("DEBUG: patching " + gen_path+"/" + dir + "/yaml_files/" + yaml_name)
+    shutil.rmtree(gen_path+"/" + dir + "/" + yaml_dir + "/" + "yaml_files_full")
+    shutil.rmtree(gen_path+"/" + dir + "/" + yaml_dir + "/" + "yaml_files_med")
+    shutil.rmtree(gen_path+"/" + dir + "/" + yaml_dir + "/" + "yaml_files_small")
+
+    # remove useless yaml dirs
+
+    print("DEBUG: patching " + gen_path+"/" + dir + "/" + yaml_dir + "/" + yaml_name, 'r')
 
     # set basis
     s = s.replace("prior_Type: tanb", "prior_type: " + options.tanb_type)
