@@ -32,18 +32,18 @@
 # and a script is generated for running all simultaneously
 # WARNING: be careful not to generate too many, otherwise you will run out of storage
 
-yaml_dir = 'yaml_files_full'
+# yaml_dir = 'yaml_files_full'
 # yaml_dir = 'yaml_files_med'
-# yaml_dir = 'yaml_files_small'
+yaml_dir = 'yaml_files_small'
 use_speed_hacks = True
-postfix = '_71'
+postfix = '_82'
 
 gen_path = 'gens' + postfix
 
 conv_threshold = 1e-6
-required_printed_points = 400000
+required_printed_points = 180000
 required_points = -1
-required_scan_duration = 10*60 # in seconds
+required_scan_duration = 35*60 # in seconds
 
 NODE_COUNT = 1  # set to desired number of nodes per gambit
 CORE_COUNT = 72 # set to number of cores per node
@@ -52,7 +52,7 @@ CORE_COUNT = 72 # set to number of cores per node
 MODE = "DIRAC"
 
 # allowed options: "THDM", "THDMI", "THDMII", "THDMLS", or "THDMflipped"
-models = ["THDMI"]
+models = ["THDMI","THDMII"]
 
 # allowed options: "tree" or "loop"
 runnings = ["loop"]
@@ -65,27 +65,26 @@ runnings = ["loop"]
 # 20
 bases = [
 
-    # ("generic", "generic_test"),
     ("generic", "generic"),
-    # ("generic", "generic_low_m122"),
-    # ("hybrid_Higgs", "hybrid1_high_cosba"),
-    # ("hybrid_Higgs", "hybrid1_high_mass_log"),
-    # ("hybrid_Higgs", "hybrid1_high_mass"),
-    # ("hybrid_Higgs", "hybrid1_log"),
-    # ("hybrid_Higgs2", "hybrid2_alignment"),
-    # ("hybrid_Higgs", "hybrid1_low_cosba"),
-    # ("hybrid_Higgs", "hybrid1_low_mass400"),
-    # ("hybrid_Higgs", "hybrid1_low_mass650"),
-    # ("hybrid_Higgs", "hybrid1_low_tanb"),
-    # ("hybrid_Higgs", "hybrid1_tanb1p5"),
-    # ("hybrid_Higgs", "hybrid1_tanb12"),
-    # ("hybrid_Higgs", "hybrid1_tanb25"),
-    # ("hybrid_Higgs", "hybrid1_tanb36"),
-    # ("hybrid_Higgs", "hybrid1_tanb45"),
-    # ("hybrid_Higgs", "hybrid1"),
-    # ("hybrid_Higgs2", "hybrid2_low_mass200"),
-    # ("hybrid_Higgs2", "hybrid2_low_mass350"),
-    # ("physical", "physical"),
+    ("generic", "generic_low_m122"),
+    ("hybrid_Higgs", "hybrid1_high_cosba"),
+    ("hybrid_Higgs", "hybrid1_high_mass_log"),
+    ("hybrid_Higgs", "hybrid1_high_mass"),
+    ("hybrid_Higgs", "hybrid1_log"),
+    ("hybrid_Higgs2", "hybrid2_alignment"),
+    ("hybrid_Higgs", "hybrid1_low_cosba"),
+    ("hybrid_Higgs", "hybrid1_low_mass400"),
+    ("hybrid_Higgs", "hybrid1_low_mass650"),
+    ("hybrid_Higgs", "hybrid1_low_tanb"),
+    ("hybrid_Higgs", "hybrid1_tanb1p5"),
+    ("hybrid_Higgs", "hybrid1_tanb12"),
+    ("hybrid_Higgs", "hybrid1_tanb25"),
+    ("hybrid_Higgs", "hybrid1_tanb36"),
+    ("hybrid_Higgs", "hybrid1_tanb45"),
+    ("hybrid_Higgs", "hybrid1"),
+    ("hybrid_Higgs2", "hybrid2_low_mass200"),
+    ("hybrid_Higgs2", "hybrid2_low_mass350"),
+    ("physical", "physical"),
 
 ]
 
@@ -103,11 +102,11 @@ tanb_types = ["flat"]
 # ---- COMBINED SCANS ----
 
 # 1
-constraints = [
+# constraints = [
 
-    (["all"], "all"),
+#     (["all"], "all"),
 
-]
+# ]
 
 # ---- THEORY SCANS ----
 
@@ -115,13 +114,12 @@ constraints = [
 # constraints = [
 
 #     (["theory"], "theory"),
-#     # (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "LO_unitarity_LogLikelihood_THDM"], "LO"),
-#     # (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "NLO_unitarity_LogLikelihood_THDM"], "NLO"),
-#     # (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "stability_LogLikelihood_THDM"], "stability"),
-#     # (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM"], "perturbativity"),
-#     # (["perturbativity_yukawas_LogLikelihood_THDM"], "pert_yukawas")
+#     (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "NLO_unitarity_LogLikelihood_THDM"], "NLO"),
+#     (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "stability_LogLikelihood_THDM"], "stability"),
+#     (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM"], "perturbativity"),
 
 # ]
+    # (["perturbativity_yukawas_LogLikelihood_THDM"], "pert_yukawas")
 
 # ---- ELECTROWEAK SCANS ----
 
@@ -135,16 +133,18 @@ constraints = [
 # ---- COLLIDER SCANS ----
 
 # 6
-# constraints = [
+constraints = [
 
-#     (["theory", "collider"], "collider"),
-#     (["theory", "LEP_Higgs_LogLike"], "HB"),
-#     (["theory", "LHC_Higgs_LogLike", "HS_ALL"], "HS"),
-#     (["theory", "LHC_Higgs_LogLike", "HS_RUN1_SS"], "HSRUN1SS"),
-#     (["theory", "LHC_Higgs_LogLike", "HS_LATEST_SS"], "HSLATESTSS"),
-#     (["theory", "LHC_Higgs_LogLike", "HS_LATEST_STXS"], "HSLATESTSTXS"),
+    (["theory", "electroweak"], "electroweak"),
 
-# ]
+    (["theory", "collider"], "collider"),
+    (["theory", "LEP_Higgs_LogLike"], "HB"),
+    (["theory", "LHC_Higgs_LogLike", "HS_ALL"], "HS"),
+    (["theory", "LHC_Higgs_LogLike", "HS_RUN1_SS"], "HSRUN1SS"),
+    (["theory", "LHC_Higgs_LogLike", "HS_LATEST_SS"], "HSLATESTSS"),
+    (["theory", "LHC_Higgs_LogLike", "HS_LATEST_STXS"], "HSLATESTSTXS"),
+
+]
 
 # ---- FLAVOR SCANS ----
 
@@ -373,14 +373,14 @@ def patchYaml(options, dir, yaml_name):
     s = file.read()
     file.close()
 
-    shutil.rmtree(gen_path+"/" + dir + "/" + yaml_dir + "/" + "yaml_files_full")
-    shutil.rmtree(gen_path+"/" + dir + "/" + yaml_dir + "/" + "yaml_files_med")
-    shutil.rmtree(gen_path+"/" + dir + "/" + yaml_dir + "/" + "yaml_files_small")
-    shutil.rmtree(gen_path+"/" + dir + "/" + yaml_dir + "/" + "yaml_files_idm")
+    shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_full")
+    shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_med")
+    shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_small")
+    shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_idm")
 
     # remove useless yaml dirs
 
-    print("DEBUG: patching " + gen_path+"/" + dir + "/" + yaml_dir + "/" + yaml_name, 'r')
+    print("DEBUG: patching " + gen_path+"/" + dir + "/" + yaml_dir + "/" + yaml_name)
 
     # set basis
     s = s.replace("prior_Type: tanb", "prior_type: " + options.tanb_type)
