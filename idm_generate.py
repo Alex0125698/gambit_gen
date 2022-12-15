@@ -32,11 +32,9 @@
 # and a script is generated for running all simultaneously
 # WARNING: be careful not to generate too many, otherwise you will run out of storage
 
-yaml_dir = 'yaml_files_full'
-# yaml_dir = 'yaml_files_med'
-# yaml_dir = 'yaml_files_small'
-use_speed_hacks = True
-postfix = '_71'
+yaml_dir = 'yaml_files_idm'
+use_speed_hacks = False
+postfix = '_1'
 
 gen_path = 'gens' + postfix
 
@@ -52,10 +50,10 @@ CORE_COUNT = 72 # set to number of cores per node
 MODE = "DIRAC"
 
 # allowed options: "THDM", "THDMI", "THDMII", "THDMLS", or "THDMflipped"
-models = ["THDMI"]
+models = ["Inert2"]
 
 # allowed options: "tree" or "loop"
-runnings = ["loop"]
+runnings = ["tree"]
 
 # allowed options: "generic", "hybrid_lambda_1", "hybrid_lambda_2", "hybrid_Higgs", "higgs", or "physical"
 
@@ -65,27 +63,14 @@ runnings = ["loop"]
 # 20
 bases = [
 
-    # ("generic", "generic_test"),
-    ("generic", "generic"),
-    # ("generic", "generic_low_m122"),
-    # ("hybrid_Higgs", "hybrid1_high_cosba"),
-    # ("hybrid_Higgs", "hybrid1_high_mass_log"),
-    # ("hybrid_Higgs", "hybrid1_high_mass"),
-    # ("hybrid_Higgs", "hybrid1_log"),
-    # ("hybrid_Higgs2", "hybrid2_alignment"),
-    # ("hybrid_Higgs", "hybrid1_low_cosba"),
-    # ("hybrid_Higgs", "hybrid1_low_mass400"),
-    # ("hybrid_Higgs", "hybrid1_low_mass650"),
-    # ("hybrid_Higgs", "hybrid1_low_tanb"),
-    # ("hybrid_Higgs", "hybrid1_tanb1p5"),
-    # ("hybrid_Higgs", "hybrid1_tanb12"),
-    # ("hybrid_Higgs", "hybrid1_tanb25"),
-    # ("hybrid_Higgs", "hybrid1_tanb36"),
-    # ("hybrid_Higgs", "hybrid1_tanb45"),
-    # ("hybrid_Higgs", "hybrid1"),
-    # ("hybrid_Higgs2", "hybrid2_low_mass200"),
-    # ("hybrid_Higgs2", "hybrid2_low_mass350"),
-    # ("physical", "physical"),
+    ("physical", "physical_high_lam3456"),
+    ("physical", "physical_high_lam3458"),
+    ("physical", "physical_high_lam34510"),
+    ("physical", "physical_logmH"),
+    ("physical", "physical_low_lam345"),
+    ("physical", "physical_low_mH140"),
+    ("physical", "physical_low_mH400"),
+    ("physical", "physical"),
 
 ]
 
@@ -103,25 +88,25 @@ tanb_types = ["flat"]
 # ---- COMBINED SCANS ----
 
 # 1
-constraints = [
+# constraints = [
 
-    (["all"], "all"),
+#     (["all"], "all"),
 
-]
+# ]
 
 # ---- THEORY SCANS ----
 
 # 5
-# constraints = [
+constraints = [
 
-#     (["theory"], "theory"),
-#     # (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "LO_unitarity_LogLikelihood_THDM"], "LO"),
-#     # (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "NLO_unitarity_LogLikelihood_THDM"], "NLO"),
-#     # (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "stability_LogLikelihood_THDM"], "stability"),
-#     # (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM"], "perturbativity"),
-#     # (["perturbativity_yukawas_LogLikelihood_THDM"], "pert_yukawas")
+    (["theory"], "theory"),
+    (["check_unitarity"], "LO"),
+    (["check_vacuum_stability"], "stability"),
+    (["check_perturbativity"], "perturbativity"),
+    (["check_charged_vacuum"], "charged_vacuum"),
+    (["check_vacuum_metastability"], "vacuum_metastability"),
 
-# ]
+]
 
 # ---- ELECTROWEAK SCANS ----
 
@@ -146,39 +131,36 @@ constraints = [
 
 # ]
 
-# ---- FLAVOR SCANS ----
 
-# 26-2
+# ---- DARK MATTER SCANS ----
+
 # constraints = [
 
-    # (["all"], "all"),
-    # (["theory", "flavour"], "flavour"),
-    # (["theory", "Bs2ll_LogLikelihood"], "Bs2ll"),
-    # (["theory", "B2Kll_LogLikelihood"], "B2Kll"),
-    # (["theory", "B2mumu_LogLikelihood_Atlas"], "B2mumuAtlas"),
-    # (["theory", "B2mumu_LogLikelihood_LHCb"], "B2mumuLHCb"),
-    # (["theory", "B2mumu_LogLikelihood_CMS"], "B2mumuCMS"),
-    # (["theory", "Bc_lifetime_LogLikelihood"], "Bclifetime"),
-    # (["theory", "B2Xsnunu_LogLikelihood"], "B2Xsnunu"),
-    # (["theory", "SL_LogLikelihood"], "SL"),
-    # (["theory", "b2sgamma_LogLikelihood"], "b2sgamma"),
-    # (["theory", "B2Kstargamma_LogLikelihood"], "B2Kstargamma"),
-    # (["theory", "RK_LogLikelihood_LHCb"], "RK"),
-    # (["theory", "RKstar_LogLikelihood_LHCb"], "RKstar"),
-    # (["theory", "B2KstarmumuAng_LogLikelihood_Atlas"], "B2KstarmumuAngAtlas"),
-    # (["theory", "B2KstarmumuAng_LogLikelihood_CMS"], "B2KstarmumuAngCMS"),
-    # (["theory", "B2KstarmumuAng_LogLikelihood_LHCb_2020"], "B2KstarmumuAngLHCb2020"),
-    # (["theory", "B2KstarmumuAng_LogLikelihood_Belle"], "B2KstarmumuAngBelle"),
-    # (["theory", "B2KstarellellAng_LogLikelihood_Belle"], "B2KstarellellAng"),
-    # (["theory", "Bu2KstarmumuAng_LogLikelihood_LHCb_2020"], "Bu2KstarmumuAng"),
-    # (["theory", "B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020"], "B2KstareeAngLowq2"),
-    # (["theory", "B2KstarmumuBr_LogLikelihood_LHCb"], "B2KstarmumuBr"),
-    # (["theory", "B2KmumuBr_LogLikelihood_LHCb"], "B2KmumuBr"),
-    # (["theory", "Bs2phimumuBr_LogLikelihood"], "Bs2phimumuBr"),
-    # (["theory", "B2mumu_LogLikelihood_Atlas", "B2mumu_LogLikelihood_LHCb", "B2mumu_LogLikelihood_CMS"], "B2mumu"),
-    # (["theory", "B2KstarmumuAng_LogLikelihood_Atlas", "B2KstarmumuAng_LogLikelihood_CMS", "B2KstarmumuAng_LogLikelihood_LHCb_2020", "B2KstarmumuAng_LogLikelihood_Belle"], "B2KstarmumuAng"),
+#     (["theory", "dark_matter"], "dark_matter"),
+#     (["theory", "XENON1T_2018_LogLikelihood", "XENON1T_2017_LogLikelihood", "XENON100_2012_LogLikelihood", "DARWIN_LogLikelihood", "LUX_2013_LogLikelihood", "LUX_2015_LogLikelihood", "LUX_2016_LogLikelihood", "LZ_LogLikelihood", "PandaX_2016_LogLikelihood", "PandaX_2017_LogLikelihood", "DarkSide_50_LogLikelihood", "DarkSide_50_S2_LogLikelihood", "CRESST_II_LogLikelihood", "CRESST_III_LogLikelihood", "SuperCDMS_2014_LogLikelihood", "CDMSlite_LogLikelihood", "SIMPLE_2014_LogLikelihood", "PICO_2L_LogLikelihood", "PICO_60_LogLikelihood", "PICO_60_2017_LogLikelihood", "PICO_60_2019_LogLikelihood", "PICO_500_LogLikelihood"], "direct_detection"),
+#     (["theory", "lnL_FermiLATdwarfs", "lnL_FermiGC", "lnL_CTAGC", "lnL_HESSGC"], "indirect_detection"), # excluding neutrinos
+#     (["theory", "lnL_oh2"], "lnL_oh2"),
+#     (["theory", "lnL_FermiLATdwarfs"], "lnL_FermiLATdwarfs"),
+#     (["theory", "lnL_FermiGC", "lnL_CTAGC", "lnL_HESSGC"], "galactic_center"),
+#     (["theory", "XENON1T_2018_LogLikelihood", "XENON1T_2017_LogLikelihood", "XENON100_2012_LogLikelihood"], "XENON"),
+#     (["theory", "DARWIN_LogLikelihood"], "DARWIN"),
+#     (["theory", "LUX_2013_LogLikelihood", "LUX_2015_LogLikelihood", "LUX_2016_LogLikelihood"], "LUX"),
+#     (["theory", "LZ_LogLikelihood"], "LZ"),
+#     (["theory", "PandaX_2016_LogLikelihood", "PandaX_2017_LogLikelihood"], "PandaX"),
+#     (["theory", "DarkSide_50_LogLikelihood", "DarkSide_50_S2_LogLikelihood"], "DarkSide_50"),
+#     (["theory", "CRESST_II_LogLikelihood", "CRESST_III_LogLikelihood"], "CRESST"),
+#     (["theory", "SuperCDMS_2014_LogLikelihood", "CDMSlite_LogLikelihood"], "CDMS"),
+#     (["theory", "SIMPLE_2014_LogLikelihood"], "SIMPLE"),
+#     (["theory", "PICO_2L_LogLikelihood", "PICO_60_LogLikelihood", "PICO_60_2017_LogLikelihood", "PICO_60_2019_LogLikelihood", "PICO_500_LogLikelihood"], "PICO"),
+
+#     # NOT WORKING
+#     # (["theory", "IceCube_likelihood"], "IceCube_likelihood"),
 
 # ]
+
+# ---- FLAVOR SCANS ----
+
+# NONE
 
 # note that all data for [bases,tanb_types] is combined for plotting
 # whereas each [models,runnings,constraints] generate different sets of plots
@@ -207,11 +189,10 @@ gambit_dirs = []
 class Options:
 
     # the names of all constraints
-    constraints_theory = ["NLO_unitarity_LogLikelihood_THDM", "LO_unitarity_LogLikelihood_THDM", "stability_LogLikelihood_THDM", "light_scalar_mass_corrections_LogLikelihood_THDM", 
-                         "heavy_scalar_mass_corrections_LogLikelihood_THDM", "scalar_mass_range_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM", "perturbativity_lambdas_LogLikelihood_THDM", 
-                         "perturbativity_yukawas_LogLikelihood_THDM"]
+    constraints_theory = ["check_unitarity", "check_vacuum_stability", "check_perturbativity","check_charged_vacuum","check_vacuum_metastability"]
     constraints_collider = ["LEP_Higgs_LogLike", "LHC_Higgs_LogLike","HS_ALL","HS_RUN1_SS","HS_LATEST_SS","HS_LATEST_STXS"] #higgs_mass_LogLikelihood
     constraints_electroweak =  ["oblique_parameters_LogLikelihood"] # lnL_gm2
+    constraints_dark_matter = ["XENON1T_2018_LogLikelihood", "XENON1T_2017_LogLikelihood", "XENON100_2012_LogLikelihood", "DARWIN_LogLikelihood", "LUX_2013_LogLikelihood", "LUX_2015_LogLikelihood", "LUX_2016_LogLikelihood", "LZ_LogLikelihood", "PandaX_2016_LogLikelihood", "PandaX_2017_LogLikelihood", "DarkSide_50_LogLikelihood", "DarkSide_50_S2_LogLikelihood", "CRESST_II_LogLikelihood", "CRESST_III_LogLikelihood", "SuperCDMS_2014_LogLikelihood", "CDMSlite_LogLikelihood", "SIMPLE_2014_LogLikelihood", "PICO_2L_LogLikelihood", "PICO_60_LogLikelihood", "PICO_60_2017_LogLikelihood", "PICO_60_2019_LogLikelihood", "PICO_500_LogLikelihood","lnL_FermiLATdwarfs", "lnL_FermiGC", "lnL_CTAGC", "lnL_HESSGC", "lnL_oh2", "IceCube_likelihood"]
     constraints_flavour =  ["Bs2ll_LogLikelihood","B2Kll_LogLikelihood","B2mumu_LogLikelihood_Atlas","B2mumu_LogLikelihood_LHCb","B2mumu_LogLikelihood_CMS",
                             "dBRBDstartaunu_LogLikelihood","dBRBDtaunu_LogLikelihood","gmu_ge_LogLikelihood","FLDstar_LogLikelihood","Bc_lifetime_LogLikelihood",
                             "B2Xsnunu","h2taumu_LogLikelihood","t2ch_LogLikelihood","deltaMB_LogLikelihood","deltaMBd_LogLikelihood",
@@ -220,7 +201,7 @@ class Options:
                             "B2KstarmumuAng_LogLikelihood_LHCb_2020","B2KstarmumuAng_LogLikelihood_Belle","B2KstarellellAng_LogLikelihood_Belle",
                             "Bu2KstarmumuAng_LogLikelihood_LHCb_2020","B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020","B2KstarmumuBr_LogLikelihood_LHCb",
                             "B2KmumuBr_LogLikelihood_LHCb","Bs2phimumuBr_LogLikelihood"]
-    constraints_all = constraints_theory + constraints_collider + constraints_electroweak + constraints_flavour
+    constraints_all = constraints_theory + constraints_collider + constraints_electroweak + constraints_dark_matter
 
     def __init__(self):
 
@@ -276,6 +257,8 @@ class Options:
             setit = self.constraints_electroweak
         elif name == "flavour":
             setit = self.constraints_flavour
+        elif name == "dark_matter":
+            setit = self.constraints_dark_matter
         else:
             setit = [name]
             if not hasattr(self, name):
@@ -299,23 +282,7 @@ class Options:
         # NOT WORKING likelihoods
         self.deltaMB_LogLikelihood = False
         self.deltaMBd_LogLikelihood = False
-
-        # unitarity 
-        if self.running == "tree" and self.NLO_unitarity_LogLikelihood_THDM:
-            self.NLO_unitarity_LogLikelihood_THDM = False
-            self.LO_unitarity_LogLikelihood_THDM = True
-
-        if self.running == "loop" and self.LO_unitarity_LogLikelihood_THDM and self.NLO_unitarity_LogLikelihood_THDM:
-            self.LO_unitarity_LogLikelihood_THDM = False
-            self.NLO_unitarity_LogLikelihood_THDM = True
-
-        # correction checks
-        if self.running == "tree":
-            self.light_scalar_mass_corrections_LogLikelihood_THDM = False
-            self.heavy_scalar_mass_corrections_LogLikelihood_THDM = False
-
-        if  self.perturbativity_LogLikelihood_THDM:
-            self.perturbativity_lambdas_LogLikelihood_THDM = False
+        self.IceCube_likelihood = False
 
         if self.HS_ALL:
             self.HS_RUN1_SS = False
@@ -437,6 +404,8 @@ def patchYaml(options, dir, yaml_name):
             i = s.find("capability: " + c)
             if i == -1:
                 i = s.find("function: " + c)
+            if i == -1:
+                i = s.find(c)
             if i != -1:
                 marker = s[i-1]
                 t = s[i-2]
