@@ -137,7 +137,7 @@ constraints = [
 # constraints = [
 
 #     # (["theory", "dark_matter"], "dark_matter"),
-#     # (["theory", "XENON1T_2018_LogLikelihood", "XENON1T_2017_LogLikelihood", "XENON100_2012_LogLikelihood", "DARWIN_LogLikelihood", "LUX_2013_LogLikelihood", "LUX_2015_LogLikelihood", "LUX_2016_LogLikelihood", "LZ_LogLikelihood", "PandaX_2016_LogLikelihood", "PandaX_2017_LogLikelihood", "DarkSide_50_LogLikelihood", "DarkSide_50_S2_LogLikelihood", "CRESST_II_LogLikelihood", "CRESST_III_LogLikelihood", "SuperCDMS_2014_LogLikelihood", "CDMSlite_LogLikelihood", "SIMPLE_2014_LogLikelihood", "PICO_2L_LogLikelihood", "PICO_60_LogLikelihood", "PICO_60_2017_LogLikelihood", "PICO_60_2019_LogLikelihood", "PICO_500_LogLikelihood"], "direct_detection"),
+#     # (["theory", "XENON1T_2018_LogLikelihood", "XENON1T_2017_LogLikelihood", "XENON100_2012_LogLikelihood", "DARWIN_LogLikelihood", "LUX_2013_LogLikelihood", "LUX_2015_LogLikelihood", "LUX_2016_LogLikelihood", "LZ_LogLikelihood", "PandaX_2016_LogLikelihood", "PandaX_2017_LogLikelihood", "PandaX_4T_LogLikelihood", "DarkSide_50_LogLikelihood", "DarkSide_50_S2_LogLikelihood", "CRESST_II_LogLikelihood", "CRESST_III_LogLikelihood", "SuperCDMS_2014_LogLikelihood", "CDMSlite_LogLikelihood", "SIMPLE_2014_LogLikelihood", "PICO_2L_LogLikelihood", "PICO_60_LogLikelihood", "PICO_60_2017_LogLikelihood", "PICO_60_2019_LogLikelihood", "PICO_500_LogLikelihood"], "direct_detection"),
 #     # (["theory", "lnL_FermiLATdwarfs", "lnL_FermiGC", "lnL_CTAGC", "lnL_HESSGC"], "indirect_detection"), # excluding neutrinos
 #     # (["theory", "lnL_oh2"], "lnL_oh2"),
 #     # (["theory", "lnL_FermiLATdwarfs"], "lnL_FermiLATdwarfs"),
@@ -146,7 +146,7 @@ constraints = [
 #     # (["theory", "DARWIN_LogLikelihood"], "DARWIN"),
 #     # (["theory", "LUX_2013_LogLikelihood", "LUX_2015_LogLikelihood", "LUX_2016_LogLikelihood"], "LUX"),
 #     # (["theory", "LZ_LogLikelihood"], "LZ"),
-#     # (["theory", "PandaX_2016_LogLikelihood", "PandaX_2017_LogLikelihood"], "PandaX"),
+#     # (["theory", "PandaX_2016_LogLikelihood", "PandaX_2017_LogLikelihood", "PandaX_4T_LogLikelihood"], "PandaX"),
 #     # (["theory", "DarkSide_50_LogLikelihood", "DarkSide_50_S2_LogLikelihood"], "DarkSide_50"),
 #     # (["theory", "CRESST_II_LogLikelihood", "CRESST_III_LogLikelihood"], "CRESST"),
 #     # (["theory", "SuperCDMS_2014_LogLikelihood", "CDMSlite_LogLikelihood"], "CDMS"),
@@ -193,8 +193,8 @@ class Options:
     constraints_collider = ["LEP_Higgs_LogLike", "LHC_Higgs_LogLike","HS_ALL","HS_RUN1_SS","HS_LATEST_SS","HS_LATEST_STXS"] #higgs_mass_LogLikelihood
     constraints_electroweak =  ["oblique_parameters_LogLikelihood"] # lnL_gm2
     constraints_dark_matter = ["XENON1T_2018_LogLikelihood", "XENON1T_2017_LogLikelihood", "XENON100_2012_LogLikelihood", "DARWIN_LogLikelihood", 
-                               "LUX_2013_LogLikelihood", "LUX_2015_LogLikelihood", "LUX_2016_LogLikelihood", "LZ_LogLikelihood", "PandaX_2016_LogLikelihood",
-                               "PandaX_2017_LogLikelihood", "DarkSide_50_LogLikelihood", "DarkSide_50_S2_LogLikelihood", "CRESST_II_LogLikelihood", 
+                               "LUX_2013_LogLikelihood", "LUX_2015_LogLikelihood", "LUX_2016_LogLikelihood", "LZ_2022_LogLikelihood", "PandaX_2016_LogLikelihood",
+                               "PandaX_2017_LogLikelihood", "PandaX_4T_LogLikelihood", "DarkSide_50_LogLikelihood", "DarkSide_50_S2_LogLikelihood", "CRESST_II_LogLikelihood", 
                                "CRESST_III_LogLikelihood", "SuperCDMS_2014_LogLikelihood", "CDMSlite_LogLikelihood", "SIMPLE_2014_LogLikelihood", 
                                "PICO_2L_LogLikelihood", "PICO_60_LogLikelihood", "PICO_60_2017_LogLikelihood", "PICO_60_2019_LogLikelihood", 
                                "PICO_500_LogLikelihood","lnL_FermiLATdwarfs", "lnL_FermiGC", "lnL_CTAGC", "lnL_HESSGC", "lnL_oh2", "IceCube_likelihood"]
@@ -206,7 +206,7 @@ class Options:
                             "B2KstarmumuAng_LogLikelihood_LHCb_2020","B2KstarmumuAng_LogLikelihood_Belle","B2KstarellellAng_LogLikelihood_Belle",
                             "Bu2KstarmumuAng_LogLikelihood_LHCb_2020","B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020","B2KstarmumuBr_LogLikelihood_LHCb",
                             "B2KmumuBr_LogLikelihood_LHCb","Bs2phimumuBr_LogLikelihood"]
-    constraints_trivial = ["lnL_v0","lnL_SI_nuclear_parameters",]
+    constraints_trivial = ["lnL_v0","lnL_nuclear_parameters_ChPT",]
 
     constraints_all = constraints_theory + constraints_collider + constraints_electroweak + constraints_dark_matter + constraints_trivial
 

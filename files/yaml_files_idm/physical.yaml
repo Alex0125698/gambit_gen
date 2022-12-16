@@ -45,15 +45,8 @@ Parameters:
       range: [-12.57,12.57]
       prior_type: flat
 
-  # Nuclear matrix parameters
-  #~Knuclear_params_sigmas_sigmal:
-    #~Ksigmas:
-      #~Krange: [19, 67]
-    #~Ksigmal:
-      #~Krange: [5, 95]
-    #~Kdeltau:  0.842
-    #~Kdeltad:  -0.427
-    #~Kdeltas:  -0.085
+  # Chiral nuclear parameters for DirectDM
+  #~Knuclear_params_ChPT_sigmapiN: !import include/nuclear_params_ChPT_sigmapiN_scan.yaml
 
   # Dark matter halo parameters
   #~JHalo_gNFW_rho0:
@@ -62,7 +55,7 @@ Parameters:
     #~Jv0:
       #~Jrange: [216, 264]
     #~Jvesc:
-      #~Jrange: [437, 629]
+      #~Jrange: [437, 603]
     #~Jvrot:
       #~Jsame_as: Halo_gNFW_rho0::v0
     #~Jrs: 20.0
@@ -204,7 +197,7 @@ ObsLikes:
   #      DARK MATTER LIKELIHOODS        #
   #-------------------------------------#
 
-  # ---- enable these alongside indirect detection ----
+  # --- DM Local Halo nuisance parameters ---
 
   # most-probable DM speed
   #~J- purpose: LogLike
@@ -214,83 +207,77 @@ ObsLikes:
   #~J- purpose: LogLike
     #~Jcapability: lnL_vesc
 
-  # escape velocity
-  #~J- purpose: LogLike
-    #~Jcapability: lnL_vrot
+  # OFF - not needed in combination with v0
+  # # escape velocity
+  # #~J- purpose: LogLike
+  #   #~Jcapability: lnL_vrot
 
   # local DM density
   #~J- purpose: LogLike
     #~Jcapability: lnL_rho0
 
-  # ---- enable this alongside direct detection ----
+  # --- DirectDM nuisance parameters ---
 
   # spin-independent nuclear parameters
   #~K- purpose:    LogLike
-    #~Kcapability: lnL_SI_nuclear_parameters
-  #~K- purpose:    LogLike
-    #~Kcapability: lnL_SD_nuclear_parameters
-    
-  # OFF - NOT WORKING
-  # #~K- purpose:    LogLike
-  #   #~Kcapability: lnL_nuclear_parameters_ChPT
+    #~Kcapability: lnL_nuclear_parameters_ChPT
 
+  # --- Actual DM likelihoods ---
 
-
-  # Relic Density: ... (via MicrOMEGAs)
+  # Relic Density (via MicrOMEGAs)
   #~Y- purpose:    LogLike
     #~Ycapability: lnL_oh2
-
-
 
   # Indirect Detection: Fermi-LAT gamma ray measurements of dwarf galaxies (via gamLike)
   #~E- purpose:    LogLike
     #~Ecapability: lnL_FermiLATdwarfs
 
-  # Indirect Detection: Fermi-LAT/CTA/HESS gamma ray measurements of galactic center (via gamLike)
-  #~F- purpose:    LogLike
-    #~Fcapability: lnL_FermiGC
-  #~F- purpose:    LogLike
-    #~Fcapability: lnL_CTAGC
-  #~F- purpose:    LogLike
-    #~Fcapability: lnL_HESSGC
-
-
+  # OFF - Unclear if GC excess is due to DM
+  # # Indirect Detection: Fermi-LAT/CTA/HESS gamma ray measurements of galactic center (via gamLike)
+  # #~F- purpose:    LogLike
+  #   #~Fcapability: lnL_FermiGC
+  # #~F- purpose:    LogLike
+  #   #~Fcapability: lnL_CTAGC
+  # #~F- purpose:    LogLike
+  #   #~Fcapability: lnL_HESSGC
 
   # XENON1T direct detection analysis (via DDCalc)
   #~G- purpose:    LogLike
     #~Gcapability: XENON1T_2018_LogLikelihood
-  #~G- purpose:    LogLike
-    #~Gcapability: XENON1T_2017_LogLikelihood
-  #~G- purpose:    LogLike
-    #~Gcapability: XENON100_2012_LogLikelihood
+  # #~G- purpose:    LogLike
+  #   #~Gcapability: XENON1T_2017_LogLikelihood
+  # #~G- purpose:    LogLike
+  #   #~Gcapability: XENON100_2012_LogLikelihood
 
   # DARWIN direct detection analysis (via DDCalc)
   #~H- purpose:    LogLike
     #~Hcapability: DARWIN_LogLikelihood
 
   # LUX direct detection analysis (via DDCalc)
-  #~I- purpose:    LogLike
-    #~Icapability: LUX_2013_LogLikelihood
-  #~I- purpose:    LogLike
-    #~Icapability: LUX_2015_LogLikelihood
+  # #~I- purpose:    LogLike
+  #   #~Icapability: LUX_2013_LogLikelihood
+  # #~I- purpose:    LogLike
+  #   #~Icapability: LUX_2015_LogLikelihood
   #~I- purpose:    LogLike
     #~Icapability: LUX_2016_LogLikelihood
 
   # LZ direct detection analysis (via DDCalc)
   #~L- purpose:    LogLike
-    #~Lcapability: LZ_LogLikelihood
+    #~Lcapability: LZ_2022_LogLikelihood
 
   # PandaX direct detection analysis (via DDCalc)
   #~M- purpose:    LogLike
     #~Mcapability: PandaX_2016_LogLikelihood
   #~M- purpose:    LogLike
     #~Mcapability: PandaX_2017_LogLikelihood
+  #~M- purpose:    LogLike
+    #~Mcapability: PandaX_4T_LogLikelihood
 
   # DarkSide direct detection analysis (via DDCalc)
   #~N- purpose:    LogLike
     #~Ncapability: DarkSide_50_LogLikelihood
-  #~N- purpose:    LogLike
-    #~Ncapability: DarkSide_50_S2_LogLikelihood
+  # #~N- purpose:    LogLike
+  #   #~Ncapability: DarkSide_50_S2_LogLikelihood
 
   # CRESST direct detection analysis (via DDCalc)
   #~O- purpose:    LogLike
@@ -299,8 +286,8 @@ ObsLikes:
     #~Ocapability: CRESST_III_LogLikelihood
 
   # CDMS direct detection analysis (via DDCalc)
-  #~P- purpose:    LogLike
-    #~Pcapability: SuperCDMS_2014_LogLikelihood
+  # #~P- purpose:    LogLike
+  #   #~Pcapability: SuperCDMS_2014_LogLikelihood
   #~P- purpose:    LogLike
     #~Pcapability: CDMSlite_LogLikelihood
 
@@ -309,23 +296,24 @@ ObsLikes:
     #~Qcapability: SIMPLE_2014_LogLikelihood
 
   # PICO direct detection analysis (via DDCalc)
-  #~R- purpose:    LogLike
-    #~Rcapability: PICO_2L_LogLikelihood
-  #~R- purpose:    LogLike
-    #~Rcapability: PICO_60_LogLikelihood
+  # #~R- purpose:    LogLike
+  #   #~Rcapability: PICO_500_LogLikelihood
+  # #~R- purpose:    LogLike
+  #   #~Rcapability: PICO_2L_LogLikelihood
+  # #~R- purpose:    LogLike
+  #   #~Rcapability: PICO_60_LogLikelihood
   #~R- purpose:    LogLike
     #~Rcapability: PICO_60_2017_LogLikelihood
   #~R- purpose:    LogLike
     #~Rcapability: PICO_60_2019_LogLikelihood
-  #~R- purpose:    LogLike
-    #~Rcapability: PICO_500_LogLikelihood
 
 
 
   # Indirect Detection: IceCube neutrinos
   #~S- purpose:    LogLike
     #~Scapability: IceCube_likelihood
-
+  # - capability: IC79_loglike
+  #   purpose: LogLike
 
 
   #-------------------------------------#
@@ -362,14 +350,10 @@ ObsLikes:
   #~Y- capability: RD_oh2
     #~Ypurpose: Observable
 
-  #  need testing
-
+  # DISABLED: doesnt print correctly, and seems to be reading from files...
+  # would be nice to get this working correctly at some point
   # # Contributions of different annihilation channels to the relic density
   # #~Y- capability: relic_density_contributions
-  #   #~Ypurpose: Observable
-
-  # # Contributions of semi-annihilation to the relic density
-  # #~Y- capability: semi_annihilation_fraction
   #   #~Ypurpose: Observable
 
   # velocity of DM at freezeout
@@ -530,10 +514,9 @@ Rules:
 
   - capability: capture_rate_Sun
     # function: capture_rate_Sun_const_xsec # DarkSUSY 6
-    function: capture_rate_Sun_const_xsec_capgen # CapGen
+    # function: capture_rate_Sun_const_xsec_capgen # CapGen
     # function: capture_rate_Sun_vnqn # CapGen
-    # function: capture_rate_Sun_NREO # CapGen
-
+    function: capture_rate_Sun_NREO # CapGen
 
   # Initialisation Settings for MicrOmegas
   - function: MicrOmegas_Inert2_3_6_9_2_init
@@ -562,6 +545,8 @@ Rules:
   - capability: RD_fraction
     # function: RD_fraction_one # use this to assume the fraction must be 1
     function: RD_fraction_leq_one # use this to assume the fraction must be less than or equal to 1
+    options: # Planck 2018 values
+      oh2_obs: 0.120
 
   # get process catalogue for the IDM
   - capability: TH_ProcessCatalog
@@ -578,6 +563,8 @@ Rules:
     function: antiproton_SimYieldTable_DarkSUSY
   - capability: antideuteron_SimYieldTable
     function: antideuteron_SimYieldTable_DarkSUSY
+  - capability: electron_SimYieldTable
+    function: electron_SimYieldTable_from_positron_SimYieldTable
 
   # select to use the gamma ray yields for an annihilating DM candidate
   # TODO: this should prob be done by GAMBIT automatically
@@ -601,8 +588,12 @@ Rules:
   # Choose to implement the relic density likelihood as an upper bound, to allow
   # the possibility of another DM candidate that provides the remaining density
   - capability: lnL_oh2
-    function: lnL_oh2_upperlimit
     # function: lnL_oh2_Simple
+    function: lnL_oh2_upperlimit
+    options: # Planck 2018 values
+      oh2_obs: 0.120
+      oh2_obserr: 0.001
+      oh2_fractional_theory_err: 0.01
 
   # Set sigma_l to 50 +/- 15 MeV based on Bishara et al [arXiv:1707.06998]
   - capability: lnL_SI_nuclear_parameters
@@ -627,7 +618,13 @@ Rules:
   # Select WIMP-nucleon couplings for DDCalc 2.1.0 WIMP object
   - capability: DDCalc_Couplings
     function: DDCalc_Couplings_WIMP_nucleon
-    # function: DD_nonrel_WCs
+    # function: DDCalc_Couplings_NR_WCs
+
+  # Choose 5 quark flavour scheme for DirectDM
+  - capability: DD_nonrel_WCs
+    # function: DD_nonrel_WCs_flavscheme
+    function: NREO_from_DD_couplings
+    module: DarkBit
 
   # get direct detection couplings via micrOMEGAs
   - capability: DD_couplings
