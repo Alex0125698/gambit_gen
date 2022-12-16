@@ -207,122 +207,124 @@ ObsLikes:
   # ---- enable these alongside indirect detection ----
 
   # most-probable DM speed
-  #~J- capability: lnL_v0
-    #~Jpurpose: LogLike
+  #~J- purpose: LogLike
+    #~Jcapability: lnL_v0
 
   # escape velocity
-  #~J- capability: lnL_vesc
-    #~Jpurpose: LogLike
+  #~J- purpose: LogLike
+    #~Jcapability: lnL_vesc
 
   # escape velocity
-  #~J- capability: lnL_vrot
-    #~Jpurpose: LogLike
+  #~J- purpose: LogLike
+    #~Jcapability: lnL_vrot
 
   # local DM density
-  #~J- capability: lnL_rho0
-    #~Jpurpose: LogLike
+  #~J- purpose: LogLike
+    #~Jcapability: lnL_rho0
 
   # ---- enable this alongside direct detection ----
 
   # spin-independent nuclear parameters
-  #~K- capability: lnL_SI_nuclear_parameters
-    #~Kpurpose:    LogLike
-  #~K- capability: lnL_SD_nuclear_parameters
-    #~Kpurpose:    LogLike
-  #~K- capability: lnL_nuclear_parameters_ChPT
-    #~Kpurpose:    LogLike
+  #~K- purpose:    LogLike
+    #~Kcapability: lnL_SI_nuclear_parameters
+  #~K- purpose:    LogLike
+    #~Kcapability: lnL_SD_nuclear_parameters
+    
+  # OFF - NOT WORKING
+  # #~K- purpose:    LogLike
+  #   #~Kcapability: lnL_nuclear_parameters_ChPT
 
 
 
   # Relic Density: ... (via MicrOMEGAs)
-  #~Y- capability: lnL_oh2
-    #~Ypurpose:    LogLike
+  #~Y- purpose:    LogLike
+    #~Ycapability: lnL_oh2
 
 
 
   # Indirect Detection: Fermi-LAT gamma ray measurements of dwarf galaxies (via gamLike)
-  #~E- capability: lnL_FermiLATdwarfs
-    #~Epurpose:    LogLike
+  #~E- purpose:    LogLike
+    #~Ecapability: lnL_FermiLATdwarfs
 
   # Indirect Detection: Fermi-LAT/CTA/HESS gamma ray measurements of galactic center (via gamLike)
-  #~F- capability: lnL_FermiGC
-    #~Fpurpose:    LogLike
-  #~F- capability: lnL_CTAGC
-    #~Fpurpose:    LogLike
-  #~F- capability: lnL_HESSGC
-    #~Fpurpose:    LogLike
+  #~F- purpose:    LogLike
+    #~Fcapability: lnL_FermiGC
+  #~F- purpose:    LogLike
+    #~Fcapability: lnL_CTAGC
+  #~F- purpose:    LogLike
+    #~Fcapability: lnL_HESSGC
 
 
 
   # XENON1T direct detection analysis (via DDCalc)
-  #~G- capability: XENON1T_2018_LogLikelihood
-    #~Gpurpose:    LogLike
-  #~G- capability: XENON1T_2017_LogLikelihood
-    #~Gpurpose:    LogLike
-  #~G- capability: XENON100_2012_LogLikelihood
-    #~Gpurpose:    LogLike
+  #~G- purpose:    LogLike
+    #~Gcapability: XENON1T_2018_LogLikelihood
+  #~G- purpose:    LogLike
+    #~Gcapability: XENON1T_2017_LogLikelihood
+  #~G- purpose:    LogLike
+    #~Gcapability: XENON100_2012_LogLikelihood
 
   # DARWIN direct detection analysis (via DDCalc)
-  #~H- capability: DARWIN_LogLikelihood
-    #~Hpurpose:    LogLike
+  #~H- purpose:    LogLike
+    #~Hcapability: DARWIN_LogLikelihood
 
   # LUX direct detection analysis (via DDCalc)
-  #~I- capability: LUX_2013_LogLikelihood
-    #~Ipurpose:    LogLike
-  #~I- capability: LUX_2015_LogLikelihood
-    #~Ipurpose:    LogLike
-  #~I- capability: LUX_2016_LogLikelihood
-    #~Ipurpose:    LogLike
+  #~I- purpose:    LogLike
+    #~Icapability: LUX_2013_LogLikelihood
+  #~I- purpose:    LogLike
+    #~Icapability: LUX_2015_LogLikelihood
+  #~I- purpose:    LogLike
+    #~Icapability: LUX_2016_LogLikelihood
 
   # LZ direct detection analysis (via DDCalc)
-  #~L- capability: LZ_LogLikelihood
-    #~Lpurpose:    LogLike
+  #~L- purpose:    LogLike
+    #~Lcapability: LZ_LogLikelihood
 
   # PandaX direct detection analysis (via DDCalc)
-  #~M- capability: PandaX_2016_LogLikelihood
-    #~Mpurpose:    LogLike
-  #~M- capability: PandaX_2017_LogLikelihood
-    #~Mpurpose:    LogLike
+  #~M- purpose:    LogLike
+    #~Mcapability: PandaX_2016_LogLikelihood
+  #~M- purpose:    LogLike
+    #~Mcapability: PandaX_2017_LogLikelihood
 
   # DarkSide direct detection analysis (via DDCalc)
-  #~N- capability: DarkSide_50_LogLikelihood
-    #~Npurpose:    LogLike
-  #~N- capability: DarkSide_50_S2_LogLikelihood
-    #~Npurpose:    LogLike
+  #~N- purpose:    LogLike
+    #~Ncapability: DarkSide_50_LogLikelihood
+  #~N- purpose:    LogLike
+    #~Ncapability: DarkSide_50_S2_LogLikelihood
 
   # CRESST direct detection analysis (via DDCalc)
-  #~O- capability: CRESST_II_LogLikelihood
-    #~Opurpose:    LogLike
-  #~O- capability: CRESST_III_LogLikelihood
-    #~Opurpose:    LogLike
+  #~O- purpose:    LogLike
+    #~Ocapability: CRESST_II_LogLikelihood
+  #~O- purpose:    LogLike
+    #~Ocapability: CRESST_III_LogLikelihood
 
   # CDMS direct detection analysis (via DDCalc)
-  #~P- capability: SuperCDMS_2014_LogLikelihood
-    #~Ppurpose:    LogLike
-  #~P- capability: CDMSlite_LogLikelihood
-    #~Ppurpose:    LogLike
+  #~P- purpose:    LogLike
+    #~Pcapability: SuperCDMS_2014_LogLikelihood
+  #~P- purpose:    LogLike
+    #~Pcapability: CDMSlite_LogLikelihood
 
   # SIMPLE direct detection analysis (via DDCalc)
-  #~Q- capability: SIMPLE_2014_LogLikelihood
-    #~Qpurpose:    LogLike
+  #~Q- purpose:    LogLike
+    #~Qcapability: SIMPLE_2014_LogLikelihood
 
   # PICO direct detection analysis (via DDCalc)
-  #~R- capability: PICO_2L_LogLikelihood
-    #~Rpurpose:    LogLike
-  #~R- capability: PICO_60_LogLikelihood
-    #~Rpurpose:    LogLike
-  #~R- capability: PICO_60_2017_LogLikelihood
-    #~Rpurpose:    LogLike
-  #~R- capability: PICO_60_2019_LogLikelihood
-    #~Rpurpose:    LogLike
-  #~R- capability: PICO_500_LogLikelihood
-    #~Rpurpose:    LogLike
+  #~R- purpose:    LogLike
+    #~Rcapability: PICO_2L_LogLikelihood
+  #~R- purpose:    LogLike
+    #~Rcapability: PICO_60_LogLikelihood
+  #~R- purpose:    LogLike
+    #~Rcapability: PICO_60_2017_LogLikelihood
+  #~R- purpose:    LogLike
+    #~Rcapability: PICO_60_2019_LogLikelihood
+  #~R- purpose:    LogLike
+    #~Rcapability: PICO_500_LogLikelihood
 
 
 
   # Indirect Detection: IceCube neutrinos
-  #~S- capability: IceCube_likelihood
-    #~Spurpose:    LogLike
+  #~S- purpose:    LogLike
+    #~Scapability: IceCube_likelihood
 
 
 

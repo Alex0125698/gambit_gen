@@ -41,7 +41,7 @@ gen_path = 'gens' + postfix
 conv_threshold = 1e-6
 required_printed_points = 400000
 required_points = -1
-required_scan_duration = 10*60 # in seconds
+required_scan_duration = 10*60/60 # in seconds
 
 NODE_COUNT = 1  # set to desired number of nodes per gambit
 CORE_COUNT = 72 # set to number of cores per node
@@ -88,25 +88,25 @@ tanb_types = ["flat"]
 # ---- COMBINED SCANS ----
 
 # 1
-# constraints = [
+constraints = [
 
-#     (["all"], "all"),
+    (["all"], "all"),
 
-# ]
+]
 
 # ---- THEORY SCANS ----
 
 # 5
-constraints = [
+# constraints = [
 
-    (["theory"], "theory"),
-    (["check_unitarity"], "LO"),
-    (["check_vacuum_stability"], "stability"),
-    (["check_perturbativity"], "perturbativity"),
-    (["check_charged_vacuum"], "charged_vacuum"),
-    (["check_vacuum_metastability"], "vacuum_metastability"),
+#     (["theory"], "theory"),
+#     (["check_unitarity"], "LO"),
+#     (["check_vacuum_stability"], "stability"),
+#     (["check_perturbativity"], "perturbativity"),
+#     (["check_charged_vacuum"], "charged_vacuum"),
+#     (["check_vacuum_metastability"], "vacuum_metastability"),
 
-]
+# ]
 
 # ---- ELECTROWEAK SCANS ----
 
@@ -136,22 +136,22 @@ constraints = [
 
 # constraints = [
 
-#     (["theory", "dark_matter"], "dark_matter"),
-#     (["theory", "XENON1T_2018_LogLikelihood", "XENON1T_2017_LogLikelihood", "XENON100_2012_LogLikelihood", "DARWIN_LogLikelihood", "LUX_2013_LogLikelihood", "LUX_2015_LogLikelihood", "LUX_2016_LogLikelihood", "LZ_LogLikelihood", "PandaX_2016_LogLikelihood", "PandaX_2017_LogLikelihood", "DarkSide_50_LogLikelihood", "DarkSide_50_S2_LogLikelihood", "CRESST_II_LogLikelihood", "CRESST_III_LogLikelihood", "SuperCDMS_2014_LogLikelihood", "CDMSlite_LogLikelihood", "SIMPLE_2014_LogLikelihood", "PICO_2L_LogLikelihood", "PICO_60_LogLikelihood", "PICO_60_2017_LogLikelihood", "PICO_60_2019_LogLikelihood", "PICO_500_LogLikelihood"], "direct_detection"),
-#     (["theory", "lnL_FermiLATdwarfs", "lnL_FermiGC", "lnL_CTAGC", "lnL_HESSGC"], "indirect_detection"), # excluding neutrinos
-#     (["theory", "lnL_oh2"], "lnL_oh2"),
-#     (["theory", "lnL_FermiLATdwarfs"], "lnL_FermiLATdwarfs"),
-#     (["theory", "lnL_FermiGC", "lnL_CTAGC", "lnL_HESSGC"], "galactic_center"),
-#     (["theory", "XENON1T_2018_LogLikelihood", "XENON1T_2017_LogLikelihood", "XENON100_2012_LogLikelihood"], "XENON"),
-#     (["theory", "DARWIN_LogLikelihood"], "DARWIN"),
-#     (["theory", "LUX_2013_LogLikelihood", "LUX_2015_LogLikelihood", "LUX_2016_LogLikelihood"], "LUX"),
-#     (["theory", "LZ_LogLikelihood"], "LZ"),
-#     (["theory", "PandaX_2016_LogLikelihood", "PandaX_2017_LogLikelihood"], "PandaX"),
-#     (["theory", "DarkSide_50_LogLikelihood", "DarkSide_50_S2_LogLikelihood"], "DarkSide_50"),
-#     (["theory", "CRESST_II_LogLikelihood", "CRESST_III_LogLikelihood"], "CRESST"),
-#     (["theory", "SuperCDMS_2014_LogLikelihood", "CDMSlite_LogLikelihood"], "CDMS"),
-#     (["theory", "SIMPLE_2014_LogLikelihood"], "SIMPLE"),
-#     (["theory", "PICO_2L_LogLikelihood", "PICO_60_LogLikelihood", "PICO_60_2017_LogLikelihood", "PICO_60_2019_LogLikelihood", "PICO_500_LogLikelihood"], "PICO"),
+#     # (["theory", "dark_matter"], "dark_matter"),
+#     # (["theory", "XENON1T_2018_LogLikelihood", "XENON1T_2017_LogLikelihood", "XENON100_2012_LogLikelihood", "DARWIN_LogLikelihood", "LUX_2013_LogLikelihood", "LUX_2015_LogLikelihood", "LUX_2016_LogLikelihood", "LZ_LogLikelihood", "PandaX_2016_LogLikelihood", "PandaX_2017_LogLikelihood", "DarkSide_50_LogLikelihood", "DarkSide_50_S2_LogLikelihood", "CRESST_II_LogLikelihood", "CRESST_III_LogLikelihood", "SuperCDMS_2014_LogLikelihood", "CDMSlite_LogLikelihood", "SIMPLE_2014_LogLikelihood", "PICO_2L_LogLikelihood", "PICO_60_LogLikelihood", "PICO_60_2017_LogLikelihood", "PICO_60_2019_LogLikelihood", "PICO_500_LogLikelihood"], "direct_detection"),
+#     # (["theory", "lnL_FermiLATdwarfs", "lnL_FermiGC", "lnL_CTAGC", "lnL_HESSGC"], "indirect_detection"), # excluding neutrinos
+#     # (["theory", "lnL_oh2"], "lnL_oh2"),
+#     # (["theory", "lnL_FermiLATdwarfs"], "lnL_FermiLATdwarfs"),
+#     # (["theory", "lnL_FermiGC", "lnL_CTAGC", "lnL_HESSGC"], "galactic_center"),
+#     # (["theory", "XENON1T_2018_LogLikelihood", "XENON1T_2017_LogLikelihood", "XENON100_2012_LogLikelihood"], "XENON"),
+#     # (["theory", "DARWIN_LogLikelihood"], "DARWIN"),
+#     # (["theory", "LUX_2013_LogLikelihood", "LUX_2015_LogLikelihood", "LUX_2016_LogLikelihood"], "LUX"),
+#     # (["theory", "LZ_LogLikelihood"], "LZ"),
+#     # (["theory", "PandaX_2016_LogLikelihood", "PandaX_2017_LogLikelihood"], "PandaX"),
+#     # (["theory", "DarkSide_50_LogLikelihood", "DarkSide_50_S2_LogLikelihood"], "DarkSide_50"),
+#     # (["theory", "CRESST_II_LogLikelihood", "CRESST_III_LogLikelihood"], "CRESST"),
+#     # (["theory", "SuperCDMS_2014_LogLikelihood", "CDMSlite_LogLikelihood"], "CDMS"),
+#     # (["theory", "SIMPLE_2014_LogLikelihood"], "SIMPLE"),
+#     # (["theory", "PICO_2L_LogLikelihood", "PICO_60_LogLikelihood", "PICO_60_2017_LogLikelihood", "PICO_60_2019_LogLikelihood", "PICO_500_LogLikelihood"], "PICO"),
 
 #     # NOT WORKING
 #     # (["theory", "IceCube_likelihood"], "IceCube_likelihood"),
@@ -192,7 +192,12 @@ class Options:
     constraints_theory = ["check_unitarity", "check_vacuum_stability", "check_perturbativity","check_charged_vacuum","check_vacuum_metastability"]
     constraints_collider = ["LEP_Higgs_LogLike", "LHC_Higgs_LogLike","HS_ALL","HS_RUN1_SS","HS_LATEST_SS","HS_LATEST_STXS"] #higgs_mass_LogLikelihood
     constraints_electroweak =  ["oblique_parameters_LogLikelihood"] # lnL_gm2
-    constraints_dark_matter = ["XENON1T_2018_LogLikelihood", "XENON1T_2017_LogLikelihood", "XENON100_2012_LogLikelihood", "DARWIN_LogLikelihood", "LUX_2013_LogLikelihood", "LUX_2015_LogLikelihood", "LUX_2016_LogLikelihood", "LZ_LogLikelihood", "PandaX_2016_LogLikelihood", "PandaX_2017_LogLikelihood", "DarkSide_50_LogLikelihood", "DarkSide_50_S2_LogLikelihood", "CRESST_II_LogLikelihood", "CRESST_III_LogLikelihood", "SuperCDMS_2014_LogLikelihood", "CDMSlite_LogLikelihood", "SIMPLE_2014_LogLikelihood", "PICO_2L_LogLikelihood", "PICO_60_LogLikelihood", "PICO_60_2017_LogLikelihood", "PICO_60_2019_LogLikelihood", "PICO_500_LogLikelihood","lnL_FermiLATdwarfs", "lnL_FermiGC", "lnL_CTAGC", "lnL_HESSGC", "lnL_oh2", "IceCube_likelihood"]
+    constraints_dark_matter = ["XENON1T_2018_LogLikelihood", "XENON1T_2017_LogLikelihood", "XENON100_2012_LogLikelihood", "DARWIN_LogLikelihood", 
+                               "LUX_2013_LogLikelihood", "LUX_2015_LogLikelihood", "LUX_2016_LogLikelihood", "LZ_LogLikelihood", "PandaX_2016_LogLikelihood",
+                               "PandaX_2017_LogLikelihood", "DarkSide_50_LogLikelihood", "DarkSide_50_S2_LogLikelihood", "CRESST_II_LogLikelihood", 
+                               "CRESST_III_LogLikelihood", "SuperCDMS_2014_LogLikelihood", "CDMSlite_LogLikelihood", "SIMPLE_2014_LogLikelihood", 
+                               "PICO_2L_LogLikelihood", "PICO_60_LogLikelihood", "PICO_60_2017_LogLikelihood", "PICO_60_2019_LogLikelihood", 
+                               "PICO_500_LogLikelihood","lnL_FermiLATdwarfs", "lnL_FermiGC", "lnL_CTAGC", "lnL_HESSGC", "lnL_oh2", "IceCube_likelihood"]
     constraints_flavour =  ["Bs2ll_LogLikelihood","B2Kll_LogLikelihood","B2mumu_LogLikelihood_Atlas","B2mumu_LogLikelihood_LHCb","B2mumu_LogLikelihood_CMS",
                             "dBRBDstartaunu_LogLikelihood","dBRBDtaunu_LogLikelihood","gmu_ge_LogLikelihood","FLDstar_LogLikelihood","Bc_lifetime_LogLikelihood",
                             "B2Xsnunu","h2taumu_LogLikelihood","t2ch_LogLikelihood","deltaMB_LogLikelihood","deltaMBd_LogLikelihood",
@@ -201,7 +206,9 @@ class Options:
                             "B2KstarmumuAng_LogLikelihood_LHCb_2020","B2KstarmumuAng_LogLikelihood_Belle","B2KstarellellAng_LogLikelihood_Belle",
                             "Bu2KstarmumuAng_LogLikelihood_LHCb_2020","B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020","B2KstarmumuBr_LogLikelihood_LHCb",
                             "B2KmumuBr_LogLikelihood_LHCb","Bs2phimumuBr_LogLikelihood"]
-    constraints_all = constraints_theory + constraints_collider + constraints_electroweak + constraints_dark_matter
+    constraints_trivial = ["lnL_v0","lnL_SI_nuclear_parameters",]
+
+    constraints_all = constraints_theory + constraints_collider + constraints_electroweak + constraints_dark_matter + constraints_trivial
 
     def __init__(self):
 
@@ -268,6 +275,26 @@ class Options:
             setattr(self, c, True)
 
     def validate(self):
+
+        # trivial likelihoods
+
+        DD = ["XENON1T_2018_LogLikelihood", "XENON1T_2017_LogLikelihood", "XENON100_2012_LogLikelihood", "DARWIN_LogLikelihood", "LUX_2013_LogLikelihood", "LUX_2015_LogLikelihood", "LUX_2016_LogLikelihood", "LZ_LogLikelihood", "PandaX_2016_LogLikelihood", "PandaX_2017_LogLikelihood", "DarkSide_50_LogLikelihood", "DarkSide_50_S2_LogLikelihood", "CRESST_II_LogLikelihood", "CRESST_III_LogLikelihood", "SuperCDMS_2014_LogLikelihood", "CDMSlite_LogLikelihood", "SIMPLE_2014_LogLikelihood", "PICO_2L_LogLikelihood", "PICO_60_LogLikelihood", "PICO_60_2017_LogLikelihood", "PICO_60_2019_LogLikelihood", "PICO_500_LogLikelihood"]
+        ID = ["lnL_FermiGC", "lnL_CTAGC", "lnL_HESSGC"]
+
+        for c in DD:
+            if getattr(self,c):
+                self.lnL_SI_nuclear_parameters = True
+                self.lnL_v0 = True
+                break
+
+        for c in ID:
+            if getattr(self,c):
+                self.lnL_v0 = True
+                break
+
+        # not ready likelihoods
+        self.lnL_CTAGC = False
+        self.LZ_LogLikelihood = False
 
         # DOES NOTHING likelihoods
         self.dBRBDstartaunu_LogLikelihood = False
@@ -340,14 +367,14 @@ def patchYaml(options, dir, yaml_name):
     s = file.read()
     file.close()
 
-    shutil.rmtree(gen_path+"/" + dir + "/" + yaml_dir + "/" + "yaml_files_full")
-    shutil.rmtree(gen_path+"/" + dir + "/" + yaml_dir + "/" + "yaml_files_med")
-    shutil.rmtree(gen_path+"/" + dir + "/" + yaml_dir + "/" + "yaml_files_small")
-    shutil.rmtree(gen_path+"/" + dir + "/" + yaml_dir + "/" + "yaml_files_idm")
+    shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_full")
+    shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_med")
+    shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_small")
+    shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_idm")
 
     # remove useless yaml dirs
 
-    print("DEBUG: patching " + gen_path+"/" + dir + "/" + yaml_dir + "/" + yaml_name, 'r')
+    print("DEBUG: patching " + gen_path+"/" + dir + "/" + yaml_dir + "/" + yaml_name)
 
     # set basis
     s = s.replace("prior_Type: tanb", "prior_type: " + options.tanb_type)
