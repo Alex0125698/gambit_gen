@@ -761,8 +761,8 @@ Rules:
       maximum_scalar_mass: 5000
 
   - capability: Higgs_Couplings
-    function: THDM_higgs_couplings_pwid
-    # function: THDM_higgs_couplings_2HDMC
+    # function: THDM_higgs_couplings_pwid
+    function: THDM_higgs_couplings_2HDMC
 
   - capability: Reference_SM_Higgs_decay_rates
     function: Ref_SM_Higgs_decays_THDM
