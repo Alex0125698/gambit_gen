@@ -64,7 +64,7 @@ Parameters:
       m12_2:
         range: [0, 6.4e5]
       tanb:
-        range: [0.001, 70]
+        range: [0.1, 100]
         prior_Type: tanb
       sba:
         range: [0.90, 1.0]

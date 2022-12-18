@@ -68,7 +68,7 @@ Parameters:
           range: [-1e3, 2.25e6]
           prior_type: flat
       tanb:
-          range: [0.001, 70]
+          range: [0.1, 100]
           prior_type: flat
       #~~Qin: 91.1876 # = mZ
 

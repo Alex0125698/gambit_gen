@@ -56,7 +56,7 @@ Parameters:
           range: [-0.55, +0.55]
           prior_Type: flat
       tanb:
-          range: [0.001, 70]
+          range: [0.1, 100]
           prior_Type: log
       Lambda4:
           range: [-4,5]
