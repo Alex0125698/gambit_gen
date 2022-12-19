@@ -33,17 +33,17 @@
 # WARNING: be careful not to generate too many, otherwise you will run out of storage
 
 # yaml_dir = 'yaml_files_full'
-# yaml_dir = 'yaml_files_med'
-yaml_dir = 'yaml_files_small'
+yaml_dir = 'yaml_files_med'
+# yaml_dir = 'yaml_files_small'
 use_speed_hacks = True
-postfix = '_82'
+postfix = '_86'
 
 gen_path = 'gens' + postfix
 
-conv_threshold = 1e-6
-required_printed_points = 180000
+conv_threshold = 1e-8
+required_printed_points = 2000000
 required_points = -1
-required_scan_duration = 35*60 # in seconds
+required_scan_duration = 26*60 # in seconds
 
 NODE_COUNT = 1  # set to desired number of nodes per gambit
 CORE_COUNT = 72 # set to number of cores per node
@@ -65,27 +65,35 @@ runnings = ["loop"]
 # 20
 bases = [
 
-    ("generic", "generic"),
-    ("generic", "generic_low_m122"),
-    ("hybrid_Higgs", "hybrid1_high_cosba"),
-    ("hybrid_Higgs", "hybrid1_high_mass_log"),
-    ("hybrid_Higgs", "hybrid1_high_mass"),
-    ("hybrid_Higgs", "hybrid1_log"),
-    ("hybrid_Higgs2", "hybrid2_alignment"),
-    ("hybrid_Higgs", "hybrid1_low_cosba"),
-    ("hybrid_Higgs", "hybrid1_low_mass400"),
-    ("hybrid_Higgs", "hybrid1_low_mass650"),
-    ("hybrid_Higgs", "hybrid1_low_tanb"),
-    ("hybrid_Higgs", "hybrid1_tanb1p5"),
-    ("hybrid_Higgs", "hybrid1_tanb12"),
-    ("hybrid_Higgs", "hybrid1_tanb25"),
-    ("hybrid_Higgs", "hybrid1_tanb36"),
-    ("hybrid_Higgs", "hybrid1_tanb45"),
-    ("hybrid_Higgs", "hybrid1"),
-    ("hybrid_Higgs2", "hybrid2_low_mass200"),
-    ("hybrid_Higgs2", "hybrid2_low_mass350"),
-    ("physical", "physical"),
+    # ("hybrid_Higgs", "hybrid1_tanb36"),
+    # ("hybrid_Higgs", "hybrid1_tanb45"),
+    # ("physical", "physical"),
+    # ("hybrid_Higgs", "hybrid1_tanb1p5"),
+    # ("hybrid_Higgs2", "hybrid2_low_mass350"),
 
+    # ("generic", "generic"),
+    # ("generic", "generic_low_m122"),
+    # ("hybrid_Higgs", "hybrid1_high_cosba"),
+    # ("hybrid_Higgs", "hybrid1_high_mass_log"),
+    # ("hybrid_Higgs", "hybrid1_high_mass"),
+    # ("hybrid_Higgs", "hybrid1_log"),
+    ("hybrid_Higgs2", "hybrid2_alignment"),
+    # ("hybrid_Higgs", "hybrid1_low_cosba"),
+    # ("hybrid_Higgs", "hybrid1_low_mass400"),
+    # ("hybrid_Higgs", "hybrid1_low_mass650"),
+    # ("hybrid_Higgs", "hybrid1_low_tanb"),
+    # ("hybrid_Higgs", "hybrid1_tanb12"),
+    # ("hybrid_Higgs", "hybrid1_tanb25"),
+    # ("hybrid_Higgs", "hybrid1"),
+    # ("hybrid_Higgs2", "hybrid2_low_mass200"),
+
+    ("hybrid_Higgs2", "rej_lambdas"),
+    ("hybrid_Higgs2", "rej_mass_splittings"),
+    ("hybrid_Higgs2", "rej_tanb_cosba"),
+    ("hybrid_Higgs2", "rej_tanb_cosba2"),
+    ("hybrid_Higgs2", "rej_tanb_mhp1"),
+    ("hybrid_Higgs2", "rej_tanb_mhp2"),
+    ("hybrid_Higgs2", "rej_tanb_mhp3"),
 ]
 
 
@@ -111,14 +119,14 @@ tanb_types = ["flat"]
 # ---- THEORY SCANS ----
 
 # 5
-# constraints = [
+constraints = [
 
-#     (["theory"], "theory"),
-#     (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "NLO_unitarity_LogLikelihood_THDM"], "NLO"),
-#     (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "stability_LogLikelihood_THDM"], "stability"),
-#     (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM"], "perturbativity"),
+    (["theory"], "theory"),
+    (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "NLO_unitarity_LogLikelihood_THDM"], "NLO"),
+    (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "stability_LogLikelihood_THDM"], "stability"),
+    (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM"], "perturbativity"),
 
-# ]
+]
     # (["perturbativity_yukawas_LogLikelihood_THDM"], "pert_yukawas")
 
 # ---- ELECTROWEAK SCANS ----
@@ -133,18 +141,18 @@ tanb_types = ["flat"]
 # ---- COLLIDER SCANS ----
 
 # 6
-constraints = [
+# constraints = [
 
-    (["theory", "electroweak"], "electroweak"),
+#     (["theory", "electroweak"], "electroweak"),
 
-    (["theory", "collider"], "collider"),
-    (["theory", "LEP_Higgs_LogLike"], "HB"),
-    (["theory", "LHC_Higgs_LogLike", "HS_ALL"], "HS"),
-    (["theory", "LHC_Higgs_LogLike", "HS_RUN1_SS"], "HSRUN1SS"),
-    (["theory", "LHC_Higgs_LogLike", "HS_LATEST_SS"], "HSLATESTSS"),
-    (["theory", "LHC_Higgs_LogLike", "HS_LATEST_STXS"], "HSLATESTSTXS"),
+#     (["theory", "collider"], "collider"),
+#     (["theory", "LEP_Higgs_LogLike"], "HB"),
+#     (["theory", "LHC_Higgs_LogLike", "HS_ALL"], "HS"),
+#     (["theory", "LHC_Higgs_LogLike", "HS_RUN1_SS"], "HSRUN1SS"),
+#     (["theory", "LHC_Higgs_LogLike", "HS_LATEST_SS"], "HSLATESTSS"),
+#     (["theory", "LHC_Higgs_LogLike", "HS_LATEST_STXS"], "HSLATESTSTXS"),
 
-]
+# ]
 
 # ---- FLAVOR SCANS ----
 

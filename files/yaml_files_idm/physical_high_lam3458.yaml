@@ -30,13 +30,13 @@ Parameters:
       range: [124.1, 126.1]
       prior_type: flat
     mhx:
-      range: [10,2000]
+      range: [10,2200]
       prior_type: flat
     mha:
-      range: [10,2000]
+      range: [36, 100]
       prior_type: flat
     mhp:
-      range: [10,2000]
+      range: [10,2200]
       prior_type: flat
     lam2:
       range: [0,12.57]

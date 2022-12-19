@@ -34,14 +34,14 @@
 
 yaml_dir = 'yaml_files_idm'
 use_speed_hacks = False
-postfix = '_1'
+postfix = '_2'
 
 gen_path = 'gensidm' + postfix
 
 conv_threshold = 1e-6
 required_printed_points = 400000
 required_points = -1
-required_scan_duration = 10*60 # in seconds
+required_scan_duration = 14*60 # in seconds
 
 NODE_COUNT = 1  # set to desired number of nodes per gambit
 CORE_COUNT = 72 # set to number of cores per node
@@ -63,13 +63,14 @@ runnings = ["tree"]
 # 20
 bases = [
 
-    ("physical", "physical_high_lam3456"),
-    ("physical", "physical_high_lam3458"),
-    ("physical", "physical_high_lam34510"),
-    ("physical", "physical_logmH"),
-    ("physical", "physical_low_lam345"),
-    ("physical", "physical_low_mH140"),
-    ("physical", "physical_low_mH400"),
+    # ("physical", "physical_high_lam3456"),
+    # ("physical", "physical_high_lam3458"),
+    # ("physical", "physical_high_lam34510"),
+    ("physical", "physical_high_lam34511"),
+    # ("physical", "physical_logmH"),
+    # ("physical", "physical_low_lam345"),
+    # ("physical", "physical_low_mH140"),
+    # ("physical", "physical_low_mH400"),
     ("physical", "physical"),
 
 ]
