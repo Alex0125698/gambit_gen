@@ -36,12 +36,12 @@ yaml_dir = 'yaml_files_idm'
 use_speed_hacks = False
 postfix = '_1'
 
-gen_path = 'gens' + postfix
+gen_path = 'gensidm' + postfix
 
 conv_threshold = 1e-6
 required_printed_points = 400000
 required_points = -1
-required_scan_duration = 10*60/60 # in seconds
+required_scan_duration = 10*60 # in seconds
 
 NODE_COUNT = 1  # set to desired number of nodes per gambit
 CORE_COUNT = 72 # set to number of cores per node
@@ -88,25 +88,25 @@ tanb_types = ["flat"]
 # ---- COMBINED SCANS ----
 
 # 1
-constraints = [
+# constraints = [
 
-    (["all"], "all"),
+#     (["all"], "all"),
 
-]
+# ]
 
 # ---- THEORY SCANS ----
 
 # 5
-# constraints = [
+constraints = [
 
-#     (["theory"], "theory"),
-#     (["check_unitarity"], "LO"),
-#     (["check_vacuum_stability"], "stability"),
-#     (["check_perturbativity"], "perturbativity"),
-#     (["check_charged_vacuum"], "charged_vacuum"),
-#     (["check_vacuum_metastability"], "vacuum_metastability"),
+    (["theory"], "theory"),
+    (["check_unitarity"], "LO"),
+    (["check_vacuum_stability"], "stability"),
+    (["check_perturbativity"], "perturbativity"),
+    (["check_charged_vacuum"], "charged_vacuum"),
+    (["check_vacuum_metastability"], "vacuum_metastability"),
 
-# ]
+]
 
 # ---- ELECTROWEAK SCANS ----
 
@@ -137,7 +137,7 @@ constraints = [
 # constraints = [
 
 #     # (["theory", "dark_matter"], "dark_matter"),
-#     # (["theory", "XENON1T_2018_LogLikelihood", "XENON1T_2017_LogLikelihood", "XENON100_2012_LogLikelihood", "DARWIN_LogLikelihood", "LUX_2013_LogLikelihood", "LUX_2015_LogLikelihood", "LUX_2016_LogLikelihood", "LZ_LogLikelihood", "PandaX_2016_LogLikelihood", "PandaX_2017_LogLikelihood", "PandaX_4T_LogLikelihood", "DarkSide_50_LogLikelihood", "DarkSide_50_S2_LogLikelihood", "CRESST_II_LogLikelihood", "CRESST_III_LogLikelihood", "SuperCDMS_2014_LogLikelihood", "CDMSlite_LogLikelihood", "SIMPLE_2014_LogLikelihood", "PICO_2L_LogLikelihood", "PICO_60_LogLikelihood", "PICO_60_2017_LogLikelihood", "PICO_60_2019_LogLikelihood", "PICO_500_LogLikelihood"], "direct_detection"),
+#     # (["theory", "XENON1T_2018_LogLikelihood", "XENON1T_2017_LogLikelihood", "XENON100_2012_LogLikelihood", "DARWIN_LogLikelihood", "LUX_2013_LogLikelihood", "LUX_2015_LogLikelihood", "LUX_2016_LogLikelihood", "LZ_2022_LogLikelihood", "PandaX_2016_LogLikelihood", "PandaX_2017_LogLikelihood", "PandaX_4T_LogLikelihood", "DarkSide_50_LogLikelihood", "DarkSide_50_S2_LogLikelihood", "CRESST_II_LogLikelihood", "CRESST_III_LogLikelihood", "SuperCDMS_2014_LogLikelihood", "CDMSlite_LogLikelihood", "SIMPLE_2014_LogLikelihood", "PICO_2L_LogLikelihood", "PICO_60_LogLikelihood", "PICO_60_2017_LogLikelihood", "PICO_60_2019_LogLikelihood", "PICO_500_LogLikelihood"], "direct_detection"),
 #     # (["theory", "lnL_FermiLATdwarfs", "lnL_FermiGC", "lnL_CTAGC", "lnL_HESSGC"], "indirect_detection"), # excluding neutrinos
 #     # (["theory", "lnL_oh2"], "lnL_oh2"),
 #     # (["theory", "lnL_FermiLATdwarfs"], "lnL_FermiLATdwarfs"),
@@ -145,7 +145,7 @@ constraints = [
 #     # (["theory", "XENON1T_2018_LogLikelihood", "XENON1T_2017_LogLikelihood", "XENON100_2012_LogLikelihood"], "XENON"),
 #     # (["theory", "DARWIN_LogLikelihood"], "DARWIN"),
 #     # (["theory", "LUX_2013_LogLikelihood", "LUX_2015_LogLikelihood", "LUX_2016_LogLikelihood"], "LUX"),
-#     # (["theory", "LZ_LogLikelihood"], "LZ"),
+#     # (["theory", "LZ_2022_LogLikelihood"], "LZ"),
 #     # (["theory", "PandaX_2016_LogLikelihood", "PandaX_2017_LogLikelihood", "PandaX_4T_LogLikelihood"], "PandaX"),
 #     # (["theory", "DarkSide_50_LogLikelihood", "DarkSide_50_S2_LogLikelihood"], "DarkSide_50"),
 #     # (["theory", "CRESST_II_LogLikelihood", "CRESST_III_LogLikelihood"], "CRESST"),
@@ -206,7 +206,7 @@ class Options:
                             "B2KstarmumuAng_LogLikelihood_LHCb_2020","B2KstarmumuAng_LogLikelihood_Belle","B2KstarellellAng_LogLikelihood_Belle",
                             "Bu2KstarmumuAng_LogLikelihood_LHCb_2020","B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020","B2KstarmumuBr_LogLikelihood_LHCb",
                             "B2KmumuBr_LogLikelihood_LHCb","Bs2phimumuBr_LogLikelihood"]
-    constraints_trivial = ["lnL_v0","lnL_nuclear_parameters_ChPT",]
+    constraints_trivial = ["lnL_v0","lnL_nuclear_parameters_ChPT"]
 
     constraints_all = constraints_theory + constraints_collider + constraints_electroweak + constraints_dark_matter + constraints_trivial
 
@@ -230,7 +230,7 @@ class Options:
             setattr(self, c, False)
 
         # default paths
-        self.results_folder = "../runs"
+        self.results_folder = "../runsidm"
         self.plots_folder = "../plots"
         self.scan_name = "scan"
 
@@ -278,7 +278,7 @@ class Options:
 
         # trivial likelihoods
 
-        DD = ["XENON1T_2018_LogLikelihood", "XENON1T_2017_LogLikelihood", "XENON100_2012_LogLikelihood", "DARWIN_LogLikelihood", "LUX_2013_LogLikelihood", "LUX_2015_LogLikelihood", "LUX_2016_LogLikelihood", "LZ_LogLikelihood", "PandaX_2016_LogLikelihood", "PandaX_2017_LogLikelihood", "DarkSide_50_LogLikelihood", "DarkSide_50_S2_LogLikelihood", "CRESST_II_LogLikelihood", "CRESST_III_LogLikelihood", "SuperCDMS_2014_LogLikelihood", "CDMSlite_LogLikelihood", "SIMPLE_2014_LogLikelihood", "PICO_2L_LogLikelihood", "PICO_60_LogLikelihood", "PICO_60_2017_LogLikelihood", "PICO_60_2019_LogLikelihood", "PICO_500_LogLikelihood"]
+        DD = ["XENON1T_2018_LogLikelihood", "XENON1T_2017_LogLikelihood", "XENON100_2012_LogLikelihood", "DARWIN_LogLikelihood", "LUX_2013_LogLikelihood", "LUX_2015_LogLikelihood", "LUX_2016_LogLikelihood", "LZ_2022_LogLikelihood", "PandaX_2016_LogLikelihood", "PandaX_2017_LogLikelihood", "DarkSide_50_LogLikelihood", "DarkSide_50_S2_LogLikelihood", "CRESST_II_LogLikelihood", "CRESST_III_LogLikelihood", "SuperCDMS_2014_LogLikelihood", "CDMSlite_LogLikelihood", "SIMPLE_2014_LogLikelihood", "PICO_2L_LogLikelihood", "PICO_60_LogLikelihood", "PICO_60_2017_LogLikelihood", "PICO_60_2019_LogLikelihood", "PICO_500_LogLikelihood"]
         ID = ["lnL_FermiGC", "lnL_CTAGC", "lnL_HESSGC"]
 
         for c in DD:
@@ -293,9 +293,20 @@ class Options:
                 break
 
         # not ready likelihoods
+        self.lnL_FermiGC = False
         self.lnL_CTAGC = False
-        self.LZ_LogLikelihood = False
-
+        self.lnL_HESSGC = False
+        self.XENON1T_2017_LogLikelihood = False
+        self.XENON100_2012_LogLikelihood = False
+        self.LUX_2013_LogLikelihood = False
+        self.LUX_2015_LogLikelihood = False
+        self.DarkSide_50_S2_LogLikelihood = False
+        self.SuperCDMS_2014_LogLikelihood = False
+        self.PICO_500_LogLikelihood = False
+        self.PICO_2L_LogLikelihood = False
+        self.PICO_60_LogLikelihood = False
+        self.IceCube_likelihood = False
+        
         # DOES NOTHING likelihoods
         self.dBRBDstartaunu_LogLikelihood = False
         self.dBRBDtaunu_LogLikelihood = False
@@ -545,15 +556,15 @@ def main():
 
                         # setup paths
                         constraint_name_full = "_" + constraint_name
-                        options.results_folder = "../../../runs/" + model + running + constraint_name_full + scanner_suffix + "/"
+                        options.results_folder = "../../../runsidm/" + model + running + constraint_name_full + scanner_suffix + "/"
                         options.plots_folder = "../plots/" + model + running + constraint_name_full + "/"
                         options.scan_name = file + "_tb"  + tanb + postfix
 
-                        tmp = "../runs/" + model + running + constraint_name_full + scanner_suffix + "/"
-                        folders_to_merge[tmp] = "../runs/" + model + running + constraint_name_full + "/"
+                        tmp = "../runsidm/" + model + running + constraint_name_full + scanner_suffix + "/"
+                        folders_to_merge[tmp] = "../runsidm/" + model + running + constraint_name_full + "/"
 
                         # for i in range(0,CORE_COUNT):
-                        #     folders_to_merge[options.results_folder + 'samples/' + options.scan_name + ".hdf5_temp_" + str(i)] = "../../../runs/" + model + running + constraint_name_full + "/"
+                        #     folders_to_merge[options.results_folder + 'samples/' + options.scan_name + ".hdf5_temp_" + str(i)] = "../../../runsidm/" + model + running + constraint_name_full + "/"
 
                         # make a new gambit with the options specified above
                         makeGambit(options, generate_gambit_name())
