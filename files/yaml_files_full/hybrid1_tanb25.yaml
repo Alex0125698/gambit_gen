@@ -160,6 +160,9 @@ Scanner:
 
 ObsLikes:
 
+  - purpose: LogLike
+    capability: pre_block_over_sampling
+
   #-------------------------------------#
   #      THEORETICAL LIKELIHOODS        #
   #-------------------------------------#
@@ -423,6 +426,9 @@ ObsLikes:
   # - purpose:    LogLike
   #   capability: B2KstarmumuAng_LogLikelihood_LHCb
 
+  - purpose: LogLike
+    capability: block_over_sampling
+
 
 #################################
 ##          OBSERVABLES        ##
@@ -682,6 +688,22 @@ ObsLikes:
 
 
 Rules:
+
+  - capability: pre_block_over_sampling
+    options:
+      dummy: false
+      block_lambdas: false
+      block_mhp_logtanb: false
+      block_cosba_logtanb: false
+      block_mass_splittings: false
+
+  - capability: block_over_sampling
+    options:
+      dummy: false
+      block_lambdas: false
+      block_mhp_logtanb: false
+      block_cosba_logtanb: false
+      block_mass_splittings: false
 
   - capability: RK_LogLikelihood_LHCb
     function: RK_LogLikelihood_LHCb
