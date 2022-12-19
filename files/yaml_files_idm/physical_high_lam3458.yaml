@@ -45,8 +45,19 @@ Parameters:
       range: [8.0,12.57]
       prior_type: flat
 
-  # Chiral nuclear parameters for DirectDM
-  #~Knuclear_params_ChPT_sigmapiN: !import include/nuclear_params_ChPT_sigmapiN_scan.yaml
+  # Nuclear matrix parameters
+  #~Knuclear_params_sigmas_sigmal:
+    #~Ksigmas:
+      #~Krange: [19, 67]
+    #~Ksigmal:
+      #~Krange: [5, 95]
+    #~Kdeltau:  0.842
+    #~Kdeltad:  -0.427
+    #~Kdeltas:  -0.085
+
+  #~K# OFF - we still need old nuclear params for DD_Couplings
+  #~K# Chiral nuclear parameters for DirectDM
+  #~K# nuclear_params_ChPT_sigmapiN: !import include/nuclear_params_ChPT_sigmapiN_scan.yaml
 
   # Dark matter halo parameters
   #~JHalo_gNFW_rho0:
@@ -218,9 +229,17 @@ ObsLikes:
 
   # --- DirectDM nuisance parameters ---
 
+  ## spin-independent nuclear parameters
+  ##~K- purpose:    LogLike
+    ##~Kcapability: lnL_nuclear_parameters_ChPT
+
   # spin-independent nuclear parameters
-  #~K- purpose:    LogLike
-    #~Kcapability: lnL_nuclear_parameters_ChPT
+  #~K- capability: lnL_SI_nuclear_parameters
+    #~Kpurpose:    LogLike
+
+  ## spin-dependent nuclear parameters
+  #~K#- capability: lnL_SD_nuclear_parameters
+    #~K#purpose:    LogLike
 
   # --- Actual DM likelihoods ---
 
@@ -250,7 +269,7 @@ ObsLikes:
   #   #~Gcapability: XENON100_2012_LogLikelihood
 
   # DARWIN direct detection analysis (via DDCalc)
-  #~H- purpose:    LogLike
+  #~H- purpose:    Observable
     #~Hcapability: DARWIN_LogLikelihood
 
   # LUX direct detection analysis (via DDCalc)
