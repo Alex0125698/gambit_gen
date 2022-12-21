@@ -39,10 +39,10 @@ Parameters:
       range: [10,2200]
       prior_type: flat
     lam2:
-      range: [0,12.57]
+      range: [0,9]
       prior_type: flat
     lam345:
-      range: [-12.57,12.57]
+      range: [-2,12.57]
       prior_type: flat
 
   # Nuclear matrix parameters
