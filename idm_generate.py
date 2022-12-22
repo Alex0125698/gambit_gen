@@ -381,6 +381,8 @@ def patchYaml(options, dir, yaml_name):
     s = file.read()
     file.close()
 
+    shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_med_hhs")
+    shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_med_final_hhs")
     shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_full")
     shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_med")
     shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_med_final")

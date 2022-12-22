@@ -32,9 +32,11 @@
 # and a script is generated for running all simultaneously
 # WARNING: be careful not to generate too many, otherwise you will run out of storage
 
+yaml_dir = 'yaml_files_full_hhs'
+# yaml_dir = 'yaml_files_full_final_hhs'
 # yaml_dir = 'yaml_files_full'
 # yaml_dir = 'yaml_files_med'
-yaml_dir = 'yaml_files_med_final'
+# yaml_dir = 'yaml_files_med_final'
 # yaml_dir = 'yaml_files_small'
 # yaml_dir = 'yaml_files_small_final'
 use_speed_hacks = False
@@ -67,35 +69,46 @@ runnings = ["tree"]
 # 22
 bases = [
 
-    ("hybrid_Higgs", "hybrid1_tanb36"),
-    ("hybrid_Higgs", "hybrid1_tanb45"),
-    # ("physical", "physical"),
-    ("hybrid_Higgs", "hybrid1_tanb1p5"),
-    ("hybrid_Higgs2", "hybrid2_low_mass350"),
 
-    ("generic", "generic"),
-    ("generic", "generic_low_m122"),
-    ("hybrid_Higgs", "hybrid1_high_cosba"),
-    ("hybrid_Higgs", "hybrid1_high_mass_log"),
-    ("hybrid_Higgs", "hybrid1_high_mass"),
-    ("hybrid_Higgs", "hybrid1_log"),
-    ("hybrid_Higgs2", "hybrid2_alignment"),
-    ("hybrid_Higgs", "hybrid1_low_cosba"),
-    ("hybrid_Higgs", "hybrid1_low_mass400"),
-    ("hybrid_Higgs", "hybrid1_low_mass650"),
-    ("hybrid_Higgs", "hybrid1_low_tanb"),
-    ("hybrid_Higgs", "hybrid1_tanb12"),
-    ("hybrid_Higgs", "hybrid1_tanb25"),
+    # ------------ hhs 
+
+    ("physical", "physical"),
     ("hybrid_Higgs", "hybrid1"),
-    ("hybrid_Higgs2", "hybrid2_low_mass200"),
+    ("hybrid_Higgs", "rej_lambdas"),
+    ("hybrid_Higgs", "rej_mass_splittings"),
+    ("hybrid_Higgs", "rej_tanb_mhp"),
 
-    ("hybrid_Higgs2", "rej_lambdas"),
-    ("hybrid_Higgs2", "rej_mass_splittings"),
-    ("hybrid_Higgs2", "rej_tanb_cosba"),
-    ("hybrid_Higgs2", "rej_tanb_cosba2"),
-    ("hybrid_Higgs2", "rej_tanb_mhp1"),
-    ("hybrid_Higgs2", "rej_tanb_mhp2"),
-    ("hybrid_Higgs2", "rej_tanb_mhp3"),
+    # -----------------------------------
+    
+    # ("hybrid_Higgs", "hybrid1_tanb36"),
+    # ("hybrid_Higgs", "hybrid1_tanb45"),
+    # # ("physical", "physical"),
+    # ("hybrid_Higgs", "hybrid1_tanb1p5"),
+    # ("hybrid_Higgs2", "hybrid2_low_mass350"),
+
+    # ("generic", "generic"),
+    # ("generic", "generic_low_m122"),
+    # ("hybrid_Higgs", "hybrid1_high_cosba"),
+    # ("hybrid_Higgs", "hybrid1_high_mass_log"),
+    # ("hybrid_Higgs", "hybrid1_high_mass"),
+    # ("hybrid_Higgs", "hybrid1_log"),
+    # ("hybrid_Higgs2", "hybrid2_alignment"),
+    # ("hybrid_Higgs", "hybrid1_low_cosba"),
+    # ("hybrid_Higgs", "hybrid1_low_mass400"),
+    # ("hybrid_Higgs", "hybrid1_low_mass650"),
+    # ("hybrid_Higgs", "hybrid1_low_tanb"),
+    # ("hybrid_Higgs", "hybrid1_tanb12"),
+    # ("hybrid_Higgs", "hybrid1_tanb25"),
+    # ("hybrid_Higgs", "hybrid1"),
+    # ("hybrid_Higgs2", "hybrid2_low_mass200"),
+
+    # # ("hybrid_Higgs2", "rej_lambdas"),
+    # # ("hybrid_Higgs2", "rej_mass_splittings"),
+    # # ("hybrid_Higgs2", "rej_tanb_cosba"),
+    # # ("hybrid_Higgs2", "rej_tanb_cosba2"),
+    # # ("hybrid_Higgs2", "rej_tanb_mhp1"),
+    # # ("hybrid_Higgs2", "rej_tanb_mhp2"),
+    # # ("hybrid_Higgs2", "rej_tanb_mhp3"),
 ]
 
 
@@ -386,6 +399,8 @@ def patchYaml(options, dir, yaml_name):
     s = file.read()
     file.close()
 
+    shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_med_hhs")
+    shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_med_final_hhs")
     shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_full")
     shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_med")
     shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_med_final")
