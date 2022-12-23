@@ -32,17 +32,17 @@
 # and a script is generated for running all simultaneously
 # WARNING: be careful not to generate too many, otherwise you will run out of storage
 
-yaml_dir = 'yaml_files_med_hhs'
-# yaml_dir = 'yaml_files_med_final_hhs'
+# yaml_dir = 'yaml_files_med_hhs'
+yaml_dir = 'yaml_files_med_final_hhs'
 use_speed_hacks = False
-postfix = '_102'
+postfix = '_2'
 
 gen_path = 'gens' + postfix
 
 conv_threshold = 1e-8
 required_printed_points = 500000
 required_points = -1
-required_scan_duration = 60*60 # in seconds
+required_scan_duration = 180*60 # in seconds
 
 NODE_COUNT = 1  # set to desired number of nodes per gambit
 CORE_COUNT = 72 # set to number of cores per node
@@ -51,7 +51,7 @@ CORE_COUNT = 72 # set to number of cores per node
 MODE = "DIRAC"
 
 # allowed options: "THDM", "THDMI", "THDMII", "THDMLS", or "THDMflipped"
-models = ["THDMI","THDMII"]
+models = ["THDMI","TYPEII"]
 
 # allowed options: "tree" or "loop"
 runnings = ["tree"]
@@ -64,11 +64,12 @@ runnings = ["tree"]
 # 22
 bases = [
 
-    ("physical", "physical"),
-    ("hybrid_Higgs", "hybrid1"),
-    ("hybrid_Higgs", "rej_lambdas"),
-    ("hybrid_Higgs", "rej_mass_splittings"),
-    ("hybrid_Higgs", "rej_tanb_mhp"),
+    # ("physical", "physical"),
+    ("hybrid_Higgs", "hybrid1_A"),
+    ("hybrid_Higgs", "hybrid1_B"),
+    # ("hybrid_Higgs", "rej_lambdas"),
+    # ("hybrid_Higgs", "rej_mass_splittings"),
+    # ("hybrid_Higgs", "rej_tanb_mhp"),
 
 ]
 
@@ -86,11 +87,11 @@ tanb_types = ["flat"]
 # ---- COMBINED SCANS ----
 
 # 1
-# constraints = [
+constraints = [
 
-#     (["all"], "all"),
+    (["all"], "all"),
 
-# ]
+]
 
 # ---- THEORY SCANS ----
 
@@ -133,33 +134,33 @@ tanb_types = ["flat"]
 # ---- FLAVOR SCANS ----
 
 # # 26-2
-constraints = [
+# constraints = [
 
-    (["theory", "flavour"], "flavour"),
-    (["theory", "Bs2ll_LogLikelihood"], "Bs2ll"),
-    (["theory", "B2Kll_LogLikelihood"], "B2Kll"),
-    (["theory", "B2mumu_LogLikelihood_Atlas"], "B2mumuAtlas"),
-    (["theory", "B2mumu_LogLikelihood_LHCb"], "B2mumuLHCb"),
-    (["theory", "B2mumu_LogLikelihood_CMS"], "B2mumuCMS"),
-    (["theory", "Bc_lifetime_LogLikelihood"], "Bclifetime"),
-    (["theory", "B2Xsnunu_LogLikelihood"], "B2Xsnunu"),
-    (["theory", "SL_LogLikelihood"], "SL"),
-    (["theory", "b2sgamma_LogLikelihood"], "b2sgamma"),
-    (["theory", "B2Kstargamma_LogLikelihood"], "B2Kstargamma"),
-    (["theory", "RK_LogLikelihood_LHCb"], "RK"),
-    (["theory", "RKstar_LogLikelihood_LHCb"], "RKstar"),
-    (["theory", "B2KstarmumuAng_LogLikelihood_Atlas"], "B2KstarmumuAngAtlas"),
-    (["theory", "B2KstarmumuAng_LogLikelihood_CMS"], "B2KstarmumuAngCMS"),
-    (["theory", "B2KstarmumuAng_LogLikelihood_LHCb_2020"], "B2KstarmumuAngLHCb2020"),
-    (["theory", "B2KstarmumuAng_LogLikelihood_Belle"], "B2KstarmumuAngBelle"),
-    (["theory", "Bu2KstarmumuAng_LogLikelihood_LHCb_2020"], "Bu2KstarmumuAng"),
-    (["theory", "B2KstarmumuBr_LogLikelihood_LHCb"], "B2KstarmumuBr"),
-    (["theory", "B2KmumuBr_LogLikelihood_LHCb"], "B2KmumuBr"),
-    (["theory", "Bs2phimumuBr_LogLikelihood"], "Bs2phimumuBr"),
-    (["theory", "B2mumu_LogLikelihood_Atlas", "B2mumu_LogLikelihood_LHCb", "B2mumu_LogLikelihood_CMS"], "B2mumu"),
-    (["theory", "B2KstarmumuAng_LogLikelihood_Atlas", "B2KstarmumuAng_LogLikelihood_CMS", "B2KstarmumuAng_LogLikelihood_LHCb_2020", "B2KstarmumuAng_LogLikelihood_Belle"], "B2KstarmumuAng"),
+#     (["theory", "flavour"], "flavour"),
+#     (["theory", "Bs2ll_LogLikelihood"], "Bs2ll"),
+#     (["theory", "B2Kll_LogLikelihood"], "B2Kll"),
+#     (["theory", "B2mumu_LogLikelihood_Atlas"], "B2mumuAtlas"),
+#     (["theory", "B2mumu_LogLikelihood_LHCb"], "B2mumuLHCb"),
+#     (["theory", "B2mumu_LogLikelihood_CMS"], "B2mumuCMS"),
+#     (["theory", "Bc_lifetime_LogLikelihood"], "Bclifetime"),
+#     (["theory", "B2Xsnunu_LogLikelihood"], "B2Xsnunu"),
+#     (["theory", "SL_LogLikelihood"], "SL"),
+#     (["theory", "b2sgamma_LogLikelihood"], "b2sgamma"),
+#     (["theory", "B2Kstargamma_LogLikelihood"], "B2Kstargamma"),
+#     (["theory", "RK_LogLikelihood_LHCb"], "RK"),
+#     (["theory", "RKstar_LogLikelihood_LHCb"], "RKstar"),
+#     (["theory", "B2KstarmumuAng_LogLikelihood_Atlas"], "B2KstarmumuAngAtlas"),
+#     (["theory", "B2KstarmumuAng_LogLikelihood_CMS"], "B2KstarmumuAngCMS"),
+#     (["theory", "B2KstarmumuAng_LogLikelihood_LHCb_2020"], "B2KstarmumuAngLHCb2020"),
+#     (["theory", "B2KstarmumuAng_LogLikelihood_Belle"], "B2KstarmumuAngBelle"),
+#     (["theory", "Bu2KstarmumuAng_LogLikelihood_LHCb_2020"], "Bu2KstarmumuAng"),
+#     (["theory", "B2KstarmumuBr_LogLikelihood_LHCb"], "B2KstarmumuBr"),
+#     (["theory", "B2KmumuBr_LogLikelihood_LHCb"], "B2KmumuBr"),
+#     (["theory", "Bs2phimumuBr_LogLikelihood"], "Bs2phimumuBr"),
+#     (["theory", "B2mumu_LogLikelihood_Atlas", "B2mumu_LogLikelihood_LHCb", "B2mumu_LogLikelihood_CMS"], "B2mumu"),
+#     (["theory", "B2KstarmumuAng_LogLikelihood_Atlas", "B2KstarmumuAng_LogLikelihood_CMS", "B2KstarmumuAng_LogLikelihood_LHCb_2020", "B2KstarmumuAng_LogLikelihood_Belle"], "B2KstarmumuAng"),
 
-]
+# ]
     # (["theory", "B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020"], "B2KstareeAngLowq2"),
     # (["theory", "B2KstarellellAng_LogLikelihood_Belle"], "B2KstarellellAng"),
 

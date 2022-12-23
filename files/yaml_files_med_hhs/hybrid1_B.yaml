@@ -47,25 +47,25 @@ Parameters:
       #      but m12_2 too low tends to cause negative masses
 
       mh:
-          range: [10, 123]
+          range: [10, 110]
           prior_Type: flat
       mH:
           range: [124.1, 126.1]
           prior_Type: flat
       cba:
-          range: [-1.0, +1.0]
+          range: [0.9, 1.0]
           prior_Type: flat
       tanb:
-          range: [0.1, 100]
+          range: [3.5, 100]
           prior_Type: flat
       Lambda4:
-          range: [-13, +13]
+          range: [-11, +6]
           prior_Type: flat
       Lambda5:
-          range: [-9, +9]
+          range: [-9, +2]
           prior_Type: flat
       Lambda7:
-          range: [-5, +5]
+          range: [-2, +1]
           prior_Type: flat
       lambda6:
           fixed_value: 0.0
