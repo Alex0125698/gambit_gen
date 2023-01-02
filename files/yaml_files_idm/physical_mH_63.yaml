@@ -30,7 +30,7 @@ Parameters:
       range: [124.1, 126.1]
       prior_type: flat
     mhx:
-      range: [10,140]
+      range: [60.5,64.5]
       prior_type: flat
     mha:
       range: [10,500]
@@ -42,7 +42,7 @@ Parameters:
       range: [0,9]
       prior_type: flat
     lam345:
-      range: [-2,3]
+      range: [-2,9]
       prior_type: flat
 
   # Nuclear matrix parameters

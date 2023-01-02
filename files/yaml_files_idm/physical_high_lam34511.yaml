@@ -42,7 +42,7 @@ Parameters:
       range: [0,9]
       prior_type: flat
     lam345:
-      range: [11.0,12.57]
+      range: [3.5,12.57]
       prior_type: flat
 
   # Nuclear matrix parameters
@@ -138,13 +138,13 @@ Scanner:
       jDE: true
 
       # population size (increase this to get more robust scan, or decrease to make it run faster)
-      NP: 40000
+      NP: 12000
 
       # when the average generation improvement falls below this, we stop the scan
       convthresh: 1e-6
 
       # try to fill the first generation with only valid points (1), or use any point (0)
-      init_population_strategy: 0
+      init_population_strategy: 1
 
       # don’t give up on initial generation
       max_initialisation_attempts: 1000000

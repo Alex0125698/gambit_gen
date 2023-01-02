@@ -30,19 +30,19 @@ Parameters:
       range: [124.1, 126.1]
       prior_type: flat
     mhx:
-      range: [10,140]
-      prior_type: flat
+      range: [10,70]
+      prior_type: log
     mha:
-      range: [10,500]
+      range: [10,600]
       prior_type: flat
     mhp:
-      range: [10,500]
+      range: [10,600]
       prior_type: flat
     lam2:
       range: [0,9]
       prior_type: flat
     lam345:
-      range: [-2,3]
+      range: [-0.2,+0.2]
       prior_type: flat
 
   # Nuclear matrix parameters
