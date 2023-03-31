@@ -35,14 +35,14 @@
 # yaml_dir = 'yaml_files_med_hhs'
 yaml_dir = 'yaml_files_med_final_hhs'
 use_speed_hacks = False
-postfix = '_2'
+postfix = '_14'
 
 gen_path = 'gens' + postfix
 
 conv_threshold = 1e-8
 required_printed_points = 500000
 required_points = -1
-required_scan_duration = 180*60 # in seconds
+required_scan_duration = 3*60*60 # in seconds
 
 NODE_COUNT = 1  # set to desired number of nodes per gambit
 CORE_COUNT = 72 # set to number of cores per node
@@ -51,7 +51,7 @@ CORE_COUNT = 72 # set to number of cores per node
 MODE = "DIRAC"
 
 # allowed options: "THDM", "THDMI", "THDMII", "THDMLS", or "THDMflipped"
-models = ["THDMI","TYPEII"]
+models = ["THDMI"]
 
 # allowed options: "tree" or "loop"
 runnings = ["tree"]
@@ -120,13 +120,14 @@ constraints = [
 # 6
 # constraints = [
 
-#     (["theory", "electroweak"], "electroweak"),
+#     # (["theory", "electroweak"], "electroweak"),
 
 #     (["theory", "collider"], "collider"),
-#     (["theory", "LEP_Higgs_LogLike"], "HB"),
-#     (["theory", "LHC_Higgs_LogLike", "HS_RUN1_SS"], "HSRUN1SS"),
-#     (["theory", "LHC_Higgs_LogLike", "HS_LATEST_SS"], "HSLATESTSS"),
-#     (["theory", "LHC_Higgs_LogLike", "HS_LATEST_STXS"], "HSLATESTSTXS"),
+#     # (["theory", "flavour"], "flavour"),
+#     # (["theory", "LEP_Higgs_LogLike"], "HB"),
+#     # (["theory", "LHC_Higgs_LogLike", "HS_RUN1_SS"], "HSRUN1SS"),
+#     # (["theory", "LHC_Higgs_LogLike", "HS_LATEST_SS"], "HSLATESTSS"),
+#     # (["theory", "LHC_Higgs_LogLike", "HS_LATEST_STXS"], "HSLATESTSTXS"),
 
 # ]
     # (["theory", "LHC_Higgs_LogLike", "HS_ALL"], "HS"),

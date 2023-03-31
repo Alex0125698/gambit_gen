@@ -687,6 +687,9 @@ ObsLikes:
 
 Rules:
 
+  - capability: prediction_DeltaMs
+    function: SuperIso_prediction_Delta_MBs
+
   - capability: pre_block_over_sampling
     options:
       dummy: false

@@ -47,7 +47,7 @@ Parameters:
       #      but m12_2 too low tends to cause negative masses
 
       mh:
-          range: [10, 110]
+          range: [50, 105]
           prior_Type: flat
       mH:
           range: [124.1, 126.1]
@@ -56,13 +56,13 @@ Parameters:
           range: [-1.0, -0.9]
           prior_Type: flat
       tanb:
-          range: [3.5, 100]
+          range: [2.5,100]
           prior_Type: flat
       Lambda4:
-          range: [-11, +6]
+          range: [-0.5, 1.5]
           prior_Type: flat
       Lambda5:
-          range: [-9, +2]
+          range: [-8, -1]
           prior_Type: flat
       Lambda7:
           range: [-2, +1]
@@ -716,6 +716,9 @@ ObsLikes:
 
 
 Rules:
+
+  - capability: prediction_DeltaMs
+    function: SuperIso_prediction_Delta_MBs
 
   - capability: pre_block_over_sampling
     options:

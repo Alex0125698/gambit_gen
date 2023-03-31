@@ -34,7 +34,7 @@
 
 yaml_dir = 'yaml_files_idm'
 use_speed_hacks = False
-postfix = '_25'
+postfix = '_3'
 
 gen_path = 'gensidm' + postfix
 
@@ -91,11 +91,11 @@ tanb_types = ["flat"]
 # ---- COMBINED SCANS ----
 
 # 1
-constraints = [
+# constraints = [
 
-    (["all"], "all"),
+#     (["all"], "all"),
 
-]
+# ]
 
 # ---- THEORY SCANS ----
 
@@ -139,29 +139,31 @@ constraints = [
 
 # ---- DARK MATTER SCANS ----
 
-# constraints = [
+constraints = [
 
-#     (["theory", "lnL_v0","lnL_nuclear_parameters_ChPT","dark_matter"], "dark_matter"),
-#     # (["theory", "lnL_oh2"], "lnL_oh2"),
-#     # (["theory", "lnL_FermiLATdwarfs"], "lnL_FermiLATdwarfs"),
-#     # (["theory", "lnL_v0","lnL_nuclear_parameters_ChPT","XENON1T_2018_LogLikelihood", "XENON1T_2017_LogLikelihood", "XENON100_2012_LogLikelihood"], "XENON"),
-#     # (["theory", "lnL_v0","lnL_nuclear_parameters_ChPT","LUX_2013_LogLikelihood", "LUX_2015_LogLikelihood", "LUX_2016_LogLikelihood"], "LUX"),
-#     # (["theory", "lnL_v0","lnL_nuclear_parameters_ChPT","LZ_2022_LogLikelihood"], "LZ"),
-#     # (["theory", "lnL_v0","lnL_nuclear_parameters_ChPT","PandaX_2016_LogLikelihood", "PandaX_2017_LogLikelihood", "PandaX_4T_LogLikelihood"], "PandaX"),
-#     # (["theory", "lnL_v0","lnL_nuclear_parameters_ChPT","DarkSide_50_LogLikelihood", "DarkSide_50_S2_LogLikelihood"], "DarkSide_50"),
-#     # (["theory", "lnL_v0","lnL_nuclear_parameters_ChPT","CRESST_II_LogLikelihood", "CRESST_III_LogLikelihood"], "CRESST"),
-#     # (["theory", "lnL_v0","lnL_nuclear_parameters_ChPT","SuperCDMS_2014_LogLikelihood", "CDMSlite_LogLikelihood"], "CDMS"),
-#     # (["theory", "lnL_v0","lnL_nuclear_parameters_ChPT","SIMPLE_2014_LogLikelihood"], "SIMPLE"),
-#     # (["theory", "lnL_v0","lnL_nuclear_parameters_ChPT","PICO_2L_LogLikelihood", "PICO_60_LogLikelihood", "PICO_60_2017_LogLikelihood", "PICO_60_2019_LogLikelihood", "PICO_500_LogLikelihood"], "PICO"),
+    (["all"], "all"),
 
-#     # NOT WORKING
-#     # (["theory", "lnL_v0","lnL_nuclear_parameters_ChPT","XENON1T_2018_LogLikelihood", "XENON1T_2017_LogLikelihood", "XENON100_2012_LogLikelihood", "DARWIN_LogLikelihood", "LUX_2013_LogLikelihood", "LUX_2015_LogLikelihood", "LUX_2016_LogLikelihood", "LZ_2022_LogLikelihood", "PandaX_2016_LogLikelihood", "PandaX_2017_LogLikelihood", "PandaX_4T_LogLikelihood", "DarkSide_50_LogLikelihood", "DarkSide_50_S2_LogLikelihood", "CRESST_II_LogLikelihood", "CRESST_III_LogLikelihood", "SuperCDMS_2014_LogLikelihood", "CDMSlite_LogLikelihood", "SIMPLE_2014_LogLikelihood", "PICO_2L_LogLikelihood", "PICO_60_LogLikelihood", "PICO_60_2017_LogLikelihood", "PICO_60_2019_LogLikelihood", "PICO_500_LogLikelihood"], "direct_detection"),
-#     # (["theory", "lnL_v0","lnL_nuclear_parameters_ChPT","DARWIN_LogLikelihood"], "DARWIN"),
-#     # (["theory", "lnL_FermiGC", "lnL_CTAGC", "lnL_HESSGC"], "galactic_center"),
-#     # (["theory", "lnL_FermiLATdwarfs", "lnL_FermiGC", "lnL_CTAGC", "lnL_HESSGC"], "indirect_detection"), # excluding neutrinos
-#     # (["theory", "IceCube_likelihood"], "IceCube_likelihood"),
+    (["theory", "lnL_v0","lnL_nuclear_parameters_ChPT","dark_matter"], "dark_matter"),
+    (["theory", "lnL_oh2"], "lnL_oh2"),
+    # (["theory", "lnL_FermiLATdwarfs"], "lnL_FermiLATdwarfs"),
+    (["theory", "lnL_v0","lnL_nuclear_parameters_ChPT","XENON1T_2018_LogLikelihood", "XENON1T_2017_LogLikelihood", "XENON100_2012_LogLikelihood"], "XENON"),
+    (["theory", "lnL_v0","lnL_nuclear_parameters_ChPT","LUX_2013_LogLikelihood", "LUX_2015_LogLikelihood", "LUX_2016_LogLikelihood"], "LUX"),
+    (["theory", "lnL_v0","lnL_nuclear_parameters_ChPT","LZ_2022_LogLikelihood"], "LZ"),
+    (["theory", "lnL_v0","lnL_nuclear_parameters_ChPT","PandaX_2016_LogLikelihood", "PandaX_2017_LogLikelihood", "PandaX_4T_LogLikelihood"], "PandaX"),
+    (["theory", "lnL_v0","lnL_nuclear_parameters_ChPT","PICO_2L_LogLikelihood", "PICO_60_LogLikelihood", "PICO_60_2017_LogLikelihood", "PICO_60_2019_LogLikelihood", "PICO_500_LogLikelihood"], "PICO"),
+    (["theory", "lnL_v0","lnL_nuclear_parameters_ChPT","DarkSide_50_LogLikelihood", "DarkSide_50_S2_LogLikelihood"], "DarkSide_50"),
+    # (["theory", "lnL_v0","lnL_nuclear_parameters_ChPT","CRESST_II_LogLikelihood", "CRESST_III_LogLikelihood"], "CRESST"),
+    # (["theory", "lnL_v0","lnL_nuclear_parameters_ChPT","SuperCDMS_2014_LogLikelihood", "CDMSlite_LogLikelihood"], "CDMS"),
+    # (["theory", "lnL_v0","lnL_nuclear_parameters_ChPT","SIMPLE_2014_LogLikelihood"], "SIMPLE"),
 
-# ]
+    # NOT WORKING
+    # (["theory", "lnL_v0","lnL_nuclear_parameters_ChPT","XENON1T_2018_LogLikelihood", "XENON1T_2017_LogLikelihood", "XENON100_2012_LogLikelihood", "DARWIN_LogLikelihood", "LUX_2013_LogLikelihood", "LUX_2015_LogLikelihood", "LUX_2016_LogLikelihood", "LZ_2022_LogLikelihood", "PandaX_2016_LogLikelihood", "PandaX_2017_LogLikelihood", "PandaX_4T_LogLikelihood", "DarkSide_50_LogLikelihood", "DarkSide_50_S2_LogLikelihood", "CRESST_II_LogLikelihood", "CRESST_III_LogLikelihood", "SuperCDMS_2014_LogLikelihood", "CDMSlite_LogLikelihood", "SIMPLE_2014_LogLikelihood", "PICO_2L_LogLikelihood", "PICO_60_LogLikelihood", "PICO_60_2017_LogLikelihood", "PICO_60_2019_LogLikelihood", "PICO_500_LogLikelihood"], "direct_detection"),
+    # (["theory", "lnL_v0","lnL_nuclear_parameters_ChPT","DARWIN_LogLikelihood"], "DARWIN"),
+    # (["theory", "lnL_FermiGC", "lnL_CTAGC", "lnL_HESSGC"], "galactic_center"),
+    # (["theory", "lnL_FermiLATdwarfs", "lnL_FermiGC", "lnL_CTAGC", "lnL_HESSGC"], "indirect_detection"), # excluding neutrinos
+    # (["theory", "IceCube_likelihood"], "IceCube_likelihood"),
+
+]
 
 # ---- FLAVOR SCANS ----
 

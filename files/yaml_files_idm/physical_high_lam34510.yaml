@@ -42,7 +42,7 @@ Parameters:
       range: [0,9]
       prior_type: flat
     lam345:
-      range: [2,12.57]
+      range: [5,12.57]
       prior_type: flat
 
   # Nuclear matrix parameters
@@ -410,6 +410,9 @@ ObsLikes:
 
 
 Rules:
+
+  - capability: prediction_DeltaMs
+    function: SuperIso_prediction_Delta_MBs
 
   - capability: THDM_Type
     function: get_THDM_Type_IDM

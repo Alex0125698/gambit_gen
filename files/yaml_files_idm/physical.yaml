@@ -412,6 +412,9 @@ ObsLikes:
 
 Rules:
 
+  - capability: prediction_DeltaMs
+    function: SuperIso_prediction_Delta_MBs
+
   - capability: THDM_Type
     function: get_THDM_Type_IDM
 

@@ -30,7 +30,7 @@ Parameters:
       range: [124.1, 126.1]
       prior_type: flat
     mhx:
-      range: [10,70]
+      range: [10,60]
       prior_type: log
     mha:
       range: [10,600]
@@ -411,6 +411,9 @@ ObsLikes:
 
 
 Rules:
+
+  - capability: prediction_DeltaMs
+    function: SuperIso_prediction_Delta_MBs
 
   - capability: THDM_Type
     function: get_THDM_Type_IDM
