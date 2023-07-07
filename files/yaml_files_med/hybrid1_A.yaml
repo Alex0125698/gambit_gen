@@ -47,25 +47,25 @@ Parameters:
       #      but m12_2 too low tends to cause negative masses
 
       mh:
-          range: [115,135]
+          range: [123,127]
           prior_Type: flat
       mH:
-          range: [140, 650]
-          prior_Type: flat
+          range: [500, 4e4]
+          prior_Type: log
       cba:
-          range: [-0.55, +0.55]
+          range: [-1.0, +1.0]
           prior_Type: flat
       tanb:
-          range: [0.1, 100]
-          prior_Type: tanb
+          range: [0.03, 0.12]
+          prior_Type: log
       Lambda4:
-          range: [-4,5]
+          range: [-13, +13]
           prior_Type: flat
       Lambda5:
-          range: [-3,4]
+          range: [-9, +9]
           prior_Type: flat
       Lambda7:
-          range: [-2,2.5]
+          range: [-1, +1]
           prior_Type: flat
       lambda6:
           fixed_value: 0.0
@@ -145,7 +145,7 @@ Scanner:
       init_population_strategy: 0
 
       # don’t give up on initial generation
-      max_initialisation_attempts: 1000000
+      max_initialisation_attempts: 100000000
 
       # set the acceptable value to coincide with our invalidation threshold
       max_acceptable_value: 9e5 # (invalid for < -1e6)
@@ -159,9 +159,6 @@ Scanner:
 
 
 ObsLikes:
-
-  - purpose: LogLike
-    capability: pre_block_over_sampling
 
   #-------------------------------------#
   #      THEORETICAL LIKELIHOODS        #
@@ -425,9 +422,6 @@ ObsLikes:
   # ONLY 2020 VERSION INCLUDED
   # - purpose:    LogLike
   #   capability: B2KstarmumuAng_LogLikelihood_LHCb
-
-  - purpose: LogLike
-    capability: block_over_sampling
 
 
 #################################
@@ -693,22 +687,6 @@ Rules:
   - capability: prediction_DeltaMs
     function: SuperIso_prediction_Delta_MBs
 
-  - capability: pre_block_over_sampling
-    options:
-      dummy: false
-      block_lambdas: false
-      block_mhp_logtanb: false
-      block_cosba_logtanb: false
-      block_mass_splittings: false
-
-  - capability: block_over_sampling
-    options:
-      dummy: false
-      block_lambdas: false
-      block_mhp_logtanb: false
-      block_cosba_logtanb: false
-      block_mass_splittings: false
-
   - capability: RK_LogLikelihood_LHCb
     function: RK_LogLikelihood_LHCb
 
@@ -862,6 +840,8 @@ Logger:
 ##########################
 
 KeyValues:
+
+  print_scanID: false
 
   likelihood:
     print_invalid_points: false

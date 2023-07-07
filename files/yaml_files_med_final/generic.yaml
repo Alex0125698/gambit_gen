@@ -144,7 +144,7 @@ Scanner:
       init_population_strategy: 0
 
       # don’t give up on initial generation
-      max_initialisation_attempts: 1000000
+      max_initialisation_attempts: 100000000
 
       # set the acceptable value to coincide with our invalidation threshold
       max_acceptable_value: 9e5 # (invalid for < -1e6)
