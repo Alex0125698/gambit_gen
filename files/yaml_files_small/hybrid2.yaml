@@ -49,15 +49,15 @@ Parameters:
       mh:
           range: [115,135]
           prior_Type: flat
-      mH:
-          range: [950, 2500]
+      mHp:
+          range: [2000, 3000]
           prior_Type: flat
       cba:
-          range: [-0.55, +0.55]
+          range: [-0.01, +0.01]
           prior_Type: flat
       tanb:
-          range: [0.1, 100]
-          prior_Type: tanb
+          range: [0.033, 1.6]
+          prior_Type: log
       Lambda4:
           range: [-4,5]
           prior_Type: flat
@@ -159,9 +159,6 @@ Scanner:
 
 
 ObsLikes:
-
-  - purpose: LogLike
-    capability: pre_block_over_sampling
 
   #-------------------------------------#
   #      THEORETICAL LIKELIHOODS        #
@@ -426,10 +423,6 @@ ObsLikes:
   # - purpose:    LogLike
   #   capability: B2KstarmumuAng_LogLikelihood_LHCb
 
-  - purpose: LogLike
-    capability: block_over_sampling
-
-
 #################################
 ##          OBSERVABLES        ##
 #################################
@@ -693,22 +686,6 @@ Rules:
   - capability: prediction_DeltaMs
     function: SuperIso_prediction_Delta_MBs
 
-  - capability: pre_block_over_sampling
-    options:
-      dummy: false
-      block_lambdas: false
-      block_mhp_logtanb: false
-      block_cosba_logtanb: false
-      block_mass_splittings: false
-
-  - capability: block_over_sampling
-    options:
-      dummy: false
-      block_lambdas: false
-      block_mhp_logtanb: false
-      block_cosba_logtanb: false
-      block_mass_splittings: false
-
   - capability: RK_LogLikelihood_LHCb
     function: RK_LogLikelihood_LHCb
 
@@ -775,7 +752,7 @@ Rules:
       check_other_scale: 1000
       # options below only for NLO unitarity
       check_correction_ratio: true
-      wave_function_corrections: true
+      wave_function_corrections: false
       gauge_corrections: true
       yukawa_corrections: true
 
@@ -862,6 +839,8 @@ Logger:
 ##########################
 
 KeyValues:
+
+  print_scanID: false
 
   likelihood:
     print_invalid_points: false
