@@ -57,7 +57,7 @@ Parameters:
           prior_Type: flat
       tanb:
           range: [0.03, 320]
-          prior_Type: log
+          prior_Type: flat
       Lambda4:
           range: [-4,5]
           prior_Type: flat

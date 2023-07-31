@@ -3,8 +3,8 @@
 #! NOTES
 #! see hours using mybalance
 #! submit using: sbatch submission_script
-#! interactive job using: sintr -A DIRAC-DP192-CPU -p icelake -N1 -n76 -t 0:10:0 --qos=INTR
-#! interactive job using: sintr -A DIRAC-DP192-CPU -p icelake -N1 -n38 -t 0:10:0 --qos=INTR
+#! interactive job using: sintr -A DIRAC-DP264-CPU -p icelake -N1 -n76 -t 0:10:0 --qos=INTR
+#! interactive job using: sintr -A DIRAC-DP264-CPU -p icelake -N1 -n38 -t 0:10:0 --qos=INTR
 #! view jobs using: 
 #! cancel using: scancel  id
 #! cores/threads = 38/76 *2 (NB hyperthreading is actually disabled)
@@ -15,7 +15,7 @@
 #!#############################################################
 
 #SBATCH -J gambit_thdm
-#SBATCH -A DIRAC-DP192-CPU
+#SBATCH -A DIRAC-DP264-CPU
 #SBATCH -p icelake
 #SBATCH --nodes=1
 #! How many (MPI) tasks will there be in total? (<= nodes*76)

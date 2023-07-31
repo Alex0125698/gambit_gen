@@ -50,19 +50,19 @@ Parameters:
         prior_Type: flat
       mH:
         range: [150, 1000]
-        prior_Type: flat
+        prior_Type: log
       mA:
         range: [30, 1000]
-        prior_Type: flat
+        prior_Type: log
       mHp:
         range: [30, 1000]
-        prior_Type: flat
+        prior_Type: log
       lambda6:
         fixed_value: 0.0
       lambda7:
         fixed_value: 0.0
       m12_2:
-        range: [-1e4, 1e6]
+        range: [0, 1e6]
         prior_Type: flat
       tanb:
         range: [0.03, 320]
