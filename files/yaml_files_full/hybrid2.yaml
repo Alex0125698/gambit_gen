@@ -1,0 +1,31 @@
+Parameters:
+    StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
+    TheModelName:
+      mh:
+          range: [120,130]
+          prior_Type: flat
+      mHp:
+          range: [2000, 3000]
+          prior_Type: flat
+      cba:
+          range: [-0.01, +0.01]
+          prior_Type: flat
+      tanb:
+          range: [0.033, 1.6]
+          prior_Type: log
+      Lambda4:
+          range: [-4,5]
+          prior_Type: flat
+      Lambda5:
+          range: [-3,4]
+          prior_Type: flat
+      Lambda7:
+          range: [-2,2.5]
+          prior_Type: flat
+      lambda6:
+          fixed_value: 0.0
+      lambda7:
+          fixed_value: 0.0
+      #~~Qin: 91.1876 # = mZ
+
+!import ../yaml_files/THDM_constraints.yaml

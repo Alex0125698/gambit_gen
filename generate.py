@@ -34,15 +34,11 @@ print("\n-----------------\nrunning 2HDM generator\n")
 # and a script is generated for running all simultaneously
 # WARNING: be careful not to generate too many, otherwise you will run out of storage
 
-# yaml_dir = 'yaml_files_full'
+yaml_dir = 'yaml_files_full'
 # yaml_dir = 'yaml_files_med'
-# yaml_dir = 'yaml_files_med_final'
-yaml_dir = 'yaml_files_small'
-# yaml_dir = 'yaml_files_small_final'
-use_speed_hacks = True
-postfix = '_2'
-
-gen_path = 'gens' + postfix
+# yaml_dir = 'yaml_files_small'
+use_speed_hacks = True # todo: maybe delete this ??
+gen_path = 'gens'
 
 conv_threshold = 1e-8
 required_printed_points = 750000*100
@@ -50,7 +46,7 @@ required_points = -1
 required_scan_duration = 1*60*60 # in seconds
 
 NODE_COUNT = 1  # set to desired number of nodes per gambit
-CORE_COUNT = 72 # set to number of cores per node
+CORE_COUNT = 76 # set to number of cores per node
 
 # either "DIRAC" or "BASH"
 MODE = "DIRAC"
@@ -69,16 +65,41 @@ runnings = ["loop"]
 # 22
 bases = [
     
-    # ("generic", "generic"),
     # ("physical", "physical"),
-    # ("hybrid_Higgs", "hybrid1"),
-    ("hybrid_Higgs2", "hybrid2"),
 
-    # ("hybrid_Higgs", "hybrid1_lowtb"),
-    # ("hybrid_Higgs2", "hybrid2_lowtb"),
-    # ("hybrid_Higgs", "hybrid1_A"),
-    # ("hybrid_Higgs2", "hybrid2_A"),
-    # ("hybrid_Higgs2", "hybrid2_B"),
+    # ("generic", "generic"),
+    # ("generic", "genericA"),
+    # ("generic", "genericB"),
+    # ("generic", "genericC"),
+    # ("generic", "genericD"),
+
+    # ("hybrid_Higgs", "hybrid1"),
+    # ("hybrid_Higgs", "hybrid1A"),
+    # ("hybrid_Higgs", "hybrid1B"),
+    # ("hybrid_Higgs", "hybrid1C"),
+    # ("hybrid_Higgs", "hybrid1D"),
+    # ("hybrid_Higgs", "hybrid1E"),
+    # ("hybrid_Higgs", "hybrid1F"),
+    # ("hybrid_Higgs", "hybrid1G"),
+    # ("hybrid_Higgs", "hybrid1H"),
+    # ("hybrid_Higgs", "hybrid1I"),
+    # ("hybrid_Higgs", "hybrid1J"),
+    # ("hybrid_Higgs", "hybrid1K"),
+    # ("hybrid_Higgs", "hybrid1L"),
+    # ("hybrid_Higgs", "hybrid1M"),
+    # ("hybrid_Higgs", "hybrid1N"),
+    # ("hybrid_Higgs", "hybrid1O"),
+    # ("hybrid_Higgs", "hybrid1P"),
+    # ("hybrid_Higgs", "hybrid1Q"),
+    # ("hybrid_Higgs", "hybrid1R"),
+
+    ("hybrid_Higgs2", "hybrid2"),
+    # ("hybrid_Higgs2", "hybrid2A"),
+    # ("hybrid_Higgs2", "hybrid2B"),
+    # ("hybrid_Higgs2", "hybrid2C"),
+    # ("hybrid_Higgs2", "hybrid2D"),
+    # ("hybrid_Higgs2", "hybrid2E"),
+
 ]
 
 
@@ -107,9 +128,9 @@ tanb_types = ["flat"]
 constraints = [
 
     (["theory"], "theory_hybrid2"),
-    # (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "NLO_unitarity_LogLikelihood_THDM"], "NLO"),
-    # (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "stability_LogLikelihood_THDM"], "stability"),
-    # (["light_scalar_mass_corrections_LogLikelihood_THDM", "heavy_scalar_mass_corrections_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM"], "perturbativity"),
+    # (["scalar_mass_corrections_LogLikelihood_THDM", "NLO_unitarity_LogLikelihood_THDM"], "NLO"),
+    # (["scalar_mass_corrections_LogLikelihood_THDM", "stability_LogLikelihood_THDM"], "stability"),
+    # (["runToScaleTest_LogLikelihood_THDM", "scalar_mass_corrections_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM"], "perturbativity"),
 
 ]
     # (["perturbativity_yukawas_LogLikelihood_THDM"], "pert_yukawas")
@@ -188,6 +209,7 @@ import os
 import shutil
 import math
 from distutils.dir_util import copy_tree
+from distutils.dir_util import remove_tree
 from sys import platform
 from pathlib import Path
 
@@ -204,8 +226,8 @@ gambit_dirs = []
 class Options:
 
     # the names of all constraints
-    constraints_theory = ["NLO_unitarity_LogLikelihood_THDM", "LO_unitarity_LogLikelihood_THDM", "stability_LogLikelihood_THDM", "light_scalar_mass_corrections_LogLikelihood_THDM", 
-                         "heavy_scalar_mass_corrections_LogLikelihood_THDM", "scalar_mass_range_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM", "perturbativity_lambdas_LogLikelihood_THDM", 
+    constraints_theory = ["runToScaleTest_LogLikelihood_THDM", "NLO_unitarity_LogLikelihood_THDM", "LO_unitarity_LogLikelihood_THDM", "stability_LogLikelihood_THDM", "higgs_exp_mass_LogLikelihood_THDM", 
+                         "scalar_mass_corrections_LogLikelihood_THDM", "higgs_scenario_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM", 
                          "perturbativity_yukawas_LogLikelihood_THDM"]
     constraints_collider = ["LEP_Higgs_LogLike", "LHC_Higgs_LogLike","HS_ALL","HS_RUN1_SS","HS_LATEST_SS","HS_LATEST_STXS"] #higgs_mass_LogLikelihood
     constraints_electroweak =  ["oblique_parameters_LogLikelihood"] # lnL_gm2
@@ -300,7 +322,8 @@ class Options:
         # !!!!!!!!!!!!!
         # self.perturbativity_yukawas_LogLikelihood_THDM = False
 
-        # self.scalar_mass_range_LogLikelihood_THDM = False
+        self.higgs_scenario_LogLikelihood_THDM = True
+        self.higgs_exp_mass_LogLikelihood_THDM = True
 
         # # NOT WORKING likelihoods
         # self.deltaMB_LogLikelihood = False
@@ -317,11 +340,8 @@ class Options:
 
         # correction checks
         if self.running == "tree":
-            self.light_scalar_mass_corrections_LogLikelihood_THDM = False
-            self.heavy_scalar_mass_corrections_LogLikelihood_THDM = False
-
-        if  self.perturbativity_LogLikelihood_THDM:
-            self.perturbativity_lambdas_LogLikelihood_THDM = False
+            self.scalar_mass_corrections_LogLikelihood_THDM = False
+            self.runToScaleTest_LogLikelihood_THDM = False
 
         if self.HS_ALL:
             self.HS_RUN1_SS = False
@@ -358,6 +378,8 @@ def makeGambit(options, dir):
 
     # patch the yaml file
     patchYaml(options, dir, yaml_name)
+    patchYaml(options, dir, "THDM_constraints.yaml")
+    remove_tree(dir2 + "/" + yaml_dir)
 
     # patch the run script
     if MODE == "BASH":
@@ -366,6 +388,9 @@ def makeGambit(options, dir):
         patchRunScriptJC(options, dir, yaml_name)
     else:
         raise Exception("unknown mode")
+    
+    os.remove(dir2 + "/job_jc.sh")
+    os.remove(dir2 + "/job_dirac.sh")
 
     # create the output folders (otherwise hdf5_v1 will crash)
     Path(dir2 + '/yaml_files/' + options.results_folder + '/samples').mkdir(parents=True, exist_ok=True)
@@ -379,14 +404,14 @@ def patchYaml(options, dir, yaml_name):
     s = file.read()
     file.close()
 
-    shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_med_hhs")
-    shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_med_final_hhs")
-    shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_full")
-    shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_med")
-    shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_med_final")
-    shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_small")
-    shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_small_final")
-    shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_idm")
+    # shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_med_hhs")
+    # shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_med_final_hhs")
+    # shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_full")
+    # shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_med")
+    # shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_med_final")
+    # shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_small")
+    # shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_small_final")
+    # shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_idm")
 
     # remove useless yaml dirs
 
@@ -420,9 +445,9 @@ def patchYaml(options, dir, yaml_name):
     
     # set the speed hacks
     if use_speed_hacks:
-        s = s.replace("#~o","use_speedhacks: true # ")
+        s = s.replace("only_perturbativity: false","only_perturbativity: false")
     else:
-        s = s.replace("#~o","use_speedhacks: false # ")
+        s = s.replace("only_perturbativity: false","only_perturbativity: true")
 
 
     # uncomment required constraints
@@ -520,6 +545,15 @@ def patchRunScriptJC(options, dir, yaml_name):
     file.close()
 
 def main():
+
+    global gen_path
+    postfix = 0
+    while os.path.exists(gen_path+"_"+str(postfix)):
+        postfix += 1
+
+    postfix = str(postfix)
+    gen_path = gen_path + "_" + postfix
+
 
     folders_to_merge = {}
 

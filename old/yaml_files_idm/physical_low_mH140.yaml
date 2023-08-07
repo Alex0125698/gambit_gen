@@ -1,0 +1,700 @@
+##########################################################################
+## GAMBIT configuration for the following                               ##
+##                                                                      ##
+## Models: Inert2 (Inert 2HDM)                                          ##
+##                                                                      ##
+## Includes all compatible likelihoods:                                 ##
+## theoretical, collider, electroweak, flavour, dark matter             ##
+##                                                                      ##
+## Requires backends:                                                   ##
+##                                                                      ##
+## micromegas_Inert2, sarah-spheno_Inert2, calchep,                     ##
+## darksusy_all_models, ddcalc, superiso, gamlike, nulike, capgen,      ##
+## higgsbounds, higgssignals, superiso, thdmc, heplike                  ##
+##                                                                      ##
+##                                                                      ##
+## Authors: A.S. Woodcock, M.J. White                                   ##
+## Date: NOV/2022                                                       ##
+##                                                                      ##
+##########################################################################
+
+
+Parameters:
+
+  # SM parameters
+  StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
+
+  # Inert 2HDM parameters
+  TheModelName:
+    mhh:
+      range: [124.1, 126.1]
+      prior_type: flat
+    mhx:
+      range: [10,200]
+      prior_type: flat
+    mha:
+      range: [10,200]
+      prior_type: log
+    mhp:
+      range: [10,200]
+      prior_type: flat
+    lam2:
+      range: [0,9]
+      prior_type: flat
+    lam345:
+      range: [-2,3]
+      prior_type: flat
+
+  # Nuclear matrix parameters
+  #~Knuclear_params_sigmas_sigmal:
+    #~Ksigmas:
+      #~Krange: [19, 67]
+    #~Ksigmal:
+      #~Krange: [5, 95]
+    #~Kdeltau:  0.842
+    #~Kdeltad:  -0.427
+    #~Kdeltas:  -0.085
+
+  #~K# OFF - we still need old nuclear params for DD_Couplings
+  #~K# Chiral nuclear parameters for DirectDM
+  #~K# nuclear_params_ChPT_sigmapiN: !import include/nuclear_params_ChPT_sigmapiN_scan.yaml
+
+  # Dark matter halo parameters
+  #~JHalo_gNFW_rho0:
+    #~Jrho0:
+      #~Jrange: [0.2, 0.8]
+    #~Jv0:
+      #~Jrange: [216, 264]
+    #~Jvesc:
+      #~Jrange: [437, 603]
+    #~Jvrot:
+      #~Jsame_as: Halo_gNFW_rho0::v0
+    #~Jrs: 20.0
+    #~Jr_sun: 8.5
+    #~Jalpha: 1
+    #~Jbeta: 3
+    #~Jgamma: 1
+
+
+#################################
+##     PRINTER SELECTION       ##
+#################################
+
+
+Printer:
+
+  # printer: cout
+
+  # printer: ascii
+  # options:
+  #   buffer_length: 100
+  #   output_file: "scan.txt"
+
+  # printer: hdf5
+  # options:
+  #   output_file: "scan.hdf5"
+  #   group: "/data"
+  #   delete_file_on_restart: true
+
+  printer: hdf5_v1
+  options:
+    output_file: "scan.hdf5"
+    group: "/data"
+    delete_file_on_restart: true
+    disable_combine_routines: true
+
+
+#################################
+##     SCANNER SELECTION       ##
+#################################
+
+
+Scanner:
+
+  use_scanner: differentialEvolution
+
+  scanners:
+
+    random:
+      plugin: random
+      point_number: 10000000
+      like:  LogLike
+
+    differentialEvolution:
+      plugin: diver
+      like: LogLike
+      verbosity: 0
+
+      # turning this off will use the less aggressive jDE self-adaptive optimization
+      # note that lambdajDE is the default method
+      lambdajDE: false
+
+      # run a self-adaptive scan where the following set automatically
+      # F [0.7] = mutation scale factor,
+      # Cr [0.9] = crossover rate,
+      # lambda [0] = best vector usage rate,
+      # current [false] = use target vector as base for mutation,
+      # expon [false] = use exponential crossover,
+      jDE: true
+
+      # population size (increase this to get more robust scan, or decrease to make it run faster)
+      NP: 12000
+
+      # when the average generation improvement falls below this, we stop the scan
+      convthresh: 1e-6
+
+      # try to fill the first generation with only valid points (1), or use any point (0)
+      init_population_strategy: 1
+
+      # don’t give up on initial generation
+      max_initialisation_attempts: 100000000
+
+      # set the acceptable value to coincide with our invalidation threshold
+      max_acceptable_value: 9e5 # (invalid for < -1e6)
+
+      outputSamples: false
+
+
+#################################
+##  OBSERVABLES / LIKELIHOODS  ##
+#################################
+
+
+ObsLikes:
+
+  #-------------------------------------#
+  #      THEORETICAL LIKELIHOODS        #
+  #-------------------------------------#
+
+  - capability: theory_LogLikelihood_Inert
+    purpose: LogLike
+
+  #-------------------------------------#
+  #      ELECTROWEAK LIKELIHOODS        #
+  #-------------------------------------#
+
+  # Calculates the electroweak precision parameters, S, T, U, V, W, X
+  # & fits to meausured values. S, T, U involve a correlation matrix.
+  # Includes low-energy notation described in arxiv::9407203.
+  # Likelihood type: Half-Gaussian
+  #~C- purpose:    LogLike
+    #~Ccapability: oblique_parameters_LogLikelihood
+
+  # muon anomalous magnetic moment likelihood (for GTHDM)
+  #~D- purpose: LogLike
+    #~Dcapability: lnL_gm2
+    #~Dfunction: lnL_gm2
+
+  #-------------------------------------#
+  #      COLLIDER LIKELIHOODS           #
+  #-------------------------------------#
+
+  ### NOTE
+  # LHC & LEP likelihoods
+  # Coupling Squared input structs are filled by colliderBit,
+  # then chi^2 are extracted directly from HS & HB
+
+  # HiggsSignals 2.5.0 likelihood
+  #~B- purpose: LogLike
+    #~Bcapability: LHC_Higgs_LogLike
+    #~Bfunction: calc_HS_2_LHC_LogLike
+
+  # HiggsBounds 5.8.0 likelihood
+  #~A- purpose: LogLike
+    #~Acapability: LEP_Higgs_LogLike
+    #~Afunction: calc_HB_5_LEP_LogLike
+
+  #-------------------------------------#
+  #      DARK MATTER LIKELIHOODS        #
+  #-------------------------------------#
+
+  # --- DM Local Halo nuisance parameters ---
+
+  # most-probable DM speed
+  #~J- purpose: LogLike
+    #~Jcapability: lnL_v0
+
+  # escape velocity
+  #~J- purpose: LogLike
+    #~Jcapability: lnL_vesc
+
+  # OFF - not needed in combination with v0
+  # # escape velocity
+  # #~J- purpose: LogLike
+  #   #~Jcapability: lnL_vrot
+
+  # local DM density
+  #~J- purpose: LogLike
+    #~Jcapability: lnL_rho0
+
+  # --- DirectDM nuisance parameters ---
+
+  ## spin-independent nuclear parameters
+  ##~K- purpose:    LogLike
+    ##~Kcapability: lnL_nuclear_parameters_ChPT
+
+  # spin-independent nuclear parameters
+  #~K- capability: lnL_SI_nuclear_parameters
+    #~Kpurpose:    LogLike
+
+  ## spin-dependent nuclear parameters
+  #~K#- capability: lnL_SD_nuclear_parameters
+    #~K#purpose:    LogLike
+
+  # --- Actual DM likelihoods ---
+
+  # Relic Density (via MicrOMEGAs)
+  #~Y- purpose:    LogLike
+    #~Ycapability: lnL_oh2
+
+  # Indirect Detection: Fermi-LAT gamma ray measurements of dwarf galaxies (via gamLike)
+  #~E- purpose:    LogLike
+    #~Ecapability: lnL_FermiLATdwarfs
+
+  # OFF - Unclear if GC excess is due to DM
+  # # Indirect Detection: Fermi-LAT/CTA/HESS gamma ray measurements of galactic center (via gamLike)
+  # #~F- purpose:    LogLike
+  #   #~Fcapability: lnL_FermiGC
+  # #~F- purpose:    LogLike
+  #   #~Fcapability: lnL_CTAGC
+  # #~F- purpose:    LogLike
+  #   #~Fcapability: lnL_HESSGC
+
+  # XENON1T direct detection analysis (via DDCalc)
+  #~G- purpose:    LogLike
+    #~Gcapability: XENON1T_2018_LogLikelihood
+  # #~G- purpose:    LogLike
+  #   #~Gcapability: XENON1T_2017_LogLikelihood
+  # #~G- purpose:    LogLike
+  #   #~Gcapability: XENON100_2012_LogLikelihood
+
+  # DARWIN direct detection analysis (via DDCalc)
+  #~H- purpose:    Observable
+    #~Hcapability: DARWIN_LogLikelihood
+
+  # LUX direct detection analysis (via DDCalc)
+  # #~I- purpose:    LogLike
+  #   #~Icapability: LUX_2013_LogLikelihood
+  # #~I- purpose:    LogLike
+  #   #~Icapability: LUX_2015_LogLikelihood
+  #~I- purpose:    LogLike
+    #~Icapability: LUX_2016_LogLikelihood
+
+  # LZ direct detection analysis (via DDCalc)
+  #~L- purpose:    LogLike
+    #~Lcapability: LZ_2022_LogLikelihood
+
+  # PandaX direct detection analysis (via DDCalc)
+  #~M- purpose:    LogLike
+    #~Mcapability: PandaX_2016_LogLikelihood
+  #~M- purpose:    LogLike
+    #~Mcapability: PandaX_2017_LogLikelihood
+  #~M- purpose:    LogLike
+    #~Mcapability: PandaX_4T_LogLikelihood
+
+  # DarkSide direct detection analysis (via DDCalc)
+  #~N- purpose:    LogLike
+    #~Ncapability: DarkSide_50_LogLikelihood
+  # #~N- purpose:    LogLike
+  #   #~Ncapability: DarkSide_50_S2_LogLikelihood
+
+  # CRESST direct detection analysis (via DDCalc)
+  #~O- purpose:    LogLike
+    #~Ocapability: CRESST_II_LogLikelihood
+  #~O- purpose:    LogLike
+    #~Ocapability: CRESST_III_LogLikelihood
+
+  # CDMS direct detection analysis (via DDCalc)
+  # #~P- purpose:    LogLike
+  #   #~Pcapability: SuperCDMS_2014_LogLikelihood
+  #~P- purpose:    LogLike
+    #~Pcapability: CDMSlite_LogLikelihood
+
+  # SIMPLE direct detection analysis (via DDCalc)
+  #~Q- purpose:    LogLike
+    #~Qcapability: SIMPLE_2014_LogLikelihood
+
+  # PICO direct detection analysis (via DDCalc)
+  # #~R- purpose:    LogLike
+  #   #~Rcapability: PICO_500_LogLikelihood
+  # #~R- purpose:    LogLike
+  #   #~Rcapability: PICO_2L_LogLikelihood
+  # #~R- purpose:    LogLike
+  #   #~Rcapability: PICO_60_LogLikelihood
+  #~R- purpose:    LogLike
+    #~Rcapability: PICO_60_2017_LogLikelihood
+  #~R- purpose:    LogLike
+    #~Rcapability: PICO_60_2019_LogLikelihood
+
+
+
+  # Indirect Detection: IceCube neutrinos
+  #~S- purpose:    LogLike
+    #~Scapability: IceCube_likelihood
+  # - capability: IC79_loglike
+  #   purpose: LogLike
+
+
+  #-------------------------------------#
+  #      FLAVOR LIKELIHOODS             #
+  #-------------------------------------#
+
+  # NONE
+
+#################################
+##          OBSERVABLES        ##
+#################################
+
+  - capability: Inert2_spectrum
+    purpose: Observable
+    type: map_str_dbl
+
+  # - capability: all_BFs
+  #   purpose: Observable
+
+  #  ---- electroweak ----
+
+  #~C- purpose:      Observable
+    #~Ccapability:   prediction_Tpar
+
+  #~C- purpose:      Observable
+    #~Ccapability:   prediction_Spar
+
+  #~C- purpose:      Observable
+    #~Ccapability:   prediction_Upar
+
+  #  ---- dark matter ----
+
+  # relic density
+  #~Y- capability: RD_oh2
+    #~Ypurpose: Observable
+
+  # DISABLED: doesnt print correctly, and seems to be reading from files...
+  # would be nice to get this working correctly at some point
+  # # Contributions of different annihilation channels to the relic density
+  # #~Y- capability: relic_density_contributions
+  #   #~Ypurpose: Observable
+
+  # velocity of DM at freezeout
+  #~Y- capability: vSigma_freezeout
+    #~Ypurpose: Observable
+
+
+  # only used for Neutrino yield
+  # total thermally-averaged annihilation cross-section
+  #~S- capability: sigmav
+    #~Spurpose: Observable
+  
+  # only used for Neutrinos
+  # spin-independent/spin-dependent proton/neutron cross-sections
+  #~S- capability: sigma_SI_p
+    #~Spurpose: Observable
+  #~S- capability: sigma_SI_n
+    #~Spurpose: Observable
+  #~S- capability: sigma_SD_p
+    #~Spurpose: Observable
+  #~S- capability: sigma_SD_n
+    #~Spurpose: Observable
+
+  #  ---- flavor ----
+
+  # NONE
+
+  #  ---- flavor (via SARAH-SPheno) ----
+
+  #  NONE
+
+
+###################################
+##  Likelihood/Observable Rules  ##
+###################################
+
+
+Rules:
+
+  - capability: prediction_DeltaMs
+    function: SuperIso_prediction_Delta_MBs
+
+  - capability: THDM_Type
+    function: get_THDM_Type_IDM
+
+  - capability: HB_ModelParameters_neutral
+    function: MSSMLikeHiggs_ModelParameters_effc
+
+  - capability: hb_charged_ModelParameters
+    function: MSSMLikeHiggs_ModelParameters_charged
+
+  - capability: Inert2_spectrum
+    options:
+      check_theory_constraints: true
+      skip_charged_DM_candidate: true
+      tree_level_spectrum: true
+      #~1check_unitarity: true
+      #~2check_charged_vacuum: true
+      #~3check_vacuum_stability: true
+      #~4check_perturbativity: true
+      #~5check_vacuum_metastability: true
+
+  - capability: prediction_Tpar
+    function: STUVWX_to_prediction_Tpar
+
+  - capability: prediction_Spar
+    function: STUVWX_to_prediction_Spar
+
+  - capability: prediction_Upar
+    function: STUVWX_to_prediction_Upar
+
+  - capability: prediction_STUVWX
+    function: THDMC_prediction_STUVWX
+
+  # # --- spheno version ---
+
+  # - capability: decay_rates
+  #   function: all_Inert2_decays_from_SPheno
+
+  # # --- calchep version ---
+
+  # - capability: decay_rates
+  #   function: all_decays
+
+  # - capability: Higgs_decay_rates
+  #   function: CH_Inert2_Higgs_decays
+  # - capability: h0_2_decay_rates
+  #   function: CH_Inert2_h0_2_decays
+  # - capability: A0_decay_rates
+  #   function: CH_Inert2_A0_decays
+  # - capability: H_plus_decay_rates
+  #   function: CH_Inert2_H_plus_decays
+  # - capability: H_minus_decay_rates
+  #   function: CH_Inert2_H_minus_decays
+  # - capability: t_decay_rates
+  #   function: t_decays
+
+  # --- thdmc version ---
+
+  - capability: decay_rates
+    function: all_decays
+
+  - capability: Higgs_decay_rates
+    function: h0_1_decays_THDM
+  - capability: h0_2_decay_rates
+    function: h0_2_decays_THDM
+  - capability: A0_decay_rates
+    function: A0_decays_THDM
+  - capability: H_plus_decay_rates
+    function: Hpm_decays_THDM
+  - capability: H_minus_decay_rates
+    function: H_minus_decays
+  - capability: t_decay_rates
+    function: t_decays_THDM
+
+
+  - capability: Reference_SM_Higgs_decay_rates
+    function: Ref_SM_Higgs_decays_THDM
+    # function: Ref_SM_Higgs_decays_table
+
+  - capability: Reference_SM_other_Higgs_decay_rates
+    function: Ref_SM_other_Higgs_decays_THDM
+
+  - capability: Reference_SM_A0_decay_rates
+    function: Ref_SM_A0_decays_THDM
+
+  # ----------------------------
+
+  # convert to Filip's THDM spectrum using this function
+  - capability: THDM_spectrum
+    function: Inert2_spectrum_2_THDM_spectrum
+
+  - capability: all_BFs
+    function: get_decaytable_as_map
+    options:
+      skip_particles: ['H-','W+','W-','Z0','e+_2','e+_3','e-_2','e-_3','mu+','mu-','pi+','pi-','pi0','tau+','tau-','tbar','u_3','ubar_3']
+      # skip first generation quark decays
+      # skip_channels:
+      #   - ['H+','dbar','u']
+      #   - ['A0','dbar','d']
+      #   - ['A0','ubar','u']
+      #   - ['h0_1','dbar','d']
+      #   - ['h0_1','ubar','u']
+      #   - ['h0_2','dbar','d']
+      #   - ['h0_2','ubar','u']
+      print_BF_error: false
+      print_as_widths: true
+
+  # ---- collider ----
+
+  - capability: LHC_Higgs_LogLike
+    options:
+      # -1:all, 0:RUN1_SS, 1:LATEST_SS, 2:LATEST_STXS
+      HS_analysis: -1
+
+  - capability: Higgs_Couplings
+    # function: THDM_higgs_couplings_pwid
+    function: THDM_higgs_couplings_2HDMC
+
+  # ---- dark matter ----
+
+  - capability: capture_rate_Sun
+    # function: capture_rate_Sun_const_xsec # DarkSUSY 6
+    # function: capture_rate_Sun_const_xsec_capgen # CapGen
+    # function: capture_rate_Sun_vnqn # CapGen
+    function: capture_rate_Sun_NREO # CapGen
+
+  # Initialisation Settings for MicrOmegas
+  - function: MicrOmegas_Inert2_3_6_9_2_init
+    options:
+       VZdecay: 1 # 0 - no 3 body final states, 1 - virtual Z in annihilations, 2 - virtual Z in coannihilations
+       VWdecay: 1 # 0 - no 3 body final states, 1 - virtual W in annihilations, 2 - virtual W in coannihilations
+
+  # get the relic density from MicrOmegas
+  - capability: RD_oh2
+    function: RD_oh2_MicrOmegas
+
+  # Relic density settings for MicrOmegas
+  # Gets RD_oh2 and Xf from micrOMEGAs simultaneously
+  - capability: RD_oh2_Xf
+    function: RD_oh2_Xf_MicrOmegas
+    options:
+      fast: 1  # 0: standard (default), 1: fast
+      Beps: 1e-5  #  1e-5: standard, 1: switches coann off
+    backends:
+    - {backend: MicrOmegas_Inert2}
+
+  # Choose to rescale signals in direct and indirect detection by the relic density fraction
+  # allows us to consider a DM candidate that only provides part of the total DM density
+  # while other particles may provide the rest
+  # Should probably be consistent with the option used for the relic density likelihood
+  - capability: RD_fraction
+    # function: RD_fraction_one # use this to assume the fraction must be 1
+    function: RD_fraction_leq_one # use this to assume the fraction must be less than or equal to 1
+    options: # Planck 2018 values
+      oh2_obs: 0.120
+
+  # get process catalogue for the IDM
+  - capability: TH_ProcessCatalog
+    function: TH_ProcessCatalog_Inert2
+
+  # select the simulated gamma ray yield tables
+  - capability: GA_SimYieldTable
+    function: GA_SimYieldTable_DarkSUSY
+    # function: GA_SimYieldTable_MicrOmegas
+  - capability: positron_SimYieldTable
+    function: positron_SimYieldTable_DarkSUSY
+    # function: positron_SimYieldTable_MicrOmegas
+  - capability: antiproton_SimYieldTable
+    function: antiproton_SimYieldTable_DarkSUSY
+  - capability: antideuteron_SimYieldTable
+    function: antideuteron_SimYieldTable_DarkSUSY
+  - capability: electron_SimYieldTable
+    function: electron_SimYieldTable_from_positron_SimYieldTable
+
+  # select to use the gamma ray yields for an annihilating DM candidate
+  # TODO: this should prob be done by GAMBIT automatically
+  - capability: GA_Yield
+    function: GA_AnnYield_General
+
+  # Set v0 to 240 +/- 8 km/s based on Reid et al [arXiv:1401.5377]
+  - capability: lnL_v0
+    function: lnL_v0_gaussian
+    options:
+      v0_obs: 240
+      v0_obserr: 8
+
+  # Set vesc to 533.0 +/- 31.9 km/s based on Piffl et. al [arXiv:1309.4293]
+  - capability: lnL_vesc
+    function: lnL_vesc_gaussian
+    options:
+      vesc_obs: 533.0
+      vesc_obserr: 31.9
+
+  # Choose to implement the relic density likelihood as an upper bound, to allow
+  # the possibility of another DM candidate that provides the remaining density
+  - capability: lnL_oh2
+    # function: lnL_oh2_Simple
+    function: lnL_oh2_upperlimit
+    options: # Planck 2018 values
+      oh2_obs: 0.120
+      oh2_obserr: 0.001
+      oh2_fractional_theory_err: 0.01
+
+  # Set sigma_l to 50 +/- 15 MeV based on Bishara et al [arXiv:1707.06998]
+  - capability: lnL_SI_nuclear_parameters
+    function: lnL_sigmas_sigmal
+    options:
+      sigmal_obs: 50.0
+      sigmal_obserr: 15.0
+
+  # Choose between the functions sigmav_late_universe and sigmav_late_universe_MicrOmegas
+  # total thermally-averaged annihilation cross-section
+  - capability: sigmav
+    # function: sigmav_late_universe
+    function: sigmav_late_universe_MicrOmegas
+
+  # TODO: not sure what this is...
+  # Retrieve the semi-annihilation branching fraction from MicrOmegas
+  - capability: get_channel_MicrOmegas
+    function: get_channel_MicrOmegas
+    backends:
+    - {backend: MicrOmegas_Inert2}
+  
+  # Select WIMP-nucleon couplings for DDCalc 2.1.0 WIMP object
+  - capability: DDCalc_Couplings
+    function: DDCalc_Couplings_WIMP_nucleon
+    # function: DDCalc_Couplings_NR_WCs
+
+  # Choose 5 quark flavour scheme for DirectDM
+  - capability: DD_nonrel_WCs
+    # function: DD_nonrel_WCs_flavscheme
+    function: NREO_from_DD_couplings
+    module: DarkBit
+
+  # get direct detection couplings via micrOMEGAs
+  - capability: DD_couplings
+    function: DD_couplings_MicrOmegas
+
+  # ---- flavor ----
+
+  # NONE
+
+#########################
+# Logging setup
+#########################
+
+
+Logger:
+
+  redirection:
+    # [Debug] :  "debug.log"
+    [Default] :  "default.log"
+    [DecayBit] :  "DecayBit.log"
+    [PrecisionBit] :  "PrecisionBit.log"
+    [ColliderBit] :  "ColliderBit.log"
+    [SpecBit] :  "SpecBit.log"
+
+##########################
+# Name/Value Section
+##########################
+
+KeyValues:
+
+  likelihood:
+    print_invalid_points: false
+    model_invalid_for_lnlike_below: -1e6
+    model_invalid_for_lnlike_below_alt: -5e5
+    disable_print_for_lnlike_below: -3e4
+    debug: false
+    required_points: 12121212
+    required_valid_points: 23232323
+    required_scan_duration: 34343434
+
+  dependency_resolution:
+    prefer_model_specific_functions: true
+    use_old_routines: false
+
+  exceptions:
+    dependency_resolver_error: fatal
+    dependency_resolver_warning: non-fatal
+    core_warning: fatal
+
+  default_output_path: "the_output_folder"
+  debug: false
