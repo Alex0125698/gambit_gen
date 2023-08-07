@@ -13,18 +13,18 @@ Printer:
   #   buffer_length: 100
   #   output_file: "scan.txt"
 
-  printer: hdf5
-  options:
-    output_file: "scan.hdf5"
-    group: "/data"
-    delete_file_on_restart: true
-
-  # printer: hdf5_v1
+  # printer: hdf5
   # options:
   #   output_file: "scan.hdf5"
   #   group: "/data"
   #   delete_file_on_restart: true
-  #   disable_combine_routines: true
+
+  printer: hdf5_v1
+  options:
+    output_file: "scan.hdf5"
+    group: "/data"
+    delete_file_on_restart: true
+    disable_combine_routines: true
 
 
 #################################
@@ -34,7 +34,7 @@ Printer:
 
 Scanner:
 
-  use_scanner: random
+  use_scanner: differentialEvolution
 
   scanners:
 
@@ -61,7 +61,7 @@ Scanner:
       jDE: true
 
       # population size (increase this to get more robust scan, or decrease to make it run faster)
-      NP: 30000
+      NP: 40000
 
       # when the average generation improvement falls below this, we stop the scan
       convthresh: 1e-6
@@ -94,42 +94,42 @@ ObsLikes:
     capability: basic_theory_LogLikelihood_THDM
 
   # check if we can run spectrum without error
-  #~2- purpose: Observable
+  #~2- purpose: LogLike
     #~2capability: runToScaleTest_LogLikelihood_THDM
 
   # Checks that the LO or NLO S-matrix is unitary
-  #~3- purpose: Observable
+  #~3- purpose: LogLike
     #~3capability: unitarity_LogLikelihood_THDM
     #~3function: NLO_unitarity_LogLikelihood_THDM
 
   # Checks that the LO or NLO S-matrix is unitary
-  #~4- purpose: Observable
+  #~4- purpose: LogLike
     #~4capability: unitarity_LogLikelihood_THDM
     #~4function: LO_unitarity_LogLikelihood_THDM
 
   # guides scanner towards mh = 125 GeV
-  #~5- purpose: Observable
+  #~5- purpose: LogLike
     #~5capability: higgs_exp_mass_LogLikelihood_THDM
 
   # only keeps points that correspond to regular Higgs scenario
-  #~6- purpose: Observable
+  #~6- purpose: LogLike
     #~6capability: higgs_scenario_LogLikelihood_THDM
 
   # Stability + meta-stability of the 2HDM Potential
-  #~7- purpose: Observable
+  #~7- purpose: LogLike
     #~7capability: stability_LogLikelihood_THDM
 
   # Perturbativity check of scalar mass corrections
-  #~8- purpose: Observable
+  #~8- purpose: LogLike
     #~8capability: scalar_mass_corrections_LogLikelihood_THDM
 
   # Perturbativity check of scalar couplings
-  #~9- purpose: Observable
+  #~9- purpose: LogLike
     #~9capability: perturbativity_LogLikelihood_THDM
     #~9function: perturbativity_LogLikelihood_THDM
 
   # Perturbativity check of yukawa couplings
-  #~0- purpose: Observable
+  #~0- purpose: LogLike
     #~0capability: perturbativity_yukawas_LogLikelihood_THDM
     
   #-------------------------------------#
@@ -612,7 +612,7 @@ Rules:
 
   - capability: higgs_exp_mass_LogLikelihood_THDM
     options:
-      higgs_mass_uncertainty: 3.5
+      higgs_mass_uncertainty: 5.0
       valid_range: 200
 
   - capability: higgs_scenario_LogLikelihood_THDM
