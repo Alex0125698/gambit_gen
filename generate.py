@@ -43,7 +43,7 @@ gen_path = 'gens'
 conv_threshold = 1e-8
 required_printed_points = 750000*100
 required_points = -1
-required_scan_duration = 1*60*60 # in seconds
+required_scan_duration = 1*5*60 # in seconds
 
 NODE_COUNT = 1  # set to desired number of nodes per gambit
 CORE_COUNT = 76 # set to number of cores per node
@@ -67,7 +67,7 @@ bases = [
     
     # ("physical", "physical"),
 
-    # ("generic", "generic"),
+    ("generic", "generic"),
     # ("generic", "genericA"),
     # ("generic", "genericB"),
     # ("generic", "genericC"),
@@ -93,7 +93,7 @@ bases = [
     # ("hybrid_Higgs", "hybrid1Q"),
     # ("hybrid_Higgs", "hybrid1R"),
 
-    ("hybrid_Higgs2", "hybrid2"),
+    # ("hybrid_Higgs2", "hybrid2"),
     # ("hybrid_Higgs2", "hybrid2A"),
     # ("hybrid_Higgs2", "hybrid2B"),
     # ("hybrid_Higgs2", "hybrid2C"),
@@ -101,10 +101,6 @@ bases = [
     # ("hybrid_Higgs2", "hybrid2E"),
 
 ]
-
-
-# allowed options: "flat", or "log"
-tanb_types = ["flat"]
 
 # allowed options: all, theory, collider, electroweak, flavour
 #                 (the name of any individual constraint)
@@ -127,7 +123,7 @@ tanb_types = ["flat"]
 # 5
 constraints = [
 
-    (["theory"], "theory_hybrid2"),
+    (["theory"], "theory"),
     # (["scalar_mass_corrections_LogLikelihood_THDM", "NLO_unitarity_LogLikelihood_THDM"], "NLO"),
     # (["scalar_mass_corrections_LogLikelihood_THDM", "stability_LogLikelihood_THDM"], "stability"),
     # (["runToScaleTest_LogLikelihood_THDM", "scalar_mass_corrections_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM"], "perturbativity"),
@@ -198,7 +194,7 @@ constraints = [
 print("\nthese scans will eat ", len(models)*len(runnings)*len(bases)*len(constraints)*required_scan_duration*CORE_COUNT/(60*60), " CPU hours\n\n")
 
 
-# note that all data for [bases,tanb_types] is combined for plotting
+# note that all data for bases is combined for plotting
 # whereas each [models,runnings,constraints] generate different sets of plots
 
 
@@ -212,7 +208,8 @@ from distutils.dir_util import copy_tree
 from distutils.dir_util import remove_tree
 from sys import platform
 from pathlib import Path
-
+import yaml
+import numpy as np
 
 def generate_gambit_name():
     generate_gambit_name.counter += 1
@@ -244,7 +241,6 @@ class Options:
     def __init__(self):
 
         # default scan options
-        self.tanb_type = None
         self.full_model_name = None
         self.model = None
         self.running = None
@@ -263,7 +259,7 @@ class Options:
         # default paths
         self.results_folder = "../runs"
         self.plots_folder = "../plots"
-        self.scan_name = "scan"
+        self.hdf5_name = "scan"
 
     def setModel(self, model, basis, running):
 
@@ -399,10 +395,17 @@ def makeGambit(options, dir):
    
 def patchYaml(options, dir, yaml_name):
 
-    # read yaml file into string
-    file = open(gen_path+"/" + dir + "/" + yaml_dir + "/" + yaml_name, 'r')
-    s = file.read()
-    file.close()
+    #  hack
+    if yaml_name == "THDM_constraints.yaml":
+
+
+        # read yaml file into string
+        file = open(gen_path+"/" + dir + "/" + yaml_dir + "/" + yaml_name, 'r')
+        s = file.read()
+        file.close()
+
+    else:
+        s = options.subscan
 
     # shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_med_hhs")
     # shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_med_final_hhs")
@@ -417,8 +420,8 @@ def patchYaml(options, dir, yaml_name):
 
     print("DEBUG: patching " + gen_path+"/" + dir + "/" + yaml_dir + "/" + yaml_name)
 
-    # set basis
-    s = s.replace("prior_Type: tanb", "prior_type: " + options.tanb_type)
+    # # set basis
+    # s = s.replace("prior_Type: tanb", "prior_type: " + "flat")
 
     # set the model name
     s = s.replace("TheModelName", options.full_model_name)
@@ -430,7 +433,7 @@ def patchYaml(options, dir, yaml_name):
     s = s.replace("convthresh:", "convthresh: " + str(options.conv_threshold) + " #")
 
     # set the output hdf5 name
-    s = s.replace("scan.hdf5", options.scan_name + ".hdf5")
+    s = s.replace("scan.hdf5", options.hdf5_name + ".hdf5")
 
     # set the output folder
     s = s.replace("the_output_folder", options.results_folder)
@@ -506,7 +509,7 @@ def patchRunScriptJC(options, dir, yaml_name):
     file.close()
 
     # set the job name
-    s = s.replace("SBATCH -J gambit_thdm", "SBATCH -J thdm_" + options.scan_name)
+    s = s.replace("SBATCH -J gambit_thdm", "SBATCH -J thdm_" + options.hdf5_name)
 
     # set the stdout and stderr paths (todo)
     dir_abs = os.path.abspath(gen_path+"/" + dir)
@@ -544,13 +547,157 @@ def patchRunScriptJC(options, dir, yaml_name):
     file.write(s)
     file.close()
 
+# load a yaml file with (optionally) a subscan node and convert to string
+def load_subscan_yaml(name):
+
+    subscans = []
+
+    file = open(name,'r').read()
+
+    # quick and dirty hack to deal with imports
+    file = re.sub(r"^!import.*",r"",file,flags=re.MULTILINE)
+    file = re.sub(r"!import",r"",file)
+
+    yfile = yaml.safe_load(file)
+
+    # check if we have a subscan node
+
+    num_scans = 1
+    overlap = 0.0
+
+    if "subscans" in yfile:
+        num_scans = yfile["subscans"]["num_scans"]
+        overlap = yfile["subscans"]["overlap"]
+
+    # get param names
+    params = [s for s in yfile["Parameters"]["TheModelName"]]
+
+    tmp = yfile["Parameters"]["TheModelName"]
+
+    # get parameter subscan weights
+    param_weights = { }
+
+    # float, [f, f], [f, f, f, f]
+    param_ranges = { }
+
+    # fixed_value (x2), flat/log, double_log_flat_join
+    param_priors = { }
+
+    # get the weights, ranges and priors
+    for param in params:
+        
+        # just a simple fixed value
+        if type(tmp[param]) is not dict:
+            param_weights[param] = 0
+            param_ranges[param] = tmp[param]
+            param_priors[param] = "fixed_value"
+        
+        # a normal map-type prior
+        else:
+            # a slightly less simple fixed value
+            if "fixed_value" in tmp[param]:
+                param_weights[param] = 0
+                param_ranges[param] = tmp[param]["fixed_value"]
+                param_priors[param] = "fixed_value"
+
+            # otherwise, it should have a prior_type and range/ranges
+            else:
+                param_priors[param] = tmp[param]["prior_type"]
+
+                if "range" in tmp[param]:
+                    param_ranges[param] = tmp[param]["range"]
+                else:
+                    param_ranges[param] = tmp[param]["ranges"]
+
+            # get the subscan_weight if any
+            if "subscan_weight" in tmp[param]:
+                param_weights[param] = tmp[param]["subscan_weight"]
+            else:
+                param_weights[param] = 0
+
+    # delete the unwanted nodes (which are not compatible with gambit yet)
+
+    if "subscans" in yfile:
+        del yfile["subscans"]
+
+    for param in params:
+        if type(yfile["Parameters"]["TheModelName"][param]) is dict:
+            if "subscan_weight" in yfile["Parameters"]["TheModelName"][param]:
+                del yfile["Parameters"]["TheModelName"][param]["subscan_weight"]
+    
+    # figure out number of divisions
+
+    pieces = { param:1 for param in params }
+
+    sum_scans_so_far = 1
+
+    while sum_scans_so_far < num_scans:
+
+        weighted_count = [ param_weights[param]/pieces[param] for param in params ]
+        sort_indices = np.argsort(weighted_count)
+        next_param = params[sort_indices[-1]]
+        pieces[next_param] += 1
+        sum_scans_so_far = np.prod(list(pieces.values()))
+
+    num_scans = sum_scans_so_far
+
+    # loop over the number of subscans
+    for i in range(0,num_scans):
+
+        prod_pieces = 1
+
+        # update the parameter ranges
+        for param in params:
+
+            # don't divide up fixed values!
+            if (param_priors[param]) == "fixed_value": continue
+            
+            # get number of parameter range pieces & index
+            nPieces = pieces[param]
+            if (nPieces) == 1: continue
+            slice_index = (i // prod_pieces) % nPieces
+            prod_pieces *= nPieces
+
+            # divide up current param range
+            param_range = param_ranges[param]
+
+            # for now, double_log_flat_join is not supported
+            # also don't worry about log-priors yet
+
+            rangee = (param_range[1] - param_range[0])/nPieces
+            param_range = [rangee*slice_index,rangee*(1+slice_index)]
+
+            yfile["Parameters"]["TheModelName"][param]["range"] = param_range
+
+        # convert yaml file to string
+        contents = yaml.dump(yfile)
+
+        # add Qin back
+        contents += "    #~~Qin: 91.1876 # = mZ\n"
+
+        # add the imports back
+        contents += "!import ../yaml_files/THDM_constraints.yaml\n"
+        contents = contents.replace("StandardModel_SLHA2:", "StandardModel_SLHA2: !import")
+
+        # add to list of yamls
+        subscans.append(contents)
+
+    # print results
+
+    # for i in range(0,len(subscans)):
+    #     with open("dump"+str(i)+".yaml","w") as f:
+    #         f.write(subscans[i])
+
+    return subscans
+
+
 def main():
 
+    # ad postfix to gen_path so that it is unique
     global gen_path
     postfix = 0
     while os.path.exists(gen_path+"_"+str(postfix)):
         postfix += 1
-
     postfix = str(postfix)
     gen_path = gen_path + "_" + postfix
 
@@ -559,20 +706,35 @@ def main():
 
     # --- loop over all options ---
 
+    # loop over all models (different output folder)
     for model in models:
+
+        # loop over all runnings (different output folder)
         for running in runnings:
+
+            # loop over all constraints (different output folder)
             for (constraint, constraint_name) in constraints:
-                counter = 0
+
+                # uniquely identifies results folders (to be merged later)
+                resultsSuffix = 0
+
+                # loop over all bases (merged output folder)
                 for (basis,file) in bases:
-                    counter += 1
-                    for tanb in tanb_types:
 
+                    # get the list of subscan files
+                    subscans = load_subscan_yaml("files/" + yaml_dir + "/" + file + ".yaml")
+
+                    # loop over all subscans (merged output folder)
+                    for subscan in subscans:
+
+                        resultsSuffix += 1
+                        resultsSuffixStr = "_" + str(resultsSuffix) if MODE != "BASH" else ""
+
+                        # setup the scan-specific options
                         options = Options()
-
-                        # setup the scan options
                         options.setModel(model, basis, running)
+                        options.subscan = subscan
                         options.file = file
-                        options.tanb_type = tanb
                         for c in constraint:
                             options.setConstraint(c)
 
@@ -589,19 +751,18 @@ def main():
                         # make sure everything is valid
                         options.validate()
 
-                        scanner_suffix = "_" + str(counter) if MODE != "BASH" else ""
-
-                        # setup paths
-                        constraint_name_full = "_" + constraint_name
-                        options.results_folder = "../../../runs/" + model + running + constraint_name_full + scanner_suffix + "/"
-                        options.plots_folder = "../plots/" + model + running + constraint_name_full + "/"
-                        options.scan_name = file + "_tb"  + tanb + postfix
-
-                        tmp = "../runs/" + model + running + constraint_name_full + scanner_suffix + "/"
-                        folders_to_merge[tmp] = "../runs/" + model + running + constraint_name_full + "/"
+                        # setup paths (also stored in options)
+                        fullName = model + running + "_" + constraint_name
+                        options.results_folder = "../../../runs/" + fullName + resultsSuffixStr + "/"
+                        options.plots_folder = "../plots/" + fullName + "/"
+                        options.hdf5_name = file + "_" + postfix + "_" + resultsSuffixStr
+                        
+                        # dict that tells us which folders to merge (essentially we will just get rid of resultsSuffixStr)
+                        tmp = "../runs/" + fullName + resultsSuffixStr + "/"
+                        folders_to_merge[tmp] = "../runs/" + fullName + "/"
 
                         # for i in range(0,CORE_COUNT):
-                        #     folders_to_merge[options.results_folder + 'samples/' + options.scan_name + ".hdf5_temp_" + str(i)] = "../../../runs/" + model + running + constraint_name_full + "/"
+                        #     folders_to_merge[options.results_folder + 'samples/' + options.hdf5_name + ".hdf5_temp_" + str(i)] = "../../../runs/" + model + running + constraint_name_full + "/"
 
                         # make a new gambit with the options specified above
                         makeGambit(options, generate_gambit_name())
@@ -665,5 +826,4 @@ def main():
 
 # run the main function
 main()
-
 
