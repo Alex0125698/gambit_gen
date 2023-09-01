@@ -2,17 +2,18 @@ Parameters:
     StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
     TheModelName:
       mh:
-          range: [115,135]
+          range: [124,126]
           prior_type: flat
       mHp:
-          range: [0, 200]
-          prior_type: flat
+          range: [150, 190]
+          prior_type: log
       cba:
           range: [-1.0, +1.0]
           prior_type: flat
       tanb:
           range: [0.03, 320]
-          prior_type: flat
+          prior_type: pow
+          power: 1
       Lambda4:
           range: [-13, 13]
           prior_type: flat

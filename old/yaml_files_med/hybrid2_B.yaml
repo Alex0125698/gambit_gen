@@ -3,25 +3,25 @@ Parameters:
     TheModelName:
       mh:
           range: [123,127]
-          prior_Type: flat
+          prior_type: flat
       mHp:
           range: [30, 631]
-          prior_Type: log
+          prior_type: log
       cba:
           range: [-1.0, +1.0]
-          prior_Type: flat
+          prior_type: flat
       tanb:
           range: [0.03, 0.2]
-          prior_Type: log
+          prior_type: log
       Lambda4:
           range: [-13, +13]
-          prior_Type: flat
+          prior_type: flat
       Lambda5:
           range: [-9, +9]
-          prior_Type: flat
+          prior_type: flat
       Lambda7:
           range: [-0.5, +0.5] # !!!!!
-          prior_Type: flat
+          prior_type: flat
       lambda6:
           fixed_value: 0.0
       lambda7:

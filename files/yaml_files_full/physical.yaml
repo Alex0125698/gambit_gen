@@ -2,32 +2,32 @@ Parameters:
     StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
     TheModelName:
       mh: 
-        range: [115,135]
-        prior_Type: flat
+        range: [100,140]
+        prior_type: flat
       mH:
         range: [150, 1000]
-        prior_Type: flat
+        prior_type: flat
       mA:
         range: [30, 1000]
-        prior_Type: flat
+        prior_type: flat
       mHp:
         range: [30, 1000]
-        prior_Type: flat
+        prior_type: flat
       lambda6:
         fixed_value: 0.0
-        prior_Type: flat
+        prior_type: flat
       lambda7:
         fixed_value: 0.0
-        prior_Type: flat
+        prior_type: flat
       m12_2:
         range: [-1e5, 1e6]
-        prior_Type: flat
+        prior_type: flat
       tanb:
         range: [0.03, 320]
-        prior_Type: flat
+        prior_type: flat
       sba:
         range: [0.90, 1.0]
-        prior_Type: flat
+        prior_type: flat
       #~~Qin: 91.1876 # = mZ
 
 !import ../yaml_files/THDM_constraints.yaml

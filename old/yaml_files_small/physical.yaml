@@ -3,29 +3,29 @@ Parameters:
     TheModelName:
       mh: 
         range: [115,135]
-        prior_Type: flat
+        prior_type: flat
       mH:
         range: [150, 1000]
-        prior_Type: log
+        prior_type: log
       mA:
         range: [30, 1000]
-        prior_Type: log
+        prior_type: log
       mHp:
         range: [30, 1000]
-        prior_Type: log
+        prior_type: log
       lambda6:
         fixed_value: 0.0
       lambda7:
         fixed_value: 0.0
       m12_2:
         range: [0, 1e6]
-        prior_Type: flat
+        prior_type: flat
       tanb:
         range: [0.03, 320]
-        prior_Type: flat
+        prior_type: flat
       sba:
         range: [0.90, 1.0]
-        prior_Type: flat
+        prior_type: flat
       #~~Qin: 91.1876 # = mZ
 
 

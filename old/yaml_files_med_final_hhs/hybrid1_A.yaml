@@ -3,25 +3,25 @@ Parameters:
     TheModelName:
       mh:
           range: [50, 105]
-          prior_Type: flat
+          prior_type: flat
       mH:
           range: [124.1, 126.1]
-          prior_Type: flat
+          prior_type: flat
       cba:
           range: [-1.0, -0.9]
-          prior_Type: flat
+          prior_type: flat
       tanb:
           range: [2.5,100]
-          prior_Type: flat
+          prior_type: flat
       Lambda4:
           range: [-0.5, 1.5]
-          prior_Type: flat
+          prior_type: flat
       Lambda5:
           range: [-8, -1]
-          prior_Type: flat
+          prior_type: flat
       Lambda7:
           range: [-2, +1]
-          prior_Type: flat
+          prior_type: flat
       lambda6:
           fixed_value: 0.0
       lambda7:
@@ -30,25 +30,25 @@ Parameters:
 
       # mh:
       #     range: [10, 123]
-      #     prior_Type: flat
+      #     prior_type: flat
       # mH:
       #     range: [124.1, 126.1]
-      #     prior_Type: flat
+      #     prior_type: flat
       # cba:
       #     range: [-1.0, +1.0]
-      #     prior_Type: flat
+      #     prior_type: flat
       # tanb:
       #     range: [0.1, 100]
-      #     prior_Type: flat
+      #     prior_type: flat
       # Lambda4:
       #     range: [-13, +13]
-      #     prior_Type: flat
+      #     prior_type: flat
       # Lambda5:
       #     range: [-9, +9]
-      #     prior_Type: flat
+      #     prior_type: flat
       # Lambda7:
       #     range: [-5, +5]
-      #     prior_Type: flat
+      #     prior_type: flat
       # lambda6:
       #     fixed_value: 0.0
       # lambda7:

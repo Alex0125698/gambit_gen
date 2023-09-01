@@ -127,10 +127,10 @@ ObsLikes:
   #~9- purpose: LogLike
     #~9capability: perturbativity_LogLikelihood_THDM
     #~9function: perturbativity_LogLikelihood_THDM
-
-  # Perturbativity check of yukawa couplings
-  #~0- purpose: LogLike
-    #~0capability: perturbativity_yukawas_LogLikelihood_THDM
+# l
+#   # Perturbativity check of yukawa couplings
+#   #~0- purpose: LogLike
+#     #~0capability: perturbativity_yukawas_LogLikelihood_THDM
     
   #-------------------------------------#
   #      COLLIDER LIKELIHOODS           #
