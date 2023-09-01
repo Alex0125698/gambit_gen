@@ -403,7 +403,7 @@ def patchYaml(options, dir, yaml_name):
     print("DEBUG: patching " + gen_path+"/" + dir + "/" + yaml_dir + "/" + yaml_name)
 
     # set basis
-    s = s.replace("prior_Type: tanb", "prior_type: " + options.tanb_type)
+    s = s.replace("prior_type: tanb", "prior_type: " + options.tanb_type)
 
     # set the model name
     s = s.replace("TheModelName", options.full_model_name)
