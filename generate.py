@@ -41,9 +41,10 @@ use_speed_hacks = True # todo: maybe delete this ??
 gen_path = 'gens'
 
 conv_threshold = 1e-8
-required_printed_points = 750000*100
+NP = 5000
+required_printed_points = 5000000
 required_points = -1
-required_scan_duration = 1*5*60 # in seconds
+required_scan_duration = 1*35*60 # in seconds
 
 NODE_COUNT = 1  # set to desired number of nodes per gambit
 CORE_COUNT = 76 # set to number of cores per node
@@ -65,9 +66,14 @@ runnings = ["loop"]
 # 22
 bases = [
     
+    # ("hybrid_Higgs", "test1"),
+    # ("hybrid_Higgs", "test2"),
+    # ("hybrid_Higgs", "test3"),
+    # ("hybrid_Higgs", "test4"),
+
     # ("physical", "physical"),
 
-    ("generic", "generic"),
+    # ("generic", "generic"),
     # ("generic", "genericA"),
     # ("generic", "genericB"),
     # ("generic", "genericC"),
@@ -123,7 +129,8 @@ bases = [
 # 5
 constraints = [
 
-    (["theory"], "theory"),
+    # (["perturbativity_LogLikelihood_THDM"], "theoryG"),
+    # (["theory"], "flavortest2_flat_grid36"),
     # (["scalar_mass_corrections_LogLikelihood_THDM", "NLO_unitarity_LogLikelihood_THDM"], "NLO"),
     # (["scalar_mass_corrections_LogLikelihood_THDM", "stability_LogLikelihood_THDM"], "stability"),
     # (["runToScaleTest_LogLikelihood_THDM", "scalar_mass_corrections_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM"], "perturbativity"),
@@ -191,15 +198,13 @@ constraints = [
 
 # ]
 
-print("\nthese scans will eat ", len(models)*len(runnings)*len(bases)*len(constraints)*required_scan_duration*CORE_COUNT/(60*60), " CPU hours\n\n")
-
-
 # note that all data for bases is combined for plotting
 # whereas each [models,runnings,constraints] generate different sets of plots
 
 
 # ----------- main script -------------
 
+import copy
 import re
 import os
 import shutil
@@ -210,6 +215,22 @@ from sys import platform
 from pathlib import Path
 import yaml
 import numpy as np
+from math import log
+from math import exp
+
+len_bases = len(bases)
+
+for (basis,file) in bases:
+    name = "files/" + yaml_dir + "/" + file + ".yaml"
+    file = open(name,'r').read()
+    file = re.sub(r"^!import.*",r"",file,flags=re.MULTILINE)
+    file = re.sub(r"!import",r"",file)
+    yfile = yaml.safe_load(file)
+    if "subscans" in yfile:
+      len_bases += yfile["subscans"]["num_scans"] - 1
+
+print("\nthese scans will eat ", len(models)*len(runnings)*len_bases*len(constraints)*required_scan_duration*CORE_COUNT/(60*60), " CPU hours\n\n")
+
 
 def generate_gambit_name():
     generate_gambit_name.counter += 1
@@ -248,6 +269,7 @@ class Options:
 
         # default convergence criteria
         self.conv_threshold = 1e-5
+        self.NP = 40000
         self.required_printed_points = -1
         self.required_points = -1
         self.required_scan_duration = 7*24*60*60
@@ -421,7 +443,7 @@ def patchYaml(options, dir, yaml_name):
     print("DEBUG: patching " + gen_path+"/" + dir + "/" + yaml_dir + "/" + yaml_name)
 
     # # set basis
-    # s = s.replace("prior_Type: tanb", "prior_type: " + "flat")
+    # s = s.replace("prior_type: tanb", "prior_type: " + "flat")
 
     # set the model name
     s = s.replace("TheModelName", options.full_model_name)
@@ -431,6 +453,7 @@ def patchYaml(options, dir, yaml_name):
     s = s.replace("23232323", str(int(options.required_printed_points)))
     s = s.replace("34343434", str(int(options.required_scan_duration)))
     s = s.replace("convthresh:", "convthresh: " + str(options.conv_threshold) + " #")
+    s = s.replace("NP:", "NP: " + str(options.NP) + " #")
 
     # set the output hdf5 name
     s = s.replace("scan.hdf5", options.hdf5_name + ".hdf5")
@@ -586,13 +609,13 @@ def load_subscan_yaml(name):
     # get the weights, ranges and priors
     for param in params:
         
-        # just a simple fixed value
+        # get a simple fixed value prior
         if type(tmp[param]) is not dict:
             param_weights[param] = 0
             param_ranges[param] = tmp[param]
             param_priors[param] = "fixed_value"
         
-        # a normal map-type prior
+        # get a normal map-type prior
         else:
             # a slightly less simple fixed value
             if "fixed_value" in tmp[param]:
@@ -659,15 +682,43 @@ def load_subscan_yaml(name):
             prod_pieces *= nPieces
 
             # divide up current param range
-            param_range = param_ranges[param]
+            param_range = copy.deepcopy(param_ranges[param])
+            param_range[0] = float(param_range[0])
+            param_range[1] = float(param_range[1])
+
+            # print(param_range)
 
             # for now, double_log_flat_join is not supported
-            # also don't worry about log-priors yet
 
+            # deal with log scale
+            if (param_priors[param]) == "log":
+              param_range[0] = log(param_range[0])
+              param_range[1] = log(param_range[1])
+
+            # calculate the new parameter range
             rangee = (param_range[1] - param_range[0])/nPieces
-            param_range = [rangee*slice_index,rangee*(1+slice_index)]
+            param_range_new = [param_range[0]+rangee*slice_index,param_range[0]+rangee*(1+slice_index)]
 
-            yfile["Parameters"]["TheModelName"][param]["range"] = param_range
+            # add the overlap
+            overlap_range = overlap*rangee
+            param_range_new[0] -= overlap_range
+            param_range_new[1] += overlap_range
+
+            # deal with log scale
+            if (param_priors[param]) == "log":
+                param_range_new[0] = exp(param_range_new[0])
+                param_range_new[1] = exp(param_range_new[1])
+                param_range = copy.deepcopy(param_ranges[param])
+                param_range[0] = float(param_range[0])
+                param_range[1] = float(param_range[1])
+
+            # don't go outside the full range
+            param_range_new[0] = max(param_range_new[0], param_range[0])
+            param_range_new[1] = min(param_range_new[1], param_range[1])
+
+            yfile["Parameters"]["TheModelName"][param]["range"] = param_range_new
+            # yfile["Parameters"]["TheModelName"][param]["shift"] = -param_range_new[0]
+            # yfile["Parameters"]["TheModelName"][param]["shift"] = -max(0.0,param_range[0]-0.1)
 
         # convert yaml file to string
         contents = yaml.dump(yfile)
@@ -740,12 +791,13 @@ def main():
 
                         # setup convergence criteria
                         options.conv_threshold = conv_threshold
+                        options.NP = NP
                         options.required_printed_points = required_printed_points
                         options.required_points = required_points
                         if required_printed_points != -1:
-                            options.required_printed_points /= CORE_COUNT
+                            options.required_printed_points /= (len_bases*CORE_COUNT)
                         if required_points != -1:
-                            options.required_points /= CORE_COUNT
+                            options.required_points /= (len_bases*CORE_COUNT)
                         options.required_scan_duration = required_scan_duration
 
                         # make sure everything is valid

@@ -61,10 +61,10 @@ Scanner:
       jDE: true
 
       # population size (increase this to get more robust scan, or decrease to make it run faster)
-      NP: 40000
+      NP: 50000
 
       # when the average generation improvement falls below this, we stop the scan
-      convthresh: 1e-6
+      convthresh: 1e-8
 
       # try to fill the first generation with only valid points (1), or use any point (0)
       init_population_strategy: 0
@@ -127,10 +127,10 @@ ObsLikes:
   #~9- purpose: LogLike
     #~9capability: perturbativity_LogLikelihood_THDM
     #~9function: perturbativity_LogLikelihood_THDM
-# l
-#   # Perturbativity check of yukawa couplings
-#   #~0- purpose: LogLike
-#     #~0capability: perturbativity_yukawas_LogLikelihood_THDM
+
+  # Perturbativity check of yukawa couplings
+  #~0- purpose: LogLike
+    #~0capability: perturbativity_yukawas_LogLikelihood_THDM
     
   #-------------------------------------#
   #      COLLIDER LIKELIHOODS           #

@@ -6,7 +6,7 @@ Parameters:
           prior_type: flat
       mH:
           range: [3e1, 1e5]
-          prior_type: flat
+          prior_type: log
       cba:
           range: [-1.0, +1.0]
           prior_type: flat
