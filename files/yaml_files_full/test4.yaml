@@ -1,5 +1,5 @@
 subscans:
-  num_scans: 36
+  num_scans: 4
   overlap: 0.4
 
 Parameters:
