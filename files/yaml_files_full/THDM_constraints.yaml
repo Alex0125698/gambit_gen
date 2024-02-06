@@ -580,6 +580,9 @@ ObsLikes:
 
 Rules:
 
+  - capability: couplingtable_THDM
+    function: get_coupling_table_using_invariant_basis
+
   - capability: basic_theory_LogLikelihood_THDM
     options:
       only_perturbativity: false
