@@ -1,11 +1,17 @@
+
+subscans:
+  num_scans: 8
+  overlap: 0.05
+
 Parameters:
     StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
     TheModelName:
       mh:
-          range: [100,140]
+          range: [124.35,126.35]
+          # range: [100,140]
           prior_type: flat
-      mH:
-          range: [3e1, 1e5]
+      mHp:
+          range: [30, 3000]
           prior_type: log
       cba:
           range: [-1.0, +1.0]
@@ -16,12 +22,15 @@ Parameters:
       Lambda4:
           range: [-13, 13]
           prior_type: flat
+          subscan_weight: 1
       Lambda5:
           range: [-13, 13]
           prior_type: flat
+          subscan_weight: 1
       Lambda7:
           range: [-13, 13]
           prior_type: flat
+          subscan_weight: 1
       lambda6:
           fixed_value: 0.0
       lambda7:

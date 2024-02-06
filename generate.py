@@ -37,14 +37,14 @@ print("\n-----------------\nrunning 2HDM generator\n")
 yaml_dir = 'yaml_files_full'
 # yaml_dir = 'yaml_files_med'
 # yaml_dir = 'yaml_files_small'
-use_speed_hacks = True # todo: maybe delete this ??
+use_speed_hacks = False # todo: maybe delete this ??
 gen_path = 'gens'
 
 conv_threshold = 1e-8
-NP = 5000
-required_printed_points = 5000000
+NP = 20000
+required_printed_points = 2000000
 required_points = -1
-required_scan_duration = 1*35*60 # in seconds
+required_scan_duration = 1*12*60 # in seconds
 
 NODE_COUNT = 1  # set to desired number of nodes per gambit
 CORE_COUNT = 76 # set to number of cores per node
@@ -53,10 +53,10 @@ CORE_COUNT = 76 # set to number of cores per node
 MODE = "DIRAC"
 
 # allowed options: "THDM", "THDMI", "THDMII", "THDMLS", or "THDMflipped"
-models = ["THDMI"]
+models = ["THDMII"]
 
 # allowed options: "tree" or "loop"
-runnings = ["loop"]
+runnings = ["tree"]
 
 # allowed options: "generic", "hybrid_lambda_1", "hybrid_lambda_2", "hybrid_Higgs", "higgs", or "physical"
 
@@ -65,6 +65,10 @@ runnings = ["loop"]
 
 # 22
 bases = [
+
+    # ("generic", "genericX"),
+    # ("hybrid_Higgs", "hybrid1X"),
+    # ("hybrid_Higgs2", "hybrid2X"),
     
     # ("hybrid_Higgs", "test1"),
     # ("hybrid_Higgs", "test2"),
@@ -79,7 +83,7 @@ bases = [
     # ("generic", "genericC"),
     # ("generic", "genericD"),
 
-    # ("hybrid_Higgs", "hybrid1"),
+    ("hybrid_Higgs", "hybrid1"),
     # ("hybrid_Higgs", "hybrid1A"),
     # ("hybrid_Higgs", "hybrid1B"),
     # ("hybrid_Higgs", "hybrid1C"),
@@ -129,11 +133,10 @@ bases = [
 # 5
 constraints = [
 
-    # (["perturbativity_LogLikelihood_THDM"], "theoryG"),
-    # (["theory"], "flavortest2_flat_grid36"),
+    (["VS_likelihood"], "theory"),
     # (["scalar_mass_corrections_LogLikelihood_THDM", "NLO_unitarity_LogLikelihood_THDM"], "NLO"),
     # (["scalar_mass_corrections_LogLikelihood_THDM", "stability_LogLikelihood_THDM"], "stability"),
-    # (["runToScaleTest_LogLikelihood_THDM", "scalar_mass_corrections_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM"], "perturbativity"),
+    # (["runToScaleTest_LogLikelihood_THDM", "scalar_mass_corrections_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM"], "perturbativity_hybrid2X"),
 
 ]
     # (["perturbativity_yukawas_LogLikelihood_THDM"], "pert_yukawas")
@@ -244,7 +247,7 @@ gambit_dirs = []
 class Options:
 
     # the names of all constraints
-    constraints_theory = ["runToScaleTest_LogLikelihood_THDM", "NLO_unitarity_LogLikelihood_THDM", "LO_unitarity_LogLikelihood_THDM", "stability_LogLikelihood_THDM", "higgs_exp_mass_LogLikelihood_THDM", 
+    constraints_theory = ["VS_likelihood", "runToScaleTest_LogLikelihood_THDM", "NLO_unitarity_LogLikelihood_THDM", "LO_unitarity_LogLikelihood_THDM", "stability_LogLikelihood_THDM", "higgs_exp_mass_LogLikelihood_THDM", 
                          "scalar_mass_corrections_LogLikelihood_THDM", "higgs_scenario_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM", 
                          "perturbativity_yukawas_LogLikelihood_THDM"]
     constraints_collider = ["LEP_Higgs_LogLike", "LHC_Higgs_LogLike","HS_ALL","HS_RUN1_SS","HS_LATEST_SS","HS_LATEST_STXS"] #higgs_mass_LogLikelihood

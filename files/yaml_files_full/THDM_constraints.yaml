@@ -93,6 +93,13 @@ ObsLikes:
   - purpose: LogLike
     capability: basic_theory_LogLikelihood_THDM
 
+  # 1-loop vacuum meta-stability Likelihood using Vevacious
+  - purpose: LogLike
+    capability: VS_likelihood
+    sub_capabilities:
+      global: [quantum]
+      nearest: [quantum]
+
   # check if we can run spectrum without error
   #~2- purpose: LogLike
     #~2capability: runToScaleTest_LogLikelihood_THDM
@@ -580,6 +587,15 @@ ObsLikes:
 
 Rules:
 
+  - capability: THDM_spectrum
+    type: Spectrum
+    function: get_THDM_spectrum_tree
+    # function: get_THDM_spectrum_FS
+    # function: convert_THDM_spectrum_SPheno
+
+  - capability: couplingtable_THDM
+    function: get_coupling_table_using_invariant_basis
+
   - capability: basic_theory_LogLikelihood_THDM
     options:
       only_perturbativity: false
@@ -591,6 +607,8 @@ Rules:
   - capability: perturbativity_LogLikelihood_THDM
     options:
       check_other_scale: 1000
+      skipCubicCouplings: true
+      skipGoldstoneCouplings: true
 
   - capability: scalar_mass_corrections_LogLikelihood_THDM
     options:
@@ -748,6 +766,7 @@ KeyValues:
   dependency_resolution:
     prefer_model_specific_functions: true
     use_old_routines: false
+    unused_rule_is_an_error: false
 
   exceptions:
     dependency_resolver_error: fatal

@@ -1,6 +1,6 @@
 
 subscans:
-  num_scans: 36
+  num_scans: 25
   overlap: 1.00
 
 Parameters:
@@ -38,7 +38,7 @@ Parameters:
           prior_type: double_log_flat_join
       tanb:
           range: [0.03, 320]
-          prior_type: flat
+          prior_type: log
       #~~Qin: 91.1876 # = mZ
 
 !import ../yaml_files/THDM_constraints.yaml

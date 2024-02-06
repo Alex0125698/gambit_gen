@@ -18,7 +18,7 @@ Parameters:
       tanb:
           subscan_weight: 10
           range: [0.03, 320]
-          prior_type: flat
+          prior_type: log
       Lambda4:
           range: [-13, 13]
           prior_type: flat
