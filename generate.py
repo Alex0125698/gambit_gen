@@ -720,7 +720,7 @@ def load_subscan_yaml(name):
             param_range_new[1] = min(param_range_new[1], param_range[1])
 
             yfile["Parameters"]["TheModelName"][param]["range"] = param_range_new
-            # yfile["Parameters"]["TheModelName"][param]["shift"] = -param_range_new[0]
+            yfile["Parameters"]["TheModelName"][param]["shift"] = -param_range_new[0]
             # yfile["Parameters"]["TheModelName"][param]["shift"] = -max(0.0,param_range[0]-0.1)
 
         # convert yaml file to string
@@ -779,7 +779,7 @@ def main():
                     subscans = load_subscan_yaml("files/" + yaml_dir + "/" + file + ".yaml")
 
                     # loop over all subscans (merged output folder)
-                    for subscan in subscans:
+                    for x,subscan in enumerate(subscans):
 
                         resultsSuffix += 1
                         resultsSuffixStr = "_" + str(resultsSuffix) if MODE != "BASH" else ""
@@ -789,6 +789,8 @@ def main():
                         options.setModel(model, basis, running)
                         options.subscan = subscan
                         options.file = file
+                        if len(subscans) > 1:
+                            options.file += "x"+str(x)
                         for c in constraint:
                             options.setConstraint(c)
 
@@ -810,7 +812,7 @@ def main():
                         fullName = model + running + "_" + constraint_name
                         options.results_folder = "../../../runs/" + fullName + resultsSuffixStr + "/"
                         options.plots_folder = "../plots/" + fullName + "/"
-                        options.hdf5_name = file + "_" + postfix + "_" + resultsSuffixStr
+                        options.hdf5_name = options.file + "_" + postfix + "_" + resultsSuffixStr
                         
                         # dict that tells us which folders to merge (essentially we will just get rid of resultsSuffixStr)
                         tmp = "../runs/" + fullName + resultsSuffixStr + "/"
