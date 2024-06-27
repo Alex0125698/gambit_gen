@@ -37,11 +37,32 @@ Scanner:
   use_scanner: differentialEvolution
 
   scanners:
+  
+    polychord:
+      plugin: polychord
+      like:  LogLike
+      nlive: 4000
+      tol: 0.00
+      print_parameters_in_native_output: true
 
     random:
       plugin: random
       point_number: 1000000000
       like:  LogLike
+
+    multinest:
+      plugin: multinest
+      like: LogLike
+      nlive: 10000
+      tol: 0.1
+
+    twalk:
+      plugin: twalk
+      like: LogLike
+      tolerance: 1.003
+      kwalk_ratio: 0.9
+      #chain_number: 20
+      projection_dimension: 4
 
     differentialEvolution:
       plugin: diver
@@ -67,7 +88,7 @@ Scanner:
       convthresh: 1e-8
 
       # try to fill the first generation with only valid points (1), or use any point (0)
-      init_population_strategy: 0
+      init_population_strategy: 1
 
       # don’t give up on initial generation
       max_initialisation_attempts: 100000000
@@ -93,12 +114,12 @@ ObsLikes:
   - purpose: LogLike
     capability: basic_theory_LogLikelihood_THDM
 
-  # 1-loop vacuum meta-stability Likelihood using Vevacious
-  - purpose: LogLike
-    capability: VS_likelihood
-    sub_capabilities:
-      global: [quantum]
-      nearest: [quantum]
+  # # 1-loop vacuum meta-stability Likelihood using Vevacious
+  # - purpose: LogLike
+  #   capability: VS_likelihood
+  #   sub_capabilities:
+  #     global: [quantum]
+  #     nearest: [quantum]
 
   # check if we can run spectrum without error
   #~2- purpose: LogLike
@@ -133,6 +154,7 @@ ObsLikes:
   # Perturbativity check of scalar couplings
   #~9- purpose: LogLike
     #~9capability: perturbativity_LogLikelihood_THDM
+    # #~9function: perturbativity_lambdas_LogLikelihood_THDM
     #~9function: perturbativity_LogLikelihood_THDM
 
   # Perturbativity check of yukawa couplings
@@ -173,159 +195,194 @@ ObsLikes:
   #      FLAVOR LIKELIHOODS             #
   #-------------------------------------#
 
-  # Bs2ll (Bs2mutau, Bs2tautau), Source: GAMBIT
-  #~J- purpose:    LogLike
-    #~Jcapability: Bs2ll_LogLikelihood
+  # ------------------------- #
+  # B -> Xs gamma likelihoods #
+  # ------------------------- #
 
-  # B2Kllp (B2Kmue, B2Ktaumu, B2Ktautau), Source: GAMBIT, SuperISO
-  #~K- purpose:    LogLike
-    #~Kcapability: B2Kll_LogLikelihood
-
-  # B -> mu mu, Source: SuperISO, HEPLike
-  #~Y- purpose:    LogLike
-    #~Ycapability: B2mumu_LogLikelihood_Atlas
-    #~Ysub_capabilities: [BRuntag_Bsmumu, BR_Bdmumu]
-  #~W- purpose:    LogLike
-    #~Wcapability: B2mumu_LogLikelihood_LHCb
-    #~Wsub_capabilities: [BRuntag_Bsmumu, BR_Bdmumu]
-  #~X- purpose:    LogLike
-    #~Xcapability: B2mumu_LogLikelihood_CMS
-    #~Xsub_capabilities: [BRuntag_Bsmumu, BR_Bdmumu]
-
-  # DOES NOTHING
-  # B-Dstartaunu distributions, Source: GAMBIT
   #~E- purpose:    LogLike
-    #~Ecapability: dBRBDstartaunu_LogLikelihood
-
-  # DOES NOTHING
-  # B-Dtanu distributions, Source: GAMBIT
+    #~Ecapability: b2sgamma_LogLikelihood
   #~F- purpose:    LogLike
-    #~Fcapability: dBRBDtaunu_LogLikelihood
+    #~Fcapability: B2Kstargamma_LogLikelihood
 
-  # DOES NOTHING
-  # mu-e universality for gTHDM based on JHEP07(2013)044, Source: GAMBIT
+  # ---------------------- #
+  # B -> mu mu likelihoods #
+  # ---------------------- #
+
   #~G- purpose:    LogLike
-    #~Gcapability: gmu_ge_LogLikelihood
-
-  # DOES NOTHING
-  # FLDstar polarization, Source: GAMBIT
+    #~Gcapability: B2mumu_LogLikelihood_Atlas
+    #~Gsub_capabilities: [BRuntag_Bsmumu, BR_Bdmumu]
   #~H- purpose:    LogLike
-    #~Hcapability: FLDstar_LogLikelihood
-
-  # Bc lifetime, Source: GAMBIT
+    #~Hcapability: B2mumu_LogLikelihood_LHCb
+    #~Hsub_capabilities: [BRuntag_Bsmumu, BR_Bdmumu]
   #~I- purpose:    LogLike
-    #~Icapability: Bc_lifetime_LogLikelihood
+    #~Icapability: B2mumu_LogLikelihood_CMS
+    #~Isub_capabilities: [BRuntag_Bsmumu, BR_Bdmumu]
 
-  # RK and RKstarnunu, Source: GAMBIT
+  # ------------------------ #
+  # B -> K mu mu likelihoods #
+  # ------------------------ #
+
+  #~J- purpose:    LogLike
+    #~Jcapability: Bd2KmumuBr_LogLikelihood_LHCb #new
+  #~K- purpose:    LogLike
+    #~Kcapability: Bd2KmumuBr_LogLikelihood_Belle #new
   #~L- purpose:    LogLike
-    #~Lcapability: B2Xsnunu_LogLikelihood
-
-  # DOES NOTHING
-  # BR(h->tau mu), Source: GAMBIT
+    #~Lcapability: B2KmumuBr_LogLikelihood_LHCb
   #~M- purpose:    LogLike
-    #~Mcapability: h2taumu_LogLikelihood
-
-  # DOES NOTHING
-  # BR(t->ch), Source: GAMBIT
+    #~Mcapability: B2KmumuBr_LogLikelihood_CMS #new
   #~N- purpose:    LogLike
-    #~Ncapability: t2ch_LogLikelihood
+    #~Ncapability: B2KmumuBr_LogLikelihood_Belle #new
 
-  # NOT WORKING
-  # B meson mass aysmmetry, Source: GAMBIT / SuperISO
+  # ---------------------- #
+  # B -> K e e likelihoods #
+  # ---------------------- #
+
   #~O- purpose:    LogLike
-    #~Ocapability: deltaMB_LogLikelihood
-
-  # NOT WORKING
-  # B_d meson mass aysmmetry, Source: SuperISO
+    #~Ocapability: B2KeeBr_LogLikelihood_Belle #new
   #~P- purpose:    LogLike
-    #~Pcapability: deltaMBd_LogLikelihood
+    #~Pcapability: Bd2KeeBr_LogLikelihood_Belle #new
 
-  # Source: GAMBIT or SuperISO
-  # Tree-level leptonic and semi-leptonic B & D decay measurements 
-  # (RD, RDstar, BDmunu, BDstarmunu, Btaunu, Rmu, Dstaunu, Dsmunu, Dmunu, Dtaunu, RDemu)
+  # ------------------------- #
+  # B -> K* mu mu likelihoods #
+  # ------------------------- #
+
   #~Q- purpose:    LogLike
-    #~Qcapability: SL_LogLikelihood
-
-  # DOES NOTHING
-  # l -> l gamma (muegamma, tauegamma, taumugamma), Source: GAMBIT
+    #~Qcapability: B2KstarmumuAng_LogLikelihood_Atlas
+    #~Qsub_capabilities: [FL, S3, S4, S5, S7, S8]
   #~R- purpose:    LogLike
-    #~Rcapability: l2lgamma_LogLikelihood
-
-  # DOES NOTHING
-  # Source: GAMBIT
-  # l -> l l l (mueee, taueee, taumumumu, taumuee, taueemu, tauemumu, taumumue)
+    #~Rcapability: B2KstarmumuAng_LogLikelihood_CMS
+    #~Rsub_capabilities: [P1, P5prime]
   #~S- purpose:    LogLike
-    #~Scapability: l2lll_LogLikelihood
-
-  # b -> s gamma, Source: SuperISO, HEPLike
+    #~Scapability: B2KstarmumuAng_LogLikelihood_Belle
+    #~Ssub_capabilities: [P4prime, P5prime]
+  #~T- purpose:    LogLike
+    #~Tcapability: B2KstarmumuAng_LogLikelihood_LHCb_2020
+    #~Tsub_capabilities: [FL, AFB, S3, S4, S5, S7, S8, S9]
   #~U- purpose:    LogLike
-    #~Ucapability: b2sgamma_LogLikelihood
-
-  # B -> K* gamma, Source: SuperISO, HEPLike
+    #~Ucapability: Bu2KstarmumuAng_LogLikelihood_LHCb_2020
+    #~Usub_capabilities: [FL, AFB, S3, S4, S5, S7, S8, S9]
   #~V- purpose:    LogLike
-    #~Vcapability: B2Kstargamma_LogLikelihood
+    #~Vcapability: B2KstarmumuBr_LogLikelihood_LHCb
+  #~W- purpose:    LogLike
+    #~Wcapability: Bs2phimumuBr_LogLikelihood
+  #~X- purpose:    LogLike
+    #~Xcapability: B2KstarmumuAng_CPAssym_LogLikelihood_LHCb #new
+  #~Y- purpose:    LogLike
+    #~Ycapability: B2KstarellellAng_LogLikelihood_Belle
+    #~Ysub_capabilities: [P4prime, P5prime]
 
-  # RK, Source: SuperISO, HEPLike
-  #~l- purpose:    LogLike
-    #~lcapability: RK_LogLikelihood_LHCb
+  # ----------------------- #
+  # B -> K* e e likelihoods #
+  # ----------------------- #
 
-  # RKstar, Source: SuperISO, HEPLike
-  #~m- purpose:    LogLike
-    #~mcapability: RKstar_LogLikelihood_LHCb
-
-  # B -> K* mu mu Angular, Source: SuperISO, HEPLike
   #~Z- purpose:    LogLike
-    #~Zcapability: B2KstarmumuAng_LogLikelihood_Atlas
-    #~Zsub_capabilities: [FL, S3, S4, S5, S7, S8]
-  #~a- purpose:    LogLike
-    #~acapability: B2KstarmumuAng_LogLikelihood_CMS
-    #~asub_capabilities: [P1, P5prime]
-  #~b- purpose:    LogLike
-    #~bcapability: B2KstarmumuAng_LogLikelihood_LHCb_2020
-    #~bsub_capabilities: [FL, AFB, S3, S4, S5, S7, S8, S9]
-  #~c- purpose:    LogLike
-    #~ccapability: B2KstarmumuAng_LogLikelihood_Belle
-    #~csub_capabilities: [P4prime, P5prime]
+    #~Zcapability: B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020
+    #~Zsub_capabilities: [FLee, AT_Re, AT_2, AT_Im]
 
-  # B -> K* l l Angular, Source: SuperISO, HEPLike
-  #~e- purpose:    LogLike
-    #~ecapability: B2KstarellellAng_LogLikelihood_Belle
-    #~esub_capabilities: [P4prime, P5prime]
+  # ---------------------- #
+  # RK and RK* likelihoods #
+  # ---------------------- #
 
-  # B_u -> K* mu mu Angular, Source: SuperISO, HEPLike
-  #~f- purpose:    LogLike
-    #~fcapability: Bu2KstarmumuAng_LogLikelihood_LHCb_2020
-    #~fsub_capabilities: [FL, AFB, S3, S4, S5, S7, S8, S9]
+  #~a- purpose: LogLike # OFF - NOT EXPLAINED BY 2HDM
+    #~acapability: RKRKstar_LogLikelihood_LHCb
+    #~asub_capabilities: [RK, RKstar]
+  #~b- purpose: LogLike # OFF - NOT EXPLAINED BY 2HDM
+    #~bcapability: RK_LogLikelihood_CMS #new
+  #~c- purpose: LogLike # OFF - NOT EXPLAINED BY 2HDM
+    #~ccapability: RK_LogLikelihood_Belle #new
 
-  # B -> K* e e angular low q2, Source: SuperISO, HEPLike
-  #~h- purpose:    LogLike
-    #~hcapability: B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020
-    #~hsub_capabilities: [FLee, AT_Re, AT_2, AT_Im]
+  # ------------------------ #
+  # B -> K nu nu likelihoods #
+  # ------------------------ #
 
-  # B -> K* mu mu BR, Source: SuperISO, HEPLike
-  #~i- purpose:    LogLike
-    #~icapability: B2KstarmumuBr_LogLikelihood_LHCb
+  #~d- purpose: LogLike
+    #~dcapability: BKnunu_LogLikelihood_Belle_sl #new
+  #~e- purpose: LogLike
+    #~ecapability: BKnunu_LogLikelihood_Belle_had #new
+  #~f- purpose: LogLike
+    #~fcapability: BuKnunu_LogLikelihood_Belle_sl #new
+  #~g- purpose: LogLike
+    #~gcapability: BuKnunu_LogLikelihood_Belle_had #new
+  #~h- purpose: LogLike
+    #~hcapability: BuKnunu_LogLikelihood_BelleII #new
+  #~i- purpose: LogLike
+    #~icapability: BKnunu_LogLikelihood_BaBar #new
+  #~j- purpose: LogLike
+    #~jcapability: BuKnunu_LogLikelihood_BaBar #new
+  # #~k- purpose: LogLike
+  #   #~kcapability: BKstarnunu_LogLikelihood_Belle_sl # missing prediction_B2Kstarnunu #new
+  # #~l- purpose: LogLike
+  #   #~lcapability: BKstarnunu_LogLikelihood_Belle_had # missing prediction_B2Kstarnunu #new
+  # #~m- purpose: LogLike
+  #   #~mcapability: BuKstarnunu_LogLikelihood_Belle_sl # missing prediction_Bu2Kstarnunu #new
+  # #~n- purpose: LogLike
+  #   #~ncapability: BuKstarnunu_LogLikelihood_Belle_had # missing prediction_Bu2Kstarnunu #new
+  # #~o- purpose: LogLike
+  #   #~ocapability: BKstarnunu_LogLikelihood_BaBar # missing prediction_B2Kstarnunu #new
+  # #~p- purpose: LogLike
+  #   #~pcapability: BuKstarnunu_LogLikelihood_BaBar # missing prediction_Bu2Kstarnunu #new
 
-  # B -> K mu mu BR, Source: SuperISO, HEPLike
-  #~j- purpose:    LogLike
-    #~jcapability: B2KmumuBr_LogLikelihood_LHCb
+  # ----------------------------- #
+  # Semileptonic FCCC likelihoods #
+  # ----------------------------- #
 
-  # Bs -> Phi mu mu BR, Source: SuperISO, HEPLike
-  #~k- purpose:    LogLike
-    #~kcapability: Bs2phimumuBr_LogLikelihood
+  #~q- purpose:    LogLike
+    #~qcapability: SL_LogLikelihood  # OFF - RD, RDstar, Rmu, RDemu
+    #~qsub_capabilities: [BDmunu, BDstarmunu, Btaunu, Dstaunu, DSmunu, Dmunu, Dtaunu]
+  #~r- purpose:    LogLike # DOES NOTHING
+    #~rcapability: FLDstar_LogLikelihood
+  #~s- purpose:    LogLike # DOES NOTHING
+    #~scapability: dBRBDstartaunu_LogLikelihood
+  #~t- purpose:    LogLike # DOES NOTHING
+    #~tcapability: dBRBDtaunu_LogLikelihood
 
+  # --------------------------------- #
+  # Lifetime and Delta MB likelihoods #
+  # --------------------------------- #
 
-# DELETED
+  #~u- purpose:    LogLike
+    #~ucapability: Bc_lifetime_LogLikelihood
+  #~v- purpose:    LogLike
+    #~vcapability: Delta_MBs_LogLikelihood
+  #~w- purpose:    LogLike
+    #~wcapability: Delta_MBd_LogLikelihood
 
-  # Source: SuperISO, HEPLike
-  # B -> K* mu mu Angular CP assymetry
-  #- purpose:    LogLike
-    #capability: B2KstarmumuAng_CPAssym_LogLikelihood_LHCb
+  # ------------------------------------ #
+  # Lepton flavour violating likelihoods #
+  # ------------------------------------ #
 
-  # ONLY 2020 VERSION INCLUDED
-  # - purpose:    LogLike
-  #   capability: B2KstarmumuAng_LogLikelihood_LHCb
+  #~x- purpose:    LogLike  # DOES NOTHING
+    #~xcapability: l2lgamma_LogLikelihood
+  #~y- purpose:    LogLike  # DOES NOTHING
+    #~ycapability: l2lll_LogLikelihood
+  #~z- purpose:    LogLike # PROBABLY DOES NOTHING
+    #~zcapability: h2ltau_LogLikelihood #new
 
+  # --------------------------------------- #
+  # Flavour violating top decay likelihoods #
+  # --------------------------------------- #
+  
+  #~!- purpose:    LogLike # DOES NOTHING
+    #~!capability: t2ch_LogLikelihood
+  #~@- purpose:    LogLike # PROBABLY DOES NOTHING
+    #~@capability: t2bbc_LogLikelihood #new
+  #~#- purpose:    LogLike # PROBABLY DOES NOTHING
+    #~#capability: t2mutauc_LogLikelihood #new
+  #~$- purpose:    LogLike # PROBABLY DOES NOTHING
+    #~$capability: Bc2taunu_LogLikelihood #new
+  #~%- purpose:    LogLike
+    #~%capability: Bs2ll_LogLikelihood
+  #~^- purpose:    LogLike
+    #~^capability: B2Kll_LogLikelihood
+
+  # --------------------------------------- #
+  #              Other                      #
+  # --------------------------------------- #
+
+  #~&- purpose:    LogLike
+    #~&capability: B2Xsnunu_LogLikelihood
+  #~*- purpose:    LogLike # DOES NOTHING
+    #~*capability: gmu_ge_LogLikelihood
 
 #################################
 ##          OBSERVABLES        ##
@@ -355,164 +412,6 @@ ObsLikes:
 
 
   #  ---- Flavor Observables ----
-
-  # # Prediction for Bs2ll_LogLikelihood
-  # #~J- capability: Bs2mutau
-  # #~J  purpose: Observable
-  # #~J- capability: Bs2tautau
-  # #~J  purpose: Observable
-
-  # # Prediction for B2Kll_LogLikelihood
-  # #~K- capability: B2Kmue
-  # #~K  purpose: Observable
-  # #~K- capability: B2Ktaumu
-  # #~K  purpose: Observable
-  # #~K- capability: B2Ktautau
-  # #~K  purpose: Observable
-
-  # # Prediction for B2mumu_LogLikelihood_
-  # #~Y- capability: prediction_B2mumu
-  # #~Y  purpose: Observable
-
-  # # Prediction for dBRBDstartaunu_LogLikelihood
-  # #~E- capability: dBRBDstartaunu
-  # #~E  purpose: Observable
-
-  # # Prediction for dBRBDtaunu_LogLikelihood
-  # #~F- capability: dBRBDtaunu
-  # #~F  purpose: Observable
-
-  # # Prediction for gmu_ge_LogLikelihood
-  # #~G- capability: gmu_ge
-  # #~G  purpose: Observable
-
-  # # Prediction for FLDstar_LogLikelihood
-  # #~H- capability: FLDstar
-  # #~H  purpose: Observable
-
-  # # Prediction for Bc_lifetime_LogLikelihood
-  # #~I- capability: Bc_lifetime
-  # #~I  purpose: Observable
-
-  # # Prediction for B2Xsnunu_LogLikelihood
-  # #~L- capability: RKnunu
-  # #~L  purpose: Observable
-  # #~L- capability: RKstarnunu
-  # #~L  purpose: Observable
-
-  # # Prediction for h2taumu_LogLikelihood
-  # #~M- capability: h2taumu
-  # #~M  purpose: Observable
-
-  # # Prediction for t2ch_LogLikelihood
-  # #~N- capability: t2ch
-  # #~N  purpose: Observable
-
-  # # Prediction for deltaMB_LogLikelihood
-  # #~O- capability: prediction_DeltaMs
-  # #~O  purpose: Observable
-
-  # # Prediction for deltaMBd_LogLikelihood
-  # #~P- capability: DeltaMd
-  # #~P  purpose: Observable
-
-  # # Prediction for SL_LogLikelihood
-  # #~Q- capability: RD
-  # #~Q  purpose: Observable
-  # #~Q- capability: RDstar
-  # #~Q  purpose: Observable
-  # #~Q- capability: BDmunu
-  # #~Q  purpose: Observable
-  # #~Q- capability: BDstarmunu
-  # #~Q  purpose: Observable
-  # #~Q- capability: Btaunu
-  # #~Q  purpose: Observable
-  # #~Q- capability: Rmu
-  # #~Q  purpose: Observable
-  # #~Q- capability: Dstaunu
-  # #~Q  purpose: Observable
-  # #~Q- capability: Dsmunu
-  # #~Q  purpose: Observable
-  # #~Q- capability: Dmunu
-  # #~Q  purpose: Observable
-  # #~Q- capability: Dtaunu
-  # #~Q  purpose: Observable
-  # #~Q- capability: RDemu
-  # #~Q  purpose: Observable
-
-  # # Prediction for l2lgamma_LogLikelihood
-  # #~R- capability: muegamma
-  # #~R  purpose: Observable
-  # #~R- capability: tauegamma
-  # #~R  purpose: Observable
-  # #~R- capability: taumugamma
-  # #~R  purpose: Observable
-
-  # # Prediction for l2lll_LogLikelihood
-  # #~S- capability: mueee
-  # #~S  purpose: Observable
-  # #~S- capability: taueee
-  # #~S  purpose: Observable
-  # #~S- capability: taumumumu
-  # #~S  purpose: Observable
-  # #~S- capability: taumuee
-  # #~S  purpose: Observable
-  # #~S- capability: taueemu
-  # #~S  purpose: Observable
-  # #~S- capability: tauemumu
-  # #~S  purpose: Observable
-  # #~S- capability: taumumue
-  # #~S  purpose: Observable
-
-  # # Prediction for b2sgamma_LogLikelihood
-  # #~U- capability: prediction_b2sgamma
-  # #~U  purpose: Observable
-
-  # # Prediction for B2Kstargamma_LogLikelihood
-  # #~V- capability: prediction_B2Kstargamma
-  # #~V  purpose: Observable
-
-  # # Prediction for RK_LogLikelihood_LHCb
-  # #~l- capability: RK
-  # #~l  purpose: Observable
-
-  # # Prediction for RKstar_LogLikelihood_LHCb
-  # #~m- capability: RKstar_0045_11
-  # #~m  purpose: Observable
-  # #~m- capability: RKstar_11_60
-  # #~m  purpose: Observable
-
-  # # Prediction for B2KstarmumuAng_LogLikelihood_
-  # #~Z- capability: prediction_B2KstarmumuAng_Atlas
-  # #~Z  purpose: Observable
-  # #~Z- capability: prediction_B2KstarmumuAng_CMS
-  # #~Z  purpose: Observable
-  # #~Z- capability: prediction_B2KstarmumuAng_LHCb
-  # #~Z  purpose: Observable
-
-  # # Prediction for B2KstarellellAng_LogLikelihood_Belle
-  # #~e- capability: prediction_B2KstarmumuAng_Belle
-  # #~e  purpose: Observable
-
-  # # Prediction for Bu2KstarmumuAng_LogLikelihood_LHCb_2020
-  # # same as previous
-
-  # # Prediction for B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020
-  # #~h- capability: prediction_B2KstareeAng_Lowq2_LHCb
-  # #~h  purpose: Observable
-
-  # # Prediction for B2KstarmumuBr_LogLikelihood_LHCb
-  # #~i- capability: prediction_B2KstarmumuBr
-  # #~i  purpose: Observable
-
-  # # Prediction for B2KmumuBr_LogLikelihood_LHCb
-  # #~j- capability: prediction_B2KmumuBr
-  # #~j  purpose: Observable
-
-  # # Prediction for Bs2phimumuBr_LogLikelihood
-  # #~k- capability: prediction_Bs2phimumuBr
-  # #~k  purpose: Observable
-
 
   #  ---- Wilson Coefficients ----
 
@@ -587,14 +486,8 @@ ObsLikes:
 
 Rules:
 
-  - capability: THDM_spectrum
-    type: Spectrum
-    function: get_THDM_spectrum_tree
-    # function: get_THDM_spectrum_FS
-    # function: convert_THDM_spectrum_SPheno
-
   - capability: couplingtable_THDM
-    function: get_coupling_table_using_invariant_basis
+    function: get_coupling_table_using_Higgs_basis
 
   - capability: basic_theory_LogLikelihood_THDM
     options:
@@ -603,35 +496,46 @@ Rules:
   - capability: runToScaleTest_LogLikelihood_THDM
     options:
       check_other_scale: 1000
+      hard_cutoff: true
 
   - capability: perturbativity_LogLikelihood_THDM
     options:
-      check_other_scale: 1000
+      check_other_scale: [-1, 1000]
       skipCubicCouplings: true
       skipGoldstoneCouplings: true
+      hard_cutoff: false
+
+  - capability: perturbativity_yukawas_LogLikelihood_THDM
+    options:
+      check_other_scale: [-1, 1000]
+      hard_cutoff: false
 
   - capability: scalar_mass_corrections_LogLikelihood_THDM
     options:
-      check_other_scale: 1000
+      check_other_scale: [-1, 1000]
+      hard_cutoff: false
 
   - capability: stability_LogLikelihood_THDM
     options:
-      check_other_scale: 1000
-      check_metastability: true
+      check_other_scale: [-1, 1000]
+      check_metastability: false
+      hard_cutoff: false
 
   - capability: unitarity_LogLikelihood_THDM
     options:
-      check_other_scale: 1000
+      check_other_scale: [1000]
       # options below only for NLO unitarity
       check_correction_ratio: true
-      wave_function_corrections: true
+      wave_function_corrections: false
       gauge_corrections: true
       yukawa_corrections: true
+      hard_cutoff: false
 
   - capability: higgs_exp_mass_LogLikelihood_THDM
     options:
       higgs_mass_uncertainty: 5.0
       valid_range: 200
+      hard_cutoff: false
 
   - capability: higgs_scenario_LogLikelihood_THDM
     options:
@@ -641,6 +545,7 @@ Rules:
     type: map_str_dbl
     options:
       print_minimal_yukawas: true
+      print_running_masses: true
 
   - capability: decay_rates
     function: all_decays

@@ -5,13 +5,13 @@ Parameters:
         range: [100,140]
         prior_type: flat
       mH:
-        range: [150, 1000]
+        range: [100, 400]
         prior_type: flat
       mA:
-        range: [30, 1000]
+        range: [30, 400]
         prior_type: flat
       mHp:
-        range: [30, 1000]
+        range: [30, 400]
         prior_type: flat
       lambda6:
         fixed_value: 0.0
@@ -20,13 +20,13 @@ Parameters:
         fixed_value: 0.0
         prior_type: flat
       m12_2:
-        range: [-1e5, 1e6]
+        range: [0, 1e6]
         prior_type: flat
       tanb:
-        range: [0.03, 320]
-        prior_type: flat
+        range: [0.3, 320]
+        prior_type: log
       sba:
-        range: [0.90, 1.0]
+        range: [0.99, 1.0]
         prior_type: flat
       #~~Qin: 91.1876 # = mZ
 
