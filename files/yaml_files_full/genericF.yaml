@@ -1,37 +1,42 @@
+
+subscans:
+  num_scans: 50
+  overlap: 1.0
+
 Parameters:
     StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
     TheModelName:
       lambda1:
-          range: [0, 4]
+          # range: [0, 4]
+          range: [0, 4.5]
           prior_type: flat
-          power: 3
-          shift: 0
-          output_scaled_values: false
       lambda2:
-          range: [0, 4]
+          # range: [0, 4]
+          range: [0, 5.5]
           prior_type: flat
-          power: 3
-          shift: 0
-          output_scaled_values: false
       lambda3:
-          range: [-2.5, 3]
+          # range: [-2.5, 3]
+          range: [-2.5, 4.5]
           prior_type: flat
       lambda4:
-          range: [-3, 3]
+          # range: [-3, 3]
+          range: [-3.5, 3.5]
           prior_type: flat
       lambda5:
-          range: [-1.5, 2]
+          # range: [-1.5, 2]
+          range: [-2.5, 2.5]
           prior_type: flat
       lambda6:
           fixed_value: 0.0
       lambda7:
           fixed_value: 0.0
       m12_2:
-          ranges: [-1e4, -1e0, 1e6, 1e10]
-          prior_type: double_log_flat_join
+          range: [-1200, 1200]
+          prior_type: flat
       tanb:
           range: [0.3, 320]
           prior_type: log
+          subscan_weight: 1
       #~~Qin: 91.1876 # = mZ
 
 !import ../yaml_files/THDM_constraints.yaml
