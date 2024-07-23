@@ -44,7 +44,7 @@ conv_threshold = 1e-8
 NP = 10000
 required_printed_points = 1000000
 required_points = -1
-required_scan_duration = 1*45*60 # in seconds
+required_scan_duration = 1*60*60 # in seconds
 
 NODE_COUNT = 1  # set to desired number of nodes per gambit
 CORE_COUNT = 76 # set to number of cores per node
@@ -99,15 +99,14 @@ bases = [
     # ("generic", "genericB"),        # f lam2, lam4 grid
     # ("generic", "genericC"),        # g lam1, lam2 grid
     # ("generic", "genericD"),        # r lam4, tanb grid (flat-log)
+    # ("generic", "genericE"),        # t tanb grid (log) (high m122)
+    # ("generic", "genericF"),        # u tanb grid (log) (vlow m122)
+    # ("generic", "genericG"),        # v tanb grid (log) (low m122)
 
     # ("hybrid_Higgs", "hybrid1A"),   # h Lam4, Lam5 grid
     # ("hybrid_Higgs", "hybrid1B"),   # i Lam4, Lam5, Lam7 grid
-    
     # ("hybrid_Higgs", "hybrid1H"),   # q tanb grid (log)
-
-    # ~~~~~~~~~~~~~
-
-    ("hybrid_Higgs", "hybrid1C"),   # j cba, tanb grid (flat-log)
+    # ("hybrid_Higgs", "hybrid1C"),   # j cba, tanb grid (flat-log)
     # ("hybrid_Higgs", "hybrid1D"),   # k mH, tanb grid (log-log)
     # ("hybrid_Higgs", "hybrid1E"),   # l mH, tanb grid (log-log) (higher mH)
     # ("hybrid_Higgs", "hybrid1F"),   # m cba, tanb grid (flat-log) Lower cba
@@ -116,23 +115,22 @@ bases = [
     # ("hybrid_Higgs2", "hybrid2A"),  # n mHp,tanb grid (log-log) -> better off doing full tb grid
     # ("hybrid_Higgs2", "hybrid2B"),  # o mHp,tanb grid (log-log) (bottom right corner)
 
-
-# a: very poor
-# b: ok, seems to prefer high mHp+tanb
-# c: ok, prefers low/mid mhp+tanb
-# d: ok, slightly worse than above
-# e: excellent, just misses high and low mHp
-# f: decent job at low mHp, wide tanb range!!
-# g: very similar to f
-# h: ok, misses high tanb and there is a gap; good job with mass splittings
-# i: similar to h
-# j: ok, but needs pow prior on tanb
-# k: ok, better than j, but needs pow prior on tanb
-# l: ok job at high mHp but needs pow prior on tanb
-# m: ok, slightly better than j
-# n: ok job at low mHp but neds pow prior on both variables
-# o: slightly worse than n; didn't work as expected; caught the wrong sign Yukawa!!!
-# p: 
+    # a: very poor
+    # b: ok, seems to prefer high mHp+tanb
+    # c: ok, prefers low/mid mhp+tanb
+    # d: ok, slightly worse than above
+    # e: excellent, just misses high and low mHp
+    # f: decent job at low mHp, wide tanb range!!
+    # g: very similar to f
+    # h: ok, misses high tanb and there is a gap; good job with mass splittings
+    # i: similar to h
+    # j: ok, but needs pow prior on tanb
+    # k: ok, better than j, but needs pow prior on tanb
+    # l: ok job at high mHp but needs pow prior on tanb
+    # m: ok, slightly better than j
+    # n: ok job at low mHp but neds pow prior on both variables
+    # o: slightly worse than n; didn't work as expected; caught the wrong sign Yukawa!!!
+    # p: 
 
 ]
 
