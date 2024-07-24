@@ -34,7 +34,7 @@ Parameters:
       lambda7:
           fixed_value: 0.0
       m12_2:
-          ranges: [-5e4, -1e0, 1e4, 7e5]
+          ranges: [-1e4, -1e0, 1e6, 1e10]
           prior_type: double_log_flat_join
       tanb:
           range: [0.3, 320]
