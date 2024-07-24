@@ -209,37 +209,92 @@ constraints = [
 # ---- FLAVOR SCANS ----
 
 # 26-2
-# constraints = [
+constraints = [
 
-#     # (["theory", "Bs2ll_LogLikelihood"], "Bs2ll"),
-#     # (["theory", "B2Kll_LogLikelihood"], "B2Kll"),
-#     # (["theory", "B2mumu_LogLikelihood_Atlas"], "B2mumuAtlas"),
-#     # (["theory", "B2mumu_LogLikelihood_LHCb"], "B2mumuLHCb"),
-#     # (["theory", "B2mumu_LogLikelihood_CMS"], "B2mumuCMS"),
-#     # (["theory", "Bc_lifetime_LogLikelihood"], "Bclifetime"),
-#     # (["theory", "B2Xsnunu_LogLikelihood"], "B2Xsnunu"),
-#     # (["theory", "SL_LogLikelihood"], "SL"),
-#     # (["theory", "b2sgamma_LogLikelihood"], "b2sgamma"),
-#     # (["theory", "B2Kstargamma_LogLikelihood"], "B2Kstargamma"),
-#     # (["theory", "B2KstarmumuAng_LogLikelihood_Atlas"], "B2KstarmumuAngAtlas"),
-#     # (["theory", "B2KstarmumuAng_LogLikelihood_CMS"], "B2KstarmumuAngCMS"),
-#     # (["theory", "B2KstarmumuAng_LogLikelihood_LHCb_2020"], "B2KstarmumuAngLHCb2020"),
-#     # (["theory", "B2KstarmumuAng_LogLikelihood_Belle"], "B2KstarmumuAngBelle"),
-#     # (["theory", "B2KstarellellAng_LogLikelihood_Belle"], "B2KstarellellAng"),
-#     # (["theory", "Bu2KstarmumuAng_LogLikelihood_LHCb_2020"], "Bu2KstarmumuAng"),
-#     # (["theory", "B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020"], "B2KstareeAngLowq2"),
-#     # (["theory", "B2KstarmumuBr_LogLikelihood_LHCb"], "B2KstarmumuBr"),
-#     # (["theory", "B2KmumuBr_LogLikelihood_LHCb"], "B2KmumuBr"),
-#     # (["theory", "Bs2phimumuBr_LogLikelihood"], "Bs2phimumuBr"),
-#     # (["theory", "flavour"], "flavour"),
-#     # (["theory", "B2mumu_LogLikelihood_Atlas", "B2mumu_LogLikelihood_LHCb", "B2mumu_LogLikelihood_CMS"], "B2mumu"),
-#     # (["theory", "B2KstarmumuAng_LogLikelihood_Atlas", "B2KstarmumuAng_LogLikelihood_CMS", "B2KstarmumuAng_LogLikelihood_LHCb_2020", "B2KstarmumuAng_LogLikelihood_Belle"], "B2KstarmumuAng"),
-#     # (["theory", "deltaMB_LogLikelihood"], "deltaMB"),
-#     # (["theory", "deltaMBd_LogLikelihood"], "deltaMBd"),
-#     # (["theory", "RK_LogLikelihood_LHCb"], "RK"),
-#     # (["theory", "RKstar_LogLikelihood_LHCb"], "RKstar"),
+    (["theory", "b2sgamma_LogLikelihood"], "b2sgamma"),
+    (["theory", "B2Kstargamma_LogLikelihood"], "B2Kstargamma"),
+    (["theory", "B2Kstargamma_LogLikelihood", "b2sgamma_LogLikelihood"], "comb_B2Xsgamma"),
 
-# ]
+    (["theory", "B2mumu_LogLikelihood_Atlas"], "B2mumu_Atlas"),
+    (["theory", "B2mumu_LogLikelihood_LHCb"], "B2mumu_LHCb"),
+    (["theory", "B2mumu_LogLikelihood_CMS"], "B2mumu_CMS"),
+    (["theory", "B2mumu_LogLikelihood_Atlas", "B2mumu_LogLikelihood_LHCb", "B2mumu_LogLikelihood_CMS"], "comb_B2mumu"),
+
+    (["theory", "Bd2KmumuBr_LogLikelihood_LHCb"], "Bd2KmumuBr_LHCb"),
+    (["theory", "Bd2KmumuBr_LogLikelihood_Belle"], "Bd2KmumuBr_Belle"),
+    (["theory", "B2KmumuBr_LogLikelihood_LHCb"], "B2KmumuBr_LHCb"),
+    (["theory", "B2KmumuBr_LogLikelihood_CMS"], "B2KmumuBr_CMS"),
+    (["theory", "B2KmumuBr_LogLikelihood_Belle"], "B2KmumuBr_Belle"),
+    (["theory", "Bd2KmumuBr_LogLikelihood_LHCb", "Bd2KmumuBr_LogLikelihood_Belle", "B2KmumuBr_LogLikelihood_Belle", "B2KmumuBr_LogLikelihood_LHCb", "B2KmumuBr_LogLikelihood_CMS"], "comb_B2KmumuBr"),
+
+    (["theory", "B2KeeBr_LogLikelihood_Belle"], "B2KeeBr_Belle"),
+    (["theory", "Bd2KeeBr_LogLikelihood_Belle"], "Bd2KeeBr_Belle"),
+    (["theory", "Bd2KeeBr_LogLikelihood_Belle", "B2KeeBr_LogLikelihood_Belle"], "comb_B2Kee"),
+
+    (["theory", "B2KstarmumuAng_LogLikelihood_Atlas"], "B2KstarmumuAngd_Atlas"),
+    (["theory", "B2KstarmumuAng_LogLikelihood_CMS"], "B2KstarmumuAng_CMS"),
+    (["theory", "B2KstarmumuAng_LogLikelihood_Belle"], "B2KstarmumuAng_Belle"),
+    (["theory", "B2KstarmumuAng_LogLikelihood_LHCb_2020"], "B2KstarmumuAng_LHCb_2020"),
+    (["theory", "Bu2KstarmumuAng_LogLikelihood_LHCb_2020"], "Bu2KstarmumuAng_LHCb_2020"),
+    (["theory", "B2KstarmumuBr_LogLikelihood_LHCb"], "B2KstarmumuBr_LHCb"),
+    (["theory", "Bs2phimumuBr_LogLikelihood"], "Bs2phimumuBr"),
+    (["theory", "B2KstarmumuAng_CPAssym_LogLikelihood_LHCb"], "B2KstarmumuAng_CPAssym_LHCb"),
+    (["theory", "B2KstarellellAng_LogLikelihood_Belle"], "B2KstarellellAng_Belle"), # works
+    (["theory", "B2KstarellellAng_LogLikelihood_Belle", "B2KstarmumuAng_CPAssym_LogLikelihood_LHCb", "Bs2phimumuBr_LogLikelihood", "Bu2KstarmumuAng_LogLikelihood_LHCb_2020", "B2KstarmumuBr_LogLikelihood_LHCb", "B2KstarmumuAng_LogLikelihood_LHCb_2020", "B2KstarmumuAng_LogLikelihood_Atlas", "B2KstarmumuAng_LogLikelihood_CMS", "B2KstarmumuAng_LogLikelihood_Belle"], "comb_B2Kstarmumu"),
+
+    (["theory", "B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020"], "B2KstareeAng_Lowq2_LHCb_2020"), # works
+
+    (["theory", "RKRKstar_LogLikelihood_LHCb"], "RKRKstar_LHCb"),
+    (["theory", "RK_LogLikelihood_CMS"], "RK_CMS"),
+    (["theory", "RK_LogLikelihood_Belle"], "RK_Belle"),
+    (["theory", "RKRKstar_LogLikelihood_LHCb", "RK_LogLikelihood_Belle", "RK_LogLikelihood_CMS"], "comb_RKRKstar"),
+
+    (["theory", "BKnunu_LogLikelihood_Belle_sl"], "BKnunu_Belle_sl"),
+    (["theory", "BKnunu_LogLikelihood_Belle_had"], "BKnunu_Belle_had"),
+    (["theory", "BuKnunu_LogLikelihood_Belle_sl"], "BuKnunu_Belle_sl"),
+    (["theory", "BuKnunu_LogLikelihood_Belle_had"], "BuKnunu_Belle_had"),
+    (["theory", "BuKnunu_LogLikelihood_BelleII"], "BuKnunu_BelleII"),
+    (["theory", "BKnunu_LogLikelihood_BaBar"], "BKnunu_BaBar"),
+    (["theory", "BuKnunu_LogLikelihood_BaBar"], "BuKnunu_BaBar"),
+    (["theory", "BKnunu_LogLikelihood_Belle_sl", "BKnunu_LogLikelihood_Belle_had", "BuKnunu_LogLikelihood_Belle_sl", "BuKnunu_LogLikelihood_Belle_had", "BuKnunu_LogLikelihood_BelleII", "BKnunu_LogLikelihood_BaBar", "BuKnunu_LogLikelihood_BaBar"], "comb_B2Knunu"),
+
+    # OFF - NOT WORKING
+    # (["theory", "BKstarnunu_LogLikelihood_Belle_sl"], "BKstarnunu_Belle_sl"),
+    # (["theory", "BKstarnunu_LogLikelihood_Belle_had"], "BKstarnunu_Belle_had"),
+    # (["theory", "BuKstarnunu_LogLikelihood_Belle_sl"], "BuKstarnunu_Belle_sl"),
+    # (["theory", "BuKstarnunu_LogLikelihood_Belle_had"], "BuKstarnunu_Belle_had"),
+    # (["theory", "BKstarnunu_LogLikelihood_BaBar"], "BKstarnunu_BaBar"),
+    # (["theory", "BuKstarnunu_LogLikelihood_BaBar"], "BuKstarnunu_BaBar"),
+
+    (["theory", "SL_LogLikelihood"], "SL"),
+    (["theory", "FLDstar_LogLikelihood"], "FLDstar"),
+    (["theory", "dBRBDstartaunu_LogLikelihood"], "dBRBDstartaunu"),
+    (["theory", "dBRBDtaunu_LogLikelihood"], "dBRBDtaunu"),
+    (["theory", "SL_LogLikelihood", "FLDstar_LogLikelihood", "dBRBDstartaunu_LogLikelihood", "dBRBDtaunu_LogLikelihood"], "comb_SL_FCCC"),
+
+
+    (["theory", "Bc_lifetime_LogLikelihood"], "Bc_lifetime"),
+    (["theory", "Delta_MBs_LogLikelihood"], "Delta_MBs"),
+    (["theory", "Delta_MBd_LogLikelihood"], "Delta_MBd"),
+    (["theory", "Bc_lifetime_LogLikelihood", "Delta_MBs_LogLikelihood", "Delta_MBd_LogLikelihood"], "comb_DeltaMB"),
+
+    (["theory", "l2lgamma_LogLikelihood"], "l2lgamma"),
+    (["theory", "l2lll_LogLikelihood"], "l2lll"),
+    (["theory", "h2ltau_LogLikelihood"], "h2ltau"),
+    (["theory", "l2lgamma_LogLikelihood", "l2lll_LogLikelihood", "h2ltau_LogLikelihood"], "comb_LFV"),
+
+    (["theory", "t2ch_LogLikelihood"], "t2ch"),
+    (["theory", "t2bbc_LogLikelihood"], "t2bbc"),
+    (["theory", "t2mutauc_LogLikelihood"], "t2mutauc"),
+    (["theory", "Bc2taunu_LogLikelihood"], "Bc2taunu"),
+    (["theory", "Bs2ll_LogLikelihood"], "Bs2ll"),
+    (["theory", "B2Kll_LogLikelihood"], "B2Kll"),
+    (["theory", "t2ch_LogLikelihood", "t2bbc_LogLikelihood", "t2mutauc_LogLikelihood", "Bc2taunu_LogLikelihood", "Bs2ll_LogLikelihood", "B2Kll_LogLikelihood"], "comb_FV_top"),
+
+    (["theory", "B2Xsnunu_LogLikelihood"], "B2Xsnunu"),
+    (["theory", "gmu_ge_LogLikelihood"], "gmu_ge"),
+
+]
 
 # note that all data for bases is combined for plotting
 # whereas each [models,runnings,constraints] generate different sets of plots
@@ -292,14 +347,7 @@ class Options:
                          "perturbativity_yukawas_LogLikelihood_THDM"]
     constraints_collider = ["LEP_Higgs_LogLike", "LHC_Higgs_LogLike","HS_ALL","HS_RUN1_SS","HS_LATEST_SS","HS_LATEST_STXS"] #higgs_mass_LogLikelihood
     constraints_electroweak =  ["oblique_parameters_LogLikelihood"] # lnL_gm2
-    constraints_flavour =  ["Bs2ll_LogLikelihood","B2Kll_LogLikelihood","B2mumu_LogLikelihood_Atlas","B2mumu_LogLikelihood_LHCb","B2mumu_LogLikelihood_CMS",
-                            "dBRBDstartaunu_LogLikelihood","dBRBDtaunu_LogLikelihood","gmu_ge_LogLikelihood","FLDstar_LogLikelihood","Bc_lifetime_LogLikelihood",
-                            "B2Xsnunu_LogLikelihood","t2ch_LogLikelihood","Delta_MBs_LogLikelihood","Delta_MBd_LogLikelihood",
-                            "SL_LogLikelihood","l2lgamma_LogLikelihood","l2lll_LogLikelihood","b2sgamma_LogLikelihood","B2Kstargamma_LogLikelihood",
-                            "RKRKstar_LogLikelihood_LHCb","B2KstarmumuAng_LogLikelihood_Atlas","B2KstarmumuAng_LogLikelihood_CMS",
-                            "B2KstarmumuAng_LogLikelihood_LHCb_2020","B2KstarmumuAng_LogLikelihood_Belle","B2KstarellellAng_LogLikelihood_Belle",
-                            "Bu2KstarmumuAng_LogLikelihood_LHCb_2020","B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020","B2KstarmumuBr_LogLikelihood_LHCb",
-                            "B2KmumuBr_LogLikelihood_LHCb","Bs2phimumuBr_LogLikelihood"]
+    constraints_flavour =  ["b2sgamma_LogLikelihood","B2Kstargamma_LogLikelihood","B2mumu_LogLikelihood_Atlas","B2mumu_LogLikelihood_LHCb","B2mumu_LogLikelihood_CMS","Bd2KmumuBr_LogLikelihood_LHCb","Bd2KmumuBr_LogLikelihood_Belle","B2KmumuBr_LogLikelihood_LHCb","B2KmumuBr_LogLikelihood_CMS","B2KmumuBr_LogLikelihood_Belle","B2KeeBr_LogLikelihood_Belle","Bd2KeeBr_LogLikelihood_Belle","B2KstarmumuAng_LogLikelihood_Atlas","B2KstarmumuAng_LogLikelihood_CMS","B2KstarmumuAng_LogLikelihood_Belle","B2KstarmumuAng_LogLikelihood_LHCb_2020","Bu2KstarmumuAng_LogLikelihood_LHCb_2020","B2KstarmumuBr_LogLikelihood_LHCb","Bs2phimumuBr_LogLikelihood","B2KstarmumuAng_CPAssym_LogLikelihood_LHCb","B2KstarellellAng_LogLikelihood_Belle","B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020","RKRKstar_LogLikelihood_LHCb","RK_LogLikelihood_CMS","RK_LogLikelihood_Belle","BKnunu_LogLikelihood_Belle_sl","BKnunu_LogLikelihood_Belle_had","BuKnunu_LogLikelihood_Belle_sl","BuKnunu_LogLikelihood_Belle_had","BuKnunu_LogLikelihood_BelleII","BKnunu_LogLikelihood_BaBar","BuKnunu_LogLikelihood_BaBar","BKstarnunu_LogLikelihood_Belle_sl","BKstarnunu_LogLikelihood_Belle_had","BuKstarnunu_LogLikelihood_Belle_sl","BuKstarnunu_LogLikelihood_Belle_had","BKstarnunu_LogLikelihood_BaBar","BuKstarnunu_LogLikelihood_BaBar","SL_LogLikelihood","FLDstar_LogLikelihood","dBRBDstartaunu_LogLikelihood","dBRBDtaunu_LogLikelihood","Bc_lifetime_LogLikelihood","Delta_MBs_LogLikelihood","Delta_MBd_LogLikelihood","l2lgamma_LogLikelihood","l2lll_LogLikelihood","h2ltau_LogLikelihood","t2ch_LogLikelihood","t2bbc_LogLikelihood","t2mutauc_LogLikelihood","Bc2taunu_LogLikelihood","Bs2ll_LogLikelihood","B2Kll_LogLikelihood","B2Xsnunu_LogLikelihood","gmu_ge_LogLikelihood"]
     constraints_all = constraints_theory + constraints_collider + constraints_electroweak + constraints_flavour
 
     def __init__(self):
