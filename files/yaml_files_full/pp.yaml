@@ -1,0 +1,25 @@
+Parameters:
+    StandardModel_SLHA2: !import include/StandardModel_SLHA2_defaults.yaml
+    TheModelName:
+      m12_2:
+          prior_type: none
+      tanb:
+          prior_type: none
+      lambda1:
+          prior_type: none
+      lambda2:
+          prior_type: none
+      lambda3:
+          prior_type: none
+      lambda4:
+          prior_type: none
+      lambda5:
+          prior_type: none
+      lambda6:
+          prior_type: none
+      lambda7:
+          prior_type: none
+      Qin:
+          prior_type: none
+
+!import ../yaml_files/THDM_constraints.yaml
