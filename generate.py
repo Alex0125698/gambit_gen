@@ -86,6 +86,8 @@ runnings = ["loop"]
 # 22
 bases = [
 
+    ("generic", "pp")
+
     # ("physical2", "physical2"),     # modified physical basis to match paper
 
     # ("physical", "physical"),       # a standard physical basis
@@ -102,12 +104,8 @@ bases = [
 
     # ("hybrid_Higgs", "hybrid1A"),   # h Lam4, Lam5 grid
     # ("hybrid_Higgs", "hybrid1B"),   # i Lam4, Lam5, Lam7 grid
-    
     # ("hybrid_Higgs", "hybrid1H"),   # q tanb grid (log)
-
-    # ~~~~~~~~~~~~~
-
-    ("hybrid_Higgs", "hybrid1C"),   # j cba, tanb grid (flat-log)
+    # ("hybrid_Higgs", "hybrid1C"),   # j cba, tanb grid (flat-log)
     # ("hybrid_Higgs", "hybrid1D"),   # k mH, tanb grid (log-log)
     # ("hybrid_Higgs", "hybrid1E"),   # l mH, tanb grid (log-log) (higher mH)
     # ("hybrid_Higgs", "hybrid1F"),   # m cba, tanb grid (flat-log) Lower cba
@@ -719,7 +717,10 @@ def load_subscan_yaml(name):
             else:
                 param_priors[param] = tmp[param]["prior_type"]
 
-                if "range" in tmp[param]:
+                if param_priors[param] == "none":
+                    param_weights[param] = 0
+                    param_ranges[param] = tmp[param]["prior_type"]
+                elif "range" in tmp[param]:
                     param_ranges[param] = tmp[param]["range"]
                 else:
                     param_ranges[param] = tmp[param]["ranges"]
@@ -766,6 +767,7 @@ def load_subscan_yaml(name):
 
             # don't divide up fixed values!
             if (param_priors[param]) == "fixed_value": continue
+            if (param_priors[param]) == "none": continue
             
             # get number of parameter range pieces & index
             nPieces = pieces[param]
@@ -815,8 +817,8 @@ def load_subscan_yaml(name):
         # convert yaml file to string
         contents = yaml.dump(yfile)
 
-        # add Qin back
-        contents += "    #~~Qin: 91.1876 # = mZ\n"
+        # # add Qin back
+        # contents += "    #~~Qin: 91.1876 # = mZ\n"
 
         # add the imports back
         contents += "!import ../yaml_files/THDM_constraints.yaml\n"
