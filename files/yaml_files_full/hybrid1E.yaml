@@ -14,8 +14,8 @@ Parameters:
           subscan_weight: 1
           prior_type: log
       cba:
-          # range: [-1.0, +1.0]
-          range: [-0.06, +0.35]
+          range: [-1.0, +1.0]
+          # range: [-0.06, +0.35]
           prior_type: flat
       tanb:
           range: [0.5, 110]

@@ -34,7 +34,7 @@ Parameters:
           range: [-2.5e5, 1e5]
           prior_type: flat
       tanb:
-          range: [0.3, 320]
+          range: [0.3, 190]
           prior_type: log
           subscan_weight: 1
       #~~Qin: 91.1876 # = mZ

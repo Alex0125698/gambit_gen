@@ -27,7 +27,7 @@ Parameters:
         range: [0, 1e6]
         prior_type: flat
       tanb:
-        range: [0.3, 320]
+        range: [0.3, 190]
         prior_type: log
         subscan_weight: 1
       sba:

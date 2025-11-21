@@ -8,12 +8,12 @@ Parameters:
     TheModelName:
       lambda1:
           range: [0, 4]
-          prior_type: flat
+          prior_type: pow
       lambda2:
           range: [0.3, 4]
           subscan_weight: 1
-          prior_type: flat
-          power: 3
+          prior_type: pow
+          power: 2
           shift: 0
           output_scaled_values: false
       lambda3:
