@@ -42,9 +42,9 @@ gen_path = 'gens'
 
 conv_threshold = 1e-8
 NP = 10000
-required_printed_points = 1000000
+required_printed_points = 25000000
 required_points = -1
-required_scan_duration = 1*60*60 # in seconds
+required_scan_duration = 2*60*60 # in seconds
 
 NODE_COUNT = 1  # set to desired number of nodes per gambit
 CORE_COUNT = 76 # set to number of cores per node
@@ -53,7 +53,7 @@ CORE_COUNT = 76 # set to number of cores per node
 MODE = "DIRAC"
 
 # allowed options: "THDM", "THDMI", "THDMII", "THDMLS", or "THDMflipped"
-models = ["THDMII"]
+models = ["THDMII"] # THDMI
 
 # allowed options: "tree" or "loop"
 runnings = ["loop"]
@@ -347,7 +347,7 @@ class Options:
                          "perturbativity_yukawas_LogLikelihood_THDM"]
     constraints_collider = ["LEP_Higgs_LogLike", "LHC_Higgs_LogLike","HS_ALL","HS_RUN1_SS","HS_LATEST_SS","HS_LATEST_STXS"] #higgs_mass_LogLikelihood
     constraints_electroweak =  ["oblique_parameters_LogLikelihood"] # lnL_gm2
-    constraints_flavour =  ["b2sgamma_LogLikelihood","B2Kstargamma_LogLikelihood","B2mumu_LogLikelihood_Atlas","B2mumu_LogLikelihood_LHCb","B2mumu_LogLikelihood_CMS","Bd2KmumuBr_LogLikelihood_LHCb","Bd2KmumuBr_LogLikelihood_Belle","B2KmumuBr_LogLikelihood_LHCb","B2KmumuBr_LogLikelihood_CMS","B2KmumuBr_LogLikelihood_Belle","B2KeeBr_LogLikelihood_Belle","Bd2KeeBr_LogLikelihood_Belle","B2KstarmumuAng_LogLikelihood_Atlas","B2KstarmumuAng_LogLikelihood_CMS","B2KstarmumuAng_LogLikelihood_Belle","B2KstarmumuAng_LogLikelihood_LHCb_2020","Bu2KstarmumuAng_LogLikelihood_LHCb_2020","B2KstarmumuBr_LogLikelihood_LHCb","Bs2phimumuBr_LogLikelihood","B2KstarmumuAng_CPAssym_LogLikelihood_LHCb","B2KstarellellAng_LogLikelihood_Belle","B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020","RKRKstar_LogLikelihood_LHCb","RK_LogLikelihood_CMS","RK_LogLikelihood_Belle","BKnunu_LogLikelihood_Belle_sl","BKnunu_LogLikelihood_Belle_had","BuKnunu_LogLikelihood_Belle_sl","BuKnunu_LogLikelihood_Belle_had","BuKnunu_LogLikelihood_BelleII","BKnunu_LogLikelihood_BaBar","BuKnunu_LogLikelihood_BaBar","BKstarnunu_LogLikelihood_Belle_sl","BKstarnunu_LogLikelihood_Belle_had","BuKstarnunu_LogLikelihood_Belle_sl","BuKstarnunu_LogLikelihood_Belle_had","BKstarnunu_LogLikelihood_BaBar","BuKstarnunu_LogLikelihood_BaBar","SL_LogLikelihood","FLDstar_LogLikelihood","dBRBDstartaunu_LogLikelihood","dBRBDtaunu_LogLikelihood","Bc_lifetime_LogLikelihood","Delta_MBs_LogLikelihood","Delta_MBd_LogLikelihood","l2lgamma_LogLikelihood","l2lll_LogLikelihood","h2ltau_LogLikelihood","t2ch_LogLikelihood","t2bbc_LogLikelihood","t2mutauc_LogLikelihood","Bc2taunu_LogLikelihood","Bs2ll_LogLikelihood","B2Kll_LogLikelihood","B2Xsnunu_LogLikelihood","gmu_ge_LogLikelihood"]
+    constraints_flavour =  ["b2sgamma_LogLikelihood","B2Kstargamma_LogLikelihood","B2mumu_LogLikelihood_Atlas","B2mumu_LogLikelihood_LHCb","B2mumu_LogLikelihood_CMS","B2mumu_LogLikelihood_CMS_ATLAS_LHCb","Bd2KmumuBr_LogLikelihood_LHCb","Bd2KmumuBr_LogLikelihood_Belle","B2KmumuBr_LogLikelihood_LHCb","B2KmumuBr_LogLikelihood_CMS","B2KmumuBr_LogLikelihood_Belle","B2KeeBr_LogLikelihood_Belle","Bd2KeeBr_LogLikelihood_Belle","B2KstarmumuAng_LogLikelihood_Atlas","B2KstarmumuAng_LogLikelihood_CMS","B2KstarmumuAng_LogLikelihood_Belle","B2KstarmumuAng_LogLikelihood_LHCb_2020","Bu2KstarmumuAng_LogLikelihood_LHCb_2020","B2KstarmumuBr_LogLikelihood_LHCb","Bs2phimumuBr_LogLikelihood","B2KstarmumuAng_CPAssym_LogLikelihood_LHCb","B2KstarellellAng_LogLikelihood_Belle","B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020","RKRKstar_LogLikelihood_LHCb","RK_LogLikelihood_CMS","RK_LogLikelihood_Belle","BKnunu_LogLikelihood_Belle_sl","BKnunu_LogLikelihood_Belle_had","BuKnunu_LogLikelihood_Belle_sl","BuKnunu_LogLikelihood_Belle_had","BuKnunu_LogLikelihood_BelleII","BKnunu_LogLikelihood_BaBar","BuKnunu_LogLikelihood_BaBar","BKstarnunu_LogLikelihood_Belle_sl","BKstarnunu_LogLikelihood_Belle_had","BuKstarnunu_LogLikelihood_Belle_sl","BuKstarnunu_LogLikelihood_Belle_had","BKstarnunu_LogLikelihood_BaBar","BuKstarnunu_LogLikelihood_BaBar","SL_LogLikelihood","FLDstar_LogLikelihood","dBRBDstartaunu_LogLikelihood","dBRBDtaunu_LogLikelihood","Bc_lifetime_LogLikelihood","Delta_MBs_LogLikelihood","Delta_MBd_LogLikelihood","l2lgamma_LogLikelihood","l2lll_LogLikelihood","h2ltau_LogLikelihood","t2ch_LogLikelihood","t2bbc_LogLikelihood","t2mutauc_LogLikelihood","Bc2taunu_LogLikelihood","Bs2ll_LogLikelihood","B2Kll_LogLikelihood","B2Xsnunu_LogLikelihood","gmu_ge_LogLikelihood"]
     constraints_all = constraints_theory + constraints_collider + constraints_electroweak + constraints_flavour
 
     def __init__(self):
@@ -414,30 +414,8 @@ class Options:
 
     def validate(self):
 
-        # # OFF FOR NOW
-        # self.B2KstarellellAng_LogLikelihood_Belle = False
-        # self.B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020 = False
-
-        # !!!!!!!!!!!!!
-        # # DOES NOTHING likelihoods
-        # self.dBRBDstartaunu_LogLikelihood = False
-        # self.dBRBDtaunu_LogLikelihood = False
-        # self.gmu_ge_LogLikelihood = False
-        # self.FLDstar_LogLikelihood = False
-        # self.h2taumu_LogLikelihood = False
-        # self.t2ch_LogLikelihood = False
-        # self.l2lgamma_LogLikelihood = False
-        # self.l2lll_LogLikelihood = False
-
-        # !!!!!!!!!!!!!
-        # self.perturbativity_yukawas_LogLikelihood_THDM = False
-
         self.higgs_scenario_LogLikelihood_THDM = True
         self.higgs_exp_mass_LogLikelihood_THDM = True
-
-        # # NOT WORKING likelihoods
-        # self.deltaMB_LogLikelihood = False
-        # self.deltaMBd_LogLikelihood = False
 
         # unitarity 
         if self.running == "tree" and self.NLO_unitarity_LogLikelihood_THDM:
@@ -447,6 +425,11 @@ class Options:
         if self.running == "loop" and self.LO_unitarity_LogLikelihood_THDM and self.NLO_unitarity_LogLikelihood_THDM:
             self.LO_unitarity_LogLikelihood_THDM = False
             self.NLO_unitarity_LogLikelihood_THDM = True
+
+        if self.B2mumu_LogLikelihood_CMS_ATLAS_LHCb:
+            self.B2mumu_LogLikelihood_CMS = False
+            self.B2mumu_LogLikelihood_ATLAS = False
+            self.B2mumu_LogLikelihood_LHCb = False
 
         # correction checks
         if self.running == "tree":

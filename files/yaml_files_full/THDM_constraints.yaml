@@ -241,6 +241,9 @@ ObsLikes:
   #~I- purpose:    LogLike
     #~Icapability: B2mumu_LogLikelihood_CMS
     #~Isub_capabilities: [BRuntag_Bsmumu, BR_Bdmumu]
+  #~,- purpose:    LogLike
+    #~,Icapability: B2mumu_LogLikelihood_CMS_ATLAS_LHCb
+    #~,Isub_capabilities: [BRuntag_Bsmumu, BR_Bdmumu]
 
   # ------------------------ #
   # B -> K mu mu likelihoods #
@@ -273,9 +276,6 @@ ObsLikes:
   #~Q- purpose:    LogLike
     #~Qcapability: B2KstarmumuAng_LogLikelihood_Atlas
     #~Qsub_capabilities: [FL, S3, S4, S5, S7, S8]
-  #~R- purpose:    LogLike
-    #~Rcapability: B2KstarmumuAng_LogLikelihood_CMS
-    #~Rsub_capabilities: [P1, P5prime]
   #~S- purpose:    LogLike
     #~Scapability: B2KstarmumuAng_LogLikelihood_Belle
     #~Ssub_capabilities: [P4prime, P5prime]
@@ -291,9 +291,13 @@ ObsLikes:
     #~Wcapability: Bs2phimumuBr_LogLikelihood
   #~X- purpose:    LogLike
     #~Xcapability: B2KstarmumuAng_CPAssym_LogLikelihood_LHCb #new
+    #~Xsub_capabilities: [FL, AFB, S3, S4, S5, S7, S8, S9]
   #~Y- purpose:    LogLike
     #~Ycapability: B2KstarellellAng_LogLikelihood_Belle
     #~Ysub_capabilities: [P4prime, P5prime]
+  #~R- purpose:    LogLike
+    #~Rcapability: B2KstarmumuAng_LogLikelihood_CMS
+    #~Rsub_capabilities: [P1, P5prime]
 
   # ----------------------- #
   # B -> K* e e likelihoods #
@@ -585,7 +589,10 @@ Rules:
     # function: THDM_higgs_couplings_pwid
     function: THDM_higgs_couplings_2HDMC
 
-  - capability: prediction_DeltaMs
+  - capability: prediction_Delta_MBd
+    function: SuperIso_prediction_Delta_MBd
+
+  - capability: prediction_Delta_MBs
     function: SuperIso_prediction_Delta_MBs
 
   - capability: RK_LogLikelihood_LHCb
