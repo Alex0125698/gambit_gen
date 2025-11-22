@@ -83,17 +83,31 @@ runnings = ["loop"]
 # Lam5: -5 to 4 -> -1.5 to 2.5
 # Lam7: -3 to 3 -> -1.5 to 2
 
+file_prefix = ""
+# file_prefix = "t/"
+# file_prefix = "tec/"
+
+if file_prefix == "t/":
+    postprocessor_file = "../../../../pippi/PP_2025_02_26_TheModelPP_theory_40000p.hdf5"
+elif file_prefix == "tec/":
+    postprocessor_file = "../../../../pippi/PP_2025_03_14_TheModelPP_most_40000p.hdf5"
+else:
+    postprocessor_file = ""
+
 # 22
 bases = [
 
-    ("generic", "pp")
-
     # ("physical2", "physical2"),     # modified physical basis to match paper
+
+
+    # # ---- full basis
 
     # ("physical", "physical"),       # a standard physical basis
     # ("generic", "generic"),         # b standard generic basis
     # ("hybrid_Higgs", "hybrid1"),    # c standard hybrid1 basis
     # ("hybrid_Higgs2", "hybrid2"),   # d standard hybrid2 basis
+    
+    # # ---- grids
     
     # ("physical", "physicalA"),       # s tanb grid (log)
 
@@ -154,6 +168,9 @@ constraints = [
     # (["theory", "collider"], "colliderX"),
 
 ]
+
+if postprocessor_file != "":
+    bases.append(("generic", "pp"))
 
 # ---- THEORY SCANS ----
 
@@ -299,6 +316,12 @@ constraints = [
 # note that all data for bases is combined for plotting
 # whereas each [models,runnings,constraints] generate different sets of plots
 
+
+if file_prefix == "t/":
+    # file_prefix = "t/" # !!!!
+    constraints = [ (c[0]+["theory"],file_prefix+c[1]) for c in constraints]
+elif file_prefix == "tec/":
+    constraints = [ (c[0]+["theory", "collider", "electroweak"],file_prefix+c[1]) for c in constraints] # 
 
 # ----------- main script -------------
 
@@ -523,6 +546,14 @@ def patchYaml(options, dir, yaml_name):
     # set the model name
     s = s.replace("TheModelName", options.full_model_name)
 
+    # enable postprocessor scanner for PP basis
+    if options.file == "pp":
+        s = s.replace("use_scanner:", "use_scanner: postprocessor # ")
+
+    # replace model name for PP
+    s = s.replace("ppfile:", "file: " + '"' + postprocessor_file + '"' + " # ")
+    s = s.replace("TheModelPP", options.model+options.running)
+
     # set the scan duration and point limit
     s = s.replace("12121212", str(int(options.required_points)))
     s = s.replace("23232323", str(int(options.required_printed_points)))
@@ -646,7 +677,7 @@ def patchRunScriptJC(options, dir, yaml_name):
     file.close()
 
 # load a yaml file with (optionally) a subscan node and convert to string
-def load_subscan_yaml(name):
+def load_subscan_yaml(running, name):
 
     subscans = []
 
@@ -796,6 +827,7 @@ def load_subscan_yaml(name):
             param_range_new[1] = min(param_range_new[1], param_range[1])
 
             yfile["Parameters"]["TheModelName"][param]["range"] = param_range_new
+            if (param_priors[param]) == "pow":
             yfile["Parameters"]["TheModelName"][param]["shift"] = -param_range_new[0]
             # yfile["Parameters"]["TheModelName"][param]["shift"] = -max(0.0,param_range[0]-0.1)
 
@@ -803,7 +835,8 @@ def load_subscan_yaml(name):
         contents = yaml.dump(yfile)
 
         # # add Qin back
-        # contents += "    #~~Qin: 91.1876 # = mZ\n"
+        if running == "loop":
+          contents += "    #~~Qin: 91.1876 # = mZ\n"
 
         # add the imports back
         contents += "!import ../yaml_files/THDM_constraints.yaml\n"
@@ -852,7 +885,7 @@ def main():
                 for (basis,file) in bases:
 
                     # get the list of subscan files
-                    subscans = load_subscan_yaml("files/" + yaml_dir + "/" + file + ".yaml")
+                    subscans = load_subscan_yaml(running, "files/" + yaml_dir + "/" + file + ".yaml")
 
                     # loop over all subscans (merged output folder)
                     for x,subscan in enumerate(subscans):

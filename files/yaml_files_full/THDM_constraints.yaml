@@ -58,8 +58,7 @@ Scanner:
       # Information about input dataset to be postprocessed
       reader:
         type: hdf5
-        file: "/home/alex/Desktop/data/THDM/PP_theory_19_JUL_2024_40000points.hdf5"
-        # file: "/home/alex/Desktop/data/THDM/PP_theory_19_JUL_2024_40000points.hdf5"
+        ppfile: "patched-file"
         group: "/data"
 
     polychord:
