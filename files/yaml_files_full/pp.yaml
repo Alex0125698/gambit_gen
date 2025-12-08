@@ -19,7 +19,6 @@ Parameters:
           prior_type: none
       lambda7:
           prior_type: none
-      Qin:
-          prior_type: none
+
 
 !import ../yaml_files/THDM_constraints.yaml
