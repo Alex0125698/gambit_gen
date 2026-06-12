@@ -1,468 +1,5 @@
 #!/bin/python3
 
-# ----------- instructions -------------
-
-# 1. compile gambit as normal
-
-# 2. copy the gambit executable into files/
-#    (overwrite the existing one)
-
-# 3. setup the options below to you liking
-
-# 4. set any other options in the yaml files
-#    found in files/yaml_files/ but don't touch
-#    any line containing '~'
-
-# 5. setup your desired plots in files/plots.pip
-#    but don't touch any line containing '~'
-
-# 6. modify files/job.sh so that it works on
-#    your HPC but don't touch any line containing '~'
-
-# 7. run this python script
-
-# 8. run the file: 'gen_path/runScans.sh'
-
-# 9. run the file: 'gen_path/runPippi.sh'
-
-
-# ----------- options -------------
-
-print("\n-----------------\nrunning 2HDM generator\n")
-
-# a GAMBIT is generated for all possible combinations below
-# and a script is generated for running all simultaneously
-# WARNING: be careful not to generate too many, otherwise you will run out of storage
-
-yaml_dir = 'yaml_files_full'
-# yaml_dir = 'yaml_files_med'
-# yaml_dir = 'yaml_files_small'
-use_speed_hacks = False # todo: maybe delete this ??
-gen_path = 'gens'
-
-conv_threshold = 1e-8
-NP = 10000
-required_printed_points = 25000000
-required_points = -1
-required_scan_duration = 2*60*60 # in seconds
-
-NODE_COUNT = 1  # set to desired number of nodes per gambit
-CORE_COUNT = 76 # set to number of cores per node
-
-# either "DIRAC" or "BASH"
-MODE = "DIRAC"
-
-# allowed options: "THDM", "THDMI", "THDMII", "THDMLS", or "THDMflipped"
-models = ["THDMII"] # THDMI
-
-# allowed options: "tree" or "loop"
-runnings = ["loop"]
-
-# allowed options: "generic", "hybrid_lambda_1", "hybrid_lambda_2", "hybrid_Higgs", "higgs", or "physical"
-
-# instead of setting the basis, we set the file. This will allow us to run targetted scans in the same basis.
-# not that we cant simply change the basis as the params will be wrong
-
-# Full
-# lam1-lam2, Lam1-Lam2: 0 to +4pi
-# lam3-lam5, Lam3-Lam5: -4pi to +4pi
-# cba: -1.0 to +1.0
-# tanb: 0.03 to 320 (log) -> 10^-0.5 to 10^2.5; 0.3 to 320
-# mh: 100 to 140
-# mHp: 30 to 3000 (log + log)
-# mH: 100 to 1e5 (log)
-
-# Reduced:
-# lam1: 0 to 6 -> 0 to 4.0
-# lam2: 0 to 6 -> 0 to 4.0
-# lam3: -6 to 8 -> -2.5 to 3
-# lam4: -9 to 8 -> -3 to 3
-# lam5: -9 to 5 -> -1.5 to 2
-
-# Lam4: -8 to 6 -> -3 to 3
-# Lam5: -5 to 4 -> -1.5 to 2.5
-# Lam7: -3 to 3 -> -1.5 to 2
-
-file_prefix = ""
-# file_prefix = "t/"
-# file_prefix = "tec/"
-
-if file_prefix == "t/":
-    postprocessor_file = "../../../../pippi/PP_2025_02_26_TheModelPP_theory_40000p.hdf5"
-elif file_prefix == "tec/":
-    postprocessor_file = "../../../../pippi/PP_2025_03_14_TheModelPP_most_40000p.hdf5"
-else:
-    postprocessor_file = ""
-
-# 22
-bases = [
-
-    # ("physical2", "physical2"),     # modified physical basis to match paper
-
-
-    # # ---- full basis
-
-    # ("physical", "physical"),       # a standard physical basis
-    # ("generic", "generic"),         # b standard generic basis
-    # ("hybrid_Higgs", "hybrid1"),    # c standard hybrid1 basis
-    # ("hybrid_Higgs2", "hybrid2"),   # d standard hybrid2 basis
-    
-    # # ---- grids
-    
-    # ("physical", "physicalA"),       # s tanb grid (log)
-
-    # ("generic", "genericA"),        # e tanb grid (log)
-    # ("generic", "genericB"),        # f lam2, lam4 grid
-    # ("generic", "genericC"),        # g lam1, lam2 grid
-    # ("generic", "genericD"),        # r lam4, tanb grid (flat-log)
-    # ("generic", "genericE"),        # t tanb grid (log) (high m122)
-    # ("generic", "genericF"),        # u tanb grid (log) (vlow m122)
-    # ("generic", "genericG"),        # v tanb grid (log) (low m122)
-
-    # ("hybrid_Higgs", "hybrid1A"),   # h Lam4, Lam5 grid
-    # ("hybrid_Higgs", "hybrid1B"),   # i Lam4, Lam5, Lam7 grid
-    # ("hybrid_Higgs", "hybrid1H"),   # q tanb grid (log)
-    # ("hybrid_Higgs", "hybrid1C"),   # j cba, tanb grid (flat-log)
-    # ("hybrid_Higgs", "hybrid1D"),   # k mH, tanb grid (log-log)
-    # ("hybrid_Higgs", "hybrid1E"),   # l mH, tanb grid (log-log) (higher mH)
-    # ("hybrid_Higgs", "hybrid1F"),   # m cba, tanb grid (flat-log) Lower cba
-    # ("hybrid_Higgs", "hybrid1G"),   # p mH, tanb (lower mH) -> better off doing full tb grid
-
-    # ("hybrid_Higgs2", "hybrid2A"),  # n mHp,tanb grid (log-log) -> better off doing full tb grid
-    # ("hybrid_Higgs2", "hybrid2B"),  # o mHp,tanb grid (log-log) (bottom right corner)
-
-    # a: very poor
-    # b: ok, seems to prefer high mHp+tanb
-    # c: ok, prefers low/mid mhp+tanb
-    # d: ok, slightly worse than above
-    # e: excellent, just misses high and low mHp
-    # f: decent job at low mHp, wide tanb range!!
-    # g: very similar to f
-    # h: ok, misses high tanb and there is a gap; good job with mass splittings
-    # i: similar to h
-    # j: ok, but needs pow prior on tanb
-    # k: ok, better than j, but needs pow prior on tanb
-    # l: ok job at high mHp but needs pow prior on tanb
-    # m: ok, slightly better than j
-    # n: ok job at low mHp but neds pow prior on both variables
-    # o: slightly worse than n; didn't work as expected; caught the wrong sign Yukawa!!!
-    # p: 
-
-]
-
-if postprocessor_file != "":
-    bases.append(("generic", "pp"))
-
-
-# allowed options: all, theory, collider, electroweak, flavour
-#                 (the name of any individual constraint)
-#                 (in the case of perturbativity, or unitarity just name the function)
-
-
-# 39-2
-
-# ---- COMBINED SCANS ----
-
-# 1
-# constraints = [
-
-#     # (["higgs_scenario_LogLikelihood_THDM"], "noneU"),
-#     # (["higgs_scenario_LogLikelihood_THDM"], "speedU"),
-    
-#     (["theory"], "theory"),
-#     (["theory", "electroweak"], "electroweak"),
-#     (["theory", "collider"], "collider"),
-#     (["theory", "collider", "electroweak"], "most"),
-
-# ]
-
-# ---- THEORY SCANS ----
-
-# constraints = [
-#     (["scalar_mass_corrections_LogLikelihood_THDM", "NLO_unitarity_LogLikelihood_THDM"], "NLO"),
-#     (["theory"], "theoryZ"),
-#     (["theory", "electroweak"], "electroweakZ"),
-#     (["theory", "collider"], "colliderZ"),
-#     (["theory", "electroweak", "collider"], "mostZ"),
-#     (["scalar_mass_corrections_LogLikelihood_THDM", "NLO_unitarity_LogLikelihood_THDM"], "NLO"),
-#     (["scalar_mass_corrections_LogLikelihood_THDM", "stability_LogLikelihood_THDM"], "stability"),
-#     (["runToScaleTest_LogLikelihood_THDM", "scalar_mass_corrections_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM"], "perturbativity_hybrid2X"),
-#     (["runToScaleTest_LogLikelihood_THDM", "LO_unitarity_LogLikelihood_THDM"  , "stability_LogLikelihood_THDM", 
-#       "higgs_exp_mass_LogLikelihood_THDM", "higgs_scenario_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM", "perturbativity_yukawas_LogLikelihood_THDM"], "theoryTA"),
-#     (["runToScaleTest_LogLikelihood_THDM", "NLO_unitarity_LogLikelihood_THDM" , "stability_LogLikelihood_THDM", 
-#       "higgs_exp_mass_LogLikelihood_THDM", "higgs_scenario_LogLikelihood_THDM", "perturbativity_LogLikelihood_THDM", "perturbativity_yukawas_LogLikelihood_THDM"], "bayesianA"),
-#     (["perturbativity_yukawas_LogLikelihood_THDM"], "pert_yukawas")
-# ]
-
-# ---- ELECTROWEAK SCANS ----
-
-# constraints = [
-#     (["theory", "electroweak"], "electroweak"),
-# ]
-
-# ---- COLLIDER SCANS ----
-
-# constraints = [
-#     (["theory", "electroweak"], "electroweak"),
-#     (["theory", "collider"], "collider"),
-#     (["theory", "LEP_Higgs_LogLike"], "HB"),
-#     (["theory", "LHC_Higgs_LogLike", "HS_RUN1_SS"], "HSRUN1SS"),
-#     (["theory", "LHC_Higgs_LogLike", "HS_LATEST_SS"], "HSLATESTSS"),
-#     (["theory", "LHC_Higgs_LogLike", "HS_LATEST_STXS"], "HSLATESTSTXS"),
-#     (["theory", "LHC_Higgs_LogLike", "HS_ALL"], "HS"),
-# ]
-
-# ---- FLAVOR SCANS ----
-
-constraints = [
-
-    # ([
-    #     "B2Kstargamma_LogLikelihood",
-    #     "b2sgamma_LogLikelihood",
-    #     # -----
-    #     "B2mumu_LogLikelihood_Atlas", 
-    #     "B2mumu_LogLikelihood_LHCb",
-    #     # "B2mumu_LogLikelihood_CMS", # OFF - broken; two lines
-    #     # "B2mumu_LogLikelihood_CMS_ATLAS_LHCb", # OFF - broken
-    #     # -----
-    #     "Bd2KmumuBr_LogLikelihood_LHCb", 
-    #     "Bd2KmumuBr_LogLikelihood_Belle", 
-    #     "B2KmumuBr_LogLikelihood_LHCb", 
-    #     # "B2KmumuBr_LogLikelihood_CMS", # OFF - broken; spikes; strong for Type-II
-    #     "B2KmumuBr_LogLikelihood_Belle",
-    #     # -----
-    #     "B2KeeBr_LogLikelihood_Belle",
-    #     "Bd2KeeBr_LogLikelihood_Belle", 
-    #     # -----
-    #     "B2KstarmumuAng_LogLikelihood_Atlas",
-    #     # "B2KstarmumuAng_LogLikelihood_CMS", # OFF - broken; data looks weird; missing point issue??
-    #     "B2KstarmumuAng_LogLikelihood_Belle",
-    #     "B2KstarmumuAng_LogLikelihood_LHCb_2020",
-    #     "Bu2KstarmumuAng_LogLikelihood_LHCb_2020", 
-    #     "B2KstarmumuBr_LogLikelihood_LHCb", 
-    #     "Bs2phimumuBr_LogLikelihood", 
-    #     "B2KstarmumuAng_CPAssym_LogLikelihood_LHCb",
-    #     "B2KstarellellAng_LogLikelihood_Belle", # OFF - strong for Type-II
-    #     # -----
-    #     "B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020",
-    #     # -----
-    #     "RKRKstar_LogLikelihood_LHCb",
-    #     "RK_LogLikelihood_Belle", 
-    #     "RK_LogLikelihood_CMS",
-    #     # -----
-    #     "BKnunu_LogLikelihood_Belle_sl", 
-    #     "BKnunu_LogLikelihood_Belle_had", 
-    #     "BuKnunu_LogLikelihood_Belle_sl", 
-    #     "BuKnunu_LogLikelihood_Belle_had", 
-    #     "BuKnunu_LogLikelihood_BelleII", 
-    #     "BKnunu_LogLikelihood_BaBar", 
-    #     "BuKnunu_LogLikelihood_BaBar",
-    #     # -----
-    #     "SL_LogLikelihood", 
-    #     # "FLDstar_LogLikelihood", 
-    #     # "dBRBDstartaunu_LogLikelihood", 
-    #     # "dBRBDtaunu_LogLikelihood",
-    #     # -----
-    #     # "Bc_lifetime_LogLikelihood", 
-    #     "Delta_MBs_LogLikelihood"], "flavor/combA"),
-
-    # ([
-    #     "B2Kstargamma_LogLikelihood",
-    #     "b2sgamma_LogLikelihood",
-    #     # -----
-    #     "B2mumu_LogLikelihood_Atlas", 
-    #     "B2mumu_LogLikelihood_LHCb",
-    #     # "B2mumu_LogLikelihood_CMS", # OFF - broken; two lines
-    #     # "B2mumu_LogLikelihood_CMS_ATLAS_LHCb", # OFF - broken
-    #     # -----
-    #     "Bd2KmumuBr_LogLikelihood_LHCb", 
-    #     "Bd2KmumuBr_LogLikelihood_Belle", 
-    #     "B2KmumuBr_LogLikelihood_LHCb", 
-    #     # "B2KmumuBr_LogLikelihood_CMS", # OFF - broken; spikes; strong for Type-II
-    #     "B2KmumuBr_LogLikelihood_Belle",
-    #     # -----
-    #     "B2KeeBr_LogLikelihood_Belle",
-    #     "Bd2KeeBr_LogLikelihood_Belle", 
-    #     # -----
-    #     "B2KstarmumuAng_LogLikelihood_Atlas",
-    #     # "B2KstarmumuAng_LogLikelihood_CMS", # OFF - broken; data looks weird; missing point issue??
-    #     "B2KstarmumuAng_LogLikelihood_Belle",
-    #     "B2KstarmumuAng_LogLikelihood_LHCb_2020",
-    #     "Bu2KstarmumuAng_LogLikelihood_LHCb_2020", 
-    #     "B2KstarmumuBr_LogLikelihood_LHCb", 
-    #     "Bs2phimumuBr_LogLikelihood", 
-    #     "B2KstarmumuAng_CPAssym_LogLikelihood_LHCb",
-    #     # "B2KstarellellAng_LogLikelihood_Belle", # OFF - strong for Type-II
-    #     # -----
-    #     "B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020",
-    #     # -----
-    #     "RKRKstar_LogLikelihood_LHCb",
-    #     "RK_LogLikelihood_Belle", 
-    #     "RK_LogLikelihood_CMS",
-    #     # -----
-    #     "BKnunu_LogLikelihood_Belle_sl", 
-    #     "BKnunu_LogLikelihood_Belle_had", 
-    #     "BuKnunu_LogLikelihood_Belle_sl", 
-    #     "BuKnunu_LogLikelihood_Belle_had", 
-    #     "BuKnunu_LogLikelihood_BelleII", 
-    #     "BKnunu_LogLikelihood_BaBar", 
-    #     "BuKnunu_LogLikelihood_BaBar",
-    #     # -----
-    #     "SL_LogLikelihood", 
-    #     "FLDstar_LogLikelihood", 
-    #     "dBRBDstartaunu_LogLikelihood", 
-    #     "dBRBDtaunu_LogLikelihood",
-    #     # -----
-    #     "Bc_lifetime_LogLikelihood", 
-    #     "Delta_MBs_LogLikelihood"], "flavor/combB"),
-
-    # ([
-    #     "B2Kstargamma_LogLikelihood",
-    #     "b2sgamma_LogLikelihood",
-    #     # -----
-    #     "B2mumu_LogLikelihood_Atlas", 
-    #     "B2mumu_LogLikelihood_LHCb",
-    #     # "B2mumu_LogLikelihood_CMS", # OFF - broken; two lines
-    #     # "B2mumu_LogLikelihood_CMS_ATLAS_LHCb", # OFF - broken
-    #     # -----
-    #     # "Bd2KmumuBr_LogLikelihood_LHCb", 
-    #     # "Bd2KmumuBr_LogLikelihood_Belle", 
-    #     # "B2KmumuBr_LogLikelihood_LHCb", 
-    #     # # "B2KmumuBr_LogLikelihood_CMS", # OFF - broken; spikes; strong for Type-II
-    #     # "B2KmumuBr_LogLikelihood_Belle",
-    #     # -----
-    #     # "B2KeeBr_LogLikelihood_Belle",
-    #     # "Bd2KeeBr_LogLikelihood_Belle", 
-    #     # -----
-    #     # "B2KstarmumuAng_LogLikelihood_Atlas",
-    #     # # "B2KstarmumuAng_LogLikelihood_CMS", # OFF - broken; data looks weird; missing point issue??
-    #     # "B2KstarmumuAng_LogLikelihood_Belle",
-    #     # "B2KstarmumuAng_LogLikelihood_LHCb_2020",
-    #     # "Bu2KstarmumuAng_LogLikelihood_LHCb_2020", 
-    #     # "B2KstarmumuBr_LogLikelihood_LHCb", 
-    #     # "Bs2phimumuBr_LogLikelihood", 
-    #     # "B2KstarmumuAng_CPAssym_LogLikelihood_LHCb",
-    #     # # "B2KstarellellAng_LogLikelihood_Belle", # OFF - strong for Type-II
-    #     # -----
-    #     # "B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020",
-    #     # -----
-    #     # "RKRKstar_LogLikelihood_LHCb",
-    #     # "RK_LogLikelihood_Belle", 
-    #     # "RK_LogLikelihood_CMS",
-    #     # -----
-    #     "BKnunu_LogLikelihood_Belle_sl", 
-    #     "BKnunu_LogLikelihood_Belle_had", 
-    #     "BuKnunu_LogLikelihood_Belle_sl", 
-    #     "BuKnunu_LogLikelihood_Belle_had", 
-    #     "BuKnunu_LogLikelihood_BelleII", 
-    #     "BKnunu_LogLikelihood_BaBar", 
-    #     "BuKnunu_LogLikelihood_BaBar",
-    #     # -----
-    #     "SL_LogLikelihood", 
-    #     # "FLDstar_LogLikelihood", 
-    #     # "dBRBDstartaunu_LogLikelihood", 
-    #     # "dBRBDtaunu_LogLikelihood",
-    #     # -----
-    #     # "Bc_lifetime_LogLikelihood", 
-    #     "Delta_MBs_LogLikelihood"], "flavor/combC"),
-
-
-
-    # (["b2sgamma_LogLikelihood"], "flavor/B2Xsgamma/b2sgamma"),
-    # (["B2Kstargamma_LogLikelihood"], "flavor/B2Xsgamma/B2Kstargamma"),
-    # (["B2Kstargamma_LogLikelihood", "b2sgamma_LogLikelihood"], "flavor/B2Xsgamma/comb"),
-
-    # (["B2mumu_LogLikelihood_Atlas"], "flavor/B2mumu/B2mumu_Atlas"),
-    # (["B2mumu_LogLikelihood_LHCb"], "flavor/B2mumu/B2mumu_LHCb"), # missing -> fixed
-    # (["B2mumu_LogLikelihood_CMS"], "flavor/B2mumu/B2mumu_CMS"),
-    # (["B2mumu_LogLikelihood_Atlas", "B2mumu_LogLikelihood_LHCb", "B2mumu_LogLikelihood_CMS"], "flavor/B2mumu/combA"), # missing -> fixed
-    (["B2mumu_LogLikelihood_CMS_ATLAS_LHCb"], "flavor/B2mumu/combB"), # wrong -> fixed
-
-    # (["Bd2KmumuBr_LogLikelihood_LHCb"], "flavor/B2KmumuBr/Bd2KmumuBr_LHCb"), # wrong?
-    # (["Bd2KmumuBr_LogLikelihood_Belle"], "flavor/B2KmumuBr/Bd2KmumuBr_Belle"), # wrong?
-    # (["B2KmumuBr_LogLikelihood_LHCb"], "flavor/B2KmumuBr/B2KmumuBr_LHCb"),
-    # (["B2KmumuBr_LogLikelihood_CMS"], "flavor/B2KmumuBr/B2KmumuBr_CMS"), # wrong?
-    # (["B2KmumuBr_LogLikelihood_Belle"], "flavor/B2KmumuBr/B2KmumuBr_Belle"), # wrong
-    # (["Bd2KmumuBr_LogLikelihood_LHCb", "Bd2KmumuBr_LogLikelihood_Belle", "B2KmumuBr_LogLikelihood_LHCb", "B2KmumuBr_LogLikelihood_CMS", "B2KmumuBr_LogLikelihood_Belle"], "flavor/B2KmumuBr/comb"),
-
-    # (["B2KeeBr_LogLikelihood_Belle"], "flavor/B2Kee/B2KeeBr_Belle"),
-    # (["Bd2KeeBr_LogLikelihood_Belle"], "flavor/B2Kee/Bd2KeeBr_Belle"),
-    # (["Bd2KeeBr_LogLikelihood_Belle", "B2KeeBr_LogLikelihood_Belle"], "flavor/B2Kee/comb"),
-
-    # (["B2KstarmumuAng_LogLikelihood_Atlas"], "flavor/B2Kstarmumu/B2KstarmumuAng_Atlas"), # wrong?
-    # (["B2KstarmumuAng_LogLikelihood_Belle"], "flavor/B2Kstarmumu/B2KstarmumuAng_Belle"), # wrong?
-    # (["B2KstarmumuAng_LogLikelihood_LHCb_2020"], "flavor/B2Kstarmumu/B2KstarmumuAng_LHCb_2020"), # wrong?
-    # (["Bu2KstarmumuAng_LogLikelihood_LHCb_2020"], "flavor/B2Kstarmumu/Bu2KstarmumuAng_LHCb_2020"), # wrong?
-    # (["B2KstarmumuBr_LogLikelihood_LHCb"], "flavor/B2Kstarmumu/B2KstarmumuBr_LHCb"),
-    # (["Bs2phimumuBr_LogLikelihood"], "flavor/B2Kstarmumu/Bs2phimumuBr"),
-    # (["B2KstarmumuAng_CPAssym_LogLikelihood_LHCb"], "flavor/B2Kstarmumu/B2KstarmumuAng_CPAssym_LHCb"),
-    # (["B2KstarmumuAng_LogLikelihood_CMS"], "flavor/B2Kstarmumu/B2KstarmumuAng_CMS"),
-    # (["B2KstarellellAng_LogLikelihood_Belle"], "flavor/B2Kstarmumu/B2KstarellellAng_Belle"), # wrong
-    # (["B2KstarmumuAng_LogLikelihood_Atlas", "B2KstarmumuAng_LogLikelihood_Belle", "B2KstarmumuAng_LogLikelihood_LHCb_2020", "Bu2KstarmumuAng_LogLikelihood_LHCb_2020", "B2KstarmumuBr_LogLikelihood_LHCb", "Bs2phimumuBr_LogLikelihood", "B2KstarmumuAng_CPAssym_LogLikelihood_LHCb","B2KstarmumuAng_LogLikelihood_CMS", "B2KstarellellAng_LogLikelihood_Belle"], "flavor/B2Kstarmumu/comb"),
-
-    # (["B2KstareeAng_Lowq2_LogLikelihood_LHCb_2020"], "flavor/B2KstareeAng_Lowq2_LHCb_2020/B2KstareeAng_Lowq2_LHCb_2020"), # wrong?
-
-    # (["RKRKstar_LogLikelihood_LHCb"], "flavor/RKRKstar/RKRKstar_LHCb"), # wrong?
-    # (["RK_LogLikelihood_CMS"], "flavor/RKRKstar/RK_CMS"), # wrong?
-    # (["RK_LogLikelihood_Belle"], "flavor/RKRKstar/RK_Belle"), # wrong?
-    # (["RKRKstar_LogLikelihood_LHCb", "RK_LogLikelihood_Belle", "RK_LogLikelihood_CMS"], "flavor/RKRKstar/comb"),
-
-    # # (["BKnunu_LogLikelihood_Belle_sl"], "flavor/B2Knunu/BKnunu_Belle_sl"),
-    # # (["BKnunu_LogLikelihood_Belle_had"], "flavor/B2Knunu/BKnunu_Belle_had"),
-    # # (["BuKnunu_LogLikelihood_Belle_sl"], "flavor/B2Knunu/BuKnunu_Belle_sl"),
-    # # (["BuKnunu_LogLikelihood_Belle_had"], "flavor/B2Knunu/BuKnunu_Belle_had"),
-    # # (["BuKnunu_LogLikelihood_BelleII"], "flavor/B2Knunu/BuKnunu_BelleII"),
-    # # (["BKnunu_LogLikelihood_BaBar"], "flavor/B2Knunu/BKnunu_BaBar"),
-    # # (["BuKnunu_LogLikelihood_BaBar"], "flavor/B2Knunu/BuKnunu_BaBar"),
-    # # (["BKnunu_LogLikelihood_Belle_sl", "BKnunu_LogLikelihood_Belle_had", "BuKnunu_LogLikelihood_Belle_sl", "BuKnunu_LogLikelihood_Belle_had", "BuKnunu_LogLikelihood_BelleII", "BKnunu_LogLikelihood_BaBar", "BuKnunu_LogLikelihood_BaBar"], "flavor/B2Knunu/comb"),
-
-    # # (["BKstarnunu_LogLikelihood_Belle_sl"], "flavor/BKstarnunu_Belle_sl"), # not ready
-    # # (["BKstarnunu_LogLikelihood_Belle_had"], "flavor/BKstarnunu_Belle_had"), # not ready
-    # # (["BuKstarnunu_LogLikelihood_Belle_sl"], "flavor/BuKstarnunu_Belle_sl"), # not ready
-    # # (["BuKstarnunu_LogLikelihood_Belle_had"], "flavor/BuKstarnunu_Belle_had"), # not ready
-    # # (["BKstarnunu_LogLikelihood_BaBar"], "flavor/BKstarnunu_BaBar"), # not ready
-    # # (["BuKstarnunu_LogLikelihood_BaBar"], "flavor/BuKstarnunu_BaBar"), # not ready
-
-    # # ([" SL_LogLikelihood"], "flavor/SL_FCCC/RD_RDstar"),
-    # (["SL_LogLikelihood"], "flavor/SL_FCCC/SL"),
-    # (["FLDstar_LogLikelihood"], "flavor/SL_FCCC/FLDstar"),
-    # (["dBRBDstartaunu_LogLikelihood"], "flavor/SL_FCCC/dBRBDstartaunu"),
-    # (["dBRBDtaunu_LogLikelihood"], "flavor/SL_FCCC/dBRBDtaunu"),
-    # (["SL_LogLikelihood", "FLDstar_LogLikelihood", "dBRBDstartaunu_LogLikelihood", "dBRBDtaunu_LogLikelihood"], "flavor/SL_FCCC/comb"),
-
-    # (["Bc_lifetime_LogLikelihood"], "flavor/DeltaMB/Bc_lifetime"), # wrong?
-    # (["Delta_MBs_LogLikelihood"], "flavor/DeltaMB/Delta_MBs"),
-    # (["Delta_MBd_LogLikelihood"], "flavor/DeltaMB/Delta_MBd"),
-    # (["Bc_lifetime_LogLikelihood", "Delta_MBs_LogLikelihood", "Delta_MBd_LogLikelihood"], "flavor/DeltaMB/comb"),
-
-    # # (["l2lgamma_LogLikelihood"], "flavor/l2lgamma"), # only for g2hdm
-    # # (["l2lll_LogLikelihood"], "flavor/l2lll"), # only for g2hdm
-    # # (["h2ltau_LogLikelihood"], "flavor/h2ltau"), # only for g2hdm
-    # # (["l2lgamma_LogLikelihood", "l2lll_LogLikelihood", "h2ltau_LogLikelihood"], "flavor/comb_LFV"), # only for g2hdm
-
-    # # (["t2ch_LogLikelihood"], "flavor/t2ch"), # only for g2hdm
-    # # (["t2bbc_LogLikelihood"], "flavor/t2bbc"), # only for g2hdm
-    # # (["t2mutauc_LogLikelihood"], "flavor/t2mutauc"), # only for g2hdm
-    # # (["Bc2taunu_LogLikelihood"], "flavor/Bc2taunu"), # only for g2hdm
-    # # (["Bs2ll_LogLikelihood"], "flavor/Bs2ll"), # only for g2hdm
-    # # (["B2Kll_LogLikelihood"], "flavor/B2Kll"), # only for g2hdm
-    # # (["t2ch_LogLikelihood", "t2bbc_LogLikelihood", "t2mutauc_LogLikelihood", "Bc2taunu_LogLikelihood", "Bs2ll_LogLikelihood", "B2Kll_LogLikelihood"], "flavor/comb_FV_top"), # only for g2hdm
-
-    # (["B2Xsnunu_LogLikelihood"], "flavor/B2Xsnunu"), # missing WCs
-    # # (["gmu_ge_LogLikelihood"], "flavor/gmu_ge"), # only for g2hdm
-
-]
-
-# note that all data for bases is combined for plotting
-# whereas each [models,runnings,constraints] generate different sets of plots
-
-
-if file_prefix == "t/":
-    # file_prefix = "t/" # !!!!
-    constraints = [ (c[0]+["theory"],file_prefix+c[1]) for c in constraints]
-elif file_prefix == "tec/":
-    constraints = [ (c[0]+["theory", "collider", "electroweak"],file_prefix+c[1]) for c in constraints] # 
-
 # ----------- main script -------------
 
 import copy
@@ -478,11 +15,46 @@ import yaml
 import numpy as np
 from math import log
 from math import exp
+from system import *
+from input import *
 
-len_bases = len(bases)
+# check that system is setup as expected
+if not os.path.isdir(ROOT_DIR):
+  print(f"File tree not setup correctly")
 
-for (basis,file) in bases:
-    name = "files/" + yaml_dir + "/" + file + ".yaml"
+# get actual PP file location; make sure it exists
+if not os.path.isfile(POSTPROCESSOR_FILE):
+  POSTPROCESSOR_FILE = f"{ROOT_DIR}/data/scansPP/{POSTPROCESSOR_FILE}"
+for b in BASES:
+  if "pp" == b[1]:
+    for model in MODELS:
+      for running in SPECTRUM_ORDER:
+        file = POSTPROCESSOR_FILE.replace("TheModelPP", model+running)
+        if not os.path.isfile(file):
+          raise Exception(f"PP file: {file} does not exist")
+
+# add the additional constraints and output prefix
+CONSTRAINTS = [(c[0]+ADDITIONAL_CONSTRAINTS, OUTPUT_PREFIX + c[1]) for c in CONSTRAINTS] 
+
+if THE_SYSTEM == "dirac_icelake":
+  NODE_COUNT = 1  # set to desired number of nodes per gambit
+  CORE_COUNT = 76 # set to number of cores per node
+elif THE_SYSTEM == "UbuntuDesktop":
+  NODE_COUNT = 1  # set to desired number of nodes per gambit
+  CORE_COUNT = 16 # set to number of cores per node
+elif THE_SYSTEM == "UbuntuLegion":
+  NODE_COUNT = 1  # set to desired number of nodes per gambit
+  CORE_COUNT = 8 # set to number of cores per node
+  
+# path for generated scans
+GEN_PATH = 'gens'
+
+print("\n-----------------\nrunning 2HDM generator\n")
+
+len_bases = len(BASES)
+
+for (basis,file) in BASES:
+    name = "files/" + BASIS_YAML_DIRECTORY + "/" + file + ".yaml"
     file = open(name,'r').read()
     file = re.sub(r"^!import.*",r"",file,flags=re.MULTILINE)
     file = re.sub(r"!import",r"",file)
@@ -490,7 +62,7 @@ for (basis,file) in bases:
     if "subscans" in yfile:
       len_bases += yfile["subscans"]["num_scans"] - 1
 
-print("\nthese scans will eat ", len(models)*len(runnings)*len_bases*len(constraints)*required_scan_duration*CORE_COUNT/(60*60), " CPU hours\n\n")
+print("\nthese scans will eat ", len(MODELS)*len(SPECTRUM_ORDER)*len_bases*len(CONSTRAINTS)*MAX_SCAN_DURATION*CORE_COUNT/(60*60), " CPU hours\n\n")
 
 
 def generate_gambit_name():
@@ -533,8 +105,7 @@ class Options:
             setattr(self, c, False)
 
         # default paths
-        self.results_folder = "../runs"
-        self.plots_folder = "../plots"
+        self.results_folder = None
         self.hdf5_name = "scan"
 
     def setModel(self, model, basis, running):
@@ -618,8 +189,8 @@ class Options:
 
 def makeGambit(options, dir):
 
-    print('making: ' + os.path.abspath(gen_path) + "/" + dir + " ... ")
-    dir2 = gen_path+"/" + dir
+    print('making: ' + os.path.abspath(GEN_PATH) + "/" + dir + " ... ")
+    dir2 = GEN_PATH+"/" + dir
 
     # delete contents if it already exists
     if os.path.exists(dir2):
@@ -627,7 +198,7 @@ def makeGambit(options, dir):
 
     # copy the files to a new gambit dir
     copy_tree("files/copyme/", dir2)
-    # os.rename(gen_path+"/files", dir2)
+    # os.rename(GEN_PATH+"/files", dir2)
 
     # figure out the yaml file name
     yaml_name = options.file + ".yaml"
@@ -635,12 +206,12 @@ def makeGambit(options, dir):
     # patch the yaml file
     patchYaml(options, dir, yaml_name)
     patchYaml(options, dir, "THDM_constraints.yaml")
-    # remove_tree(dir2 + "/" + yaml_dir)
+    # remove_tree(dir2 + "/" + BASIS_YAML_DIRECTORY)
 
     # patch the run script
-    if MODE == "BASH":
+    if THE_SYSTEM in ["UbuntuDesktop", "UbuntuLegion"]:
         patchRunScript(options, dir, yaml_name)
-    elif MODE == "DIRAC":
+    elif THE_SYSTEM == "dirac_icelake":
         patchRunScriptJC(options, dir, yaml_name)
     else:
         raise Exception("unknown mode")
@@ -649,7 +220,7 @@ def makeGambit(options, dir):
     os.remove(dir2 + "/job_dirac.sh")
 
     # create the output folders (otherwise hdf5_v1 will crash)
-    Path(dir2 + '/yaml_files/' + options.results_folder + '/samples').mkdir(parents=True, exist_ok=True)
+    Path(options.results_folder + '/samples').mkdir(parents=True, exist_ok=True)
 
     print("done")
    
@@ -660,25 +231,25 @@ def patchYaml(options, dir, yaml_name):
 
 
         # read yaml file into string
-        file = open("files/" + yaml_dir + "/" + yaml_name, 'r')
+        file = open("files/" + BASIS_YAML_DIRECTORY + "/" + yaml_name, 'r')
         s = file.read()
         file.close()
 
     else:
         s = options.subscan
 
-    # shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_med_hhs")
-    # shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_med_final_hhs")
-    # shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_full")
-    # shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_med")
-    # shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_med_final")
-    # shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_small")
-    # shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_small_final")
-    # shutil.rmtree(gen_path+"/" + dir + "/" + "yaml_files_idm")
+    # shutil.rmtree(GEN_PATH+"/" + dir + "/" + "yaml_files_med_hhs")
+    # shutil.rmtree(GEN_PATH+"/" + dir + "/" + "yaml_files_med_final_hhs")
+    # shutil.rmtree(GEN_PATH+"/" + dir + "/" + "yaml_files_full")
+    # shutil.rmtree(GEN_PATH+"/" + dir + "/" + "yaml_files_med")
+    # shutil.rmtree(GEN_PATH+"/" + dir + "/" + "yaml_files_med_final")
+    # shutil.rmtree(GEN_PATH+"/" + dir + "/" + "yaml_files_small")
+    # shutil.rmtree(GEN_PATH+"/" + dir + "/" + "yaml_files_small_final")
+    # shutil.rmtree(GEN_PATH+"/" + dir + "/" + "yaml_files_idm")
 
     # remove useless yaml dirs
 
-    print("DEBUG: patching " + gen_path+"/" + dir + "/" + yaml_dir + "/" + yaml_name)
+    print("DEBUG: patching " + GEN_PATH+"/" + dir + "/" + BASIS_YAML_DIRECTORY + "/" + yaml_name)
 
     # # set basis
     # s = s.replace("prior_type: tanb", "prior_type: " + "flat")
@@ -691,12 +262,12 @@ def patchYaml(options, dir, yaml_name):
         s = s.replace("use_scanner:", "use_scanner: postprocessor # ")
 
     # replace model name for PP
-    s = s.replace("ppfile:", "file: " + '"' + postprocessor_file + '"' + " # ")
+    s = s.replace("ppfile:", "file: " + '"' + POSTPROCESSOR_FILE + '"' + " # ")
     s = s.replace("TheModelPP", options.model+options.running)
 
     # set the scan duration and point limit
-    s = s.replace("12121212", str(int(options.required_points)))
-    s = s.replace("23232323", str(int(options.required_printed_points)))
+    if options.required_points: s = s.replace("12121212", str(int(options.required_points)))
+    if options.required_printed_points: s = s.replace("23232323", str(int(options.required_printed_points)))
     s = s.replace("34343434", str(int(options.required_scan_duration)))
     s = s.replace("convthresh:", "convthresh: " + str(options.conv_threshold) + " #")
     s = s.replace("NP:", "NP: " + str(options.NP) + " #")
@@ -716,7 +287,7 @@ def patchYaml(options, dir, yaml_name):
         s = s.replace("check_other_scale:", "check_other_scale: -1 # ")
     
     # set the speed hacks
-    if use_speed_hacks:
+    if USE_SPEED_HACKS:
         s = s.replace("only_perturbativity: false","only_perturbativity: false")
     else:
         s = s.replace("only_perturbativity: false","only_perturbativity: true")
@@ -751,14 +322,14 @@ def patchYaml(options, dir, yaml_name):
                     s = s.replace("#~"+marker, "")
 
     # write patched file to disk
-    file = open(gen_path+"/" + dir + "/yaml_files/" + yaml_name, 'w')
+    file = open(GEN_PATH+"/" + dir + "/yaml_files/" + yaml_name, 'w')
     file.write(s)
     file.close()
 
 def patchRunScript(options, dir, yaml_name):
 
     # load run script into string
-    file = open(gen_path+"/" + dir + "/job.sh", 'r')
+    file = open(GEN_PATH+"/" + dir + "/job.sh", 'r')
     s = file.read()
     file.close()
     
@@ -766,14 +337,14 @@ def patchRunScript(options, dir, yaml_name):
     s = s.replace("THDM_physical.yaml", yaml_name)
 
     # write patched file to disk
-    file = open(gen_path+"/" + dir + "/job.sh", 'w')
+    file = open(GEN_PATH+"/" + dir + "/job.sh", 'w')
     file.write(s)
     file.close()
 
 def patchRunScriptJC(options, dir, yaml_name):
 
     # load run script into string
-    file = open(gen_path+"/" + dir + "/job_dirac.sh", 'r')
+    file = open(GEN_PATH+"/" + dir + "/job_dirac.sh", 'r')
     s = file.read()
     file.close()
 
@@ -781,7 +352,7 @@ def patchRunScriptJC(options, dir, yaml_name):
     s = s.replace("SBATCH -J gambit_thdm", "SBATCH -J thdm_" + options.hdf5_name)
 
     # set the stdout and stderr paths (todo)
-    dir_abs = os.path.abspath(gen_path+"/" + dir)
+    dir_abs = os.path.abspath(GEN_PATH+"/" + dir)
     # s = s.replace("stdo_", dir + "/work/stdo_")
     # s = s.replace("stde_", dir + "/work/stde_")
 
@@ -812,7 +383,7 @@ def patchRunScriptJC(options, dir, yaml_name):
     s = s.replace("HHHHH", str(hours))
 
     # write patched file to disk
-    file = open(gen_path+"/" + dir + "/job.sh", 'w')
+    file = open(GEN_PATH+"/" + dir + "/job.sh", 'w')
     file.write(s)
     file.close()
 
@@ -968,8 +539,8 @@ def load_subscan_yaml(running, name):
 
             yfile["Parameters"]["TheModelName"][param]["range"] = param_range_new
             if (param_priors[param]) == "pow":
-            yfile["Parameters"]["TheModelName"][param]["shift"] = -param_range_new[0]
-            # yfile["Parameters"]["TheModelName"][param]["shift"] = -max(0.0,param_range[0]-0.1)
+              yfile["Parameters"]["TheModelName"][param]["shift"] = -param_range_new[0]
+              # yfile["Parameters"]["TheModelName"][param]["shift"] = -max(0.0,param_range[0]-0.1)
 
         # convert yaml file to string
         contents = yaml.dump(yfile)
@@ -996,13 +567,13 @@ def load_subscan_yaml(running, name):
 
 def main():
 
-    # ad postfix to gen_path so that it is unique
-    global gen_path
+    # ad postfix to GEN_PATH so that it is unique
+    global GEN_PATH
     postfix = 0
-    while os.path.exists(gen_path+"_"+str(postfix)):
+    while os.path.exists(GEN_PATH+"_"+str(postfix)):
         postfix += 1
     postfix = str(postfix)
-    gen_path = gen_path + "_" + postfix
+    GEN_PATH = GEN_PATH + "_" + postfix
 
 
     folders_to_merge = {}
@@ -1010,28 +581,28 @@ def main():
     # --- loop over all options ---
 
     # loop over all models (different output folder)
-    for model in models:
+    for model in MODELS:
 
         # loop over all runnings (different output folder)
-        for running in runnings:
+        for running in SPECTRUM_ORDER:
 
             # loop over all constraints (different output folder)
-            for (constraint, constraint_name) in constraints:
+            for (constraint, constraint_name) in CONSTRAINTS:
 
                 # uniquely identifies results folders (to be merged later)
                 resultsSuffix = 0
 
                 # loop over all bases (merged output folder)
-                for (basis,file) in bases:
+                for (basis,file) in BASES:
 
                     # get the list of subscan files
-                    subscans = load_subscan_yaml(running, "files/" + yaml_dir + "/" + file + ".yaml")
+                    subscans = load_subscan_yaml(running, "files/" + BASIS_YAML_DIRECTORY + "/" + file + ".yaml")
 
                     # loop over all subscans (merged output folder)
                     for x,subscan in enumerate(subscans):
 
                         resultsSuffix += 1
-                        resultsSuffixStr = "_" + str(resultsSuffix) if MODE != "BASH" else ""
+                        resultsSuffixStr = "_" + str(resultsSuffix) if THE_SYSTEM == "dirac_icelake" else ""
 
                         # setup the scan-specific options
                         options = Options()
@@ -1044,37 +615,33 @@ def main():
                             options.setConstraint(c)
 
                         # setup convergence criteria
-                        options.conv_threshold = conv_threshold
-                        options.NP = NP
-                        options.required_printed_points = required_printed_points
-                        options.required_points = required_points
-                        if required_printed_points != -1:
+                        options.conv_threshold = DIVER_CONV_THRESHOLD
+                        options.NP = DIVER_NP
+                        options.required_printed_points = MAX_PRINTED_POINTS
+                        options.required_points = MAX_POINTS
+                        if MAX_PRINTED_POINTS != None:
                             options.required_printed_points /= (len_bases*CORE_COUNT)
-                        if required_points != -1:
+                        if MAX_POINTS != None:
                             options.required_points /= (len_bases*CORE_COUNT)
-                        options.required_scan_duration = required_scan_duration
+                        options.required_scan_duration = MAX_SCAN_DURATION
 
                         # make sure everything is valid
                         options.validate()
 
                         # setup paths (also stored in options)
                         fullName = model + running + "_" + constraint_name
-                        options.results_folder = "../../../runs/" + fullName + resultsSuffixStr + "/"
-                        options.plots_folder = "../plots/" + fullName + "/"
+                        options.results_folder = f"{ROOT_DIR}/data/scans/{fullName}{resultsSuffixStr}/"
                         options.hdf5_name = options.file + "_" + postfix + "_" + resultsSuffixStr
                         
                         # dict that tells us which folders to merge (essentially we will just get rid of resultsSuffixStr)
-                        tmp = "../runs/" + fullName + resultsSuffixStr + "/"
-                        folders_to_merge[tmp] = "../runs/" + fullName + "/"
-
-                        # for i in range(0,CORE_COUNT):
-                        #     folders_to_merge[options.results_folder + 'samples/' + options.hdf5_name + ".hdf5_temp_" + str(i)] = "../../../runs/" + model + running + constraint_name_full + "/"
+                        tmp = "{ROOT_DIR}/data/scans/{fullName}{resultsSuffixStr}/"
+                        folders_to_merge[tmp] = "{ROOT_DIR}{fullName}/"
 
                         # make a new gambit with the options specified above
                         makeGambit(options, generate_gambit_name())
 
-    parent_abs = os.path.abspath(gen_path)
-    if MODE != "BASH":
+    parent_abs = os.path.abspath(GEN_PATH)
+    if THE_SYSTEM == "dirac_icelake":
         with open(parent_abs + "/merge.py", "w") as f:
             f.write("#!/bin/python3\n")
             f.write("import os, shutil, pathlib, fnmatch\n")
@@ -1118,7 +685,7 @@ def main():
         file.write("echo \"---------- "+str(i)+" of " + str(len(gambit_dirs)) + " ----------\"\n")
         file.write("echo \"------------------------------\"\n")
         file.write('cd "' + parent_abs + "/" + dir + '"\n')
-        if MODE == "BASH":
+        if THE_SYSTEM in ["UbuntuDesktop", 'UbuntuLegion']:
             file.write("./job.sh\n")
         else:
             file.write("sbatch job.sh\n")
